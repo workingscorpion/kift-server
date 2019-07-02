@@ -1,4 +1,4 @@
 
 export interface GraphQLResolver {
-    resolve(): Promise<any>;
+    resolve(args?: any): Promise<any>;
 }

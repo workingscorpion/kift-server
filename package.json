@@ -13,11 +13,17 @@
     "@types/glob": "^7.1.1",
     "@types/graphql": "^14.2.2",
     "@types/node": "^12.0.10",
+    "@types/sequelize": "^4.28.3",
     "apollo-server-koa": "^2.7.0-alpha.3",
     "awilix": "^4.2.2",
     "awilix-koa": "^3.1.0",
     "graphql": "^14.4.1",
     "koa": "^2.7.0",
-    "typescript": "^3.5.2"
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^5.9.1",
+    "sequelize-typescript": "^0.6.11",
+    "sqlite3": "^4.0.9",
+    "typescript": "^3.5.2",
+    "yenv": "^2.1.0"
   }
 }
