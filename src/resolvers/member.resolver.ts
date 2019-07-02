@@ -29,3 +29,19 @@ export class MembersResolver implements GraphQLResolver {
         return members.map(r => toGqlMemberType(r));
     }
 }
+
+export class AddMemberResolver implements GraphQLResolver {
+    constructor({ }) {
+    }
+
+    async resolve({ email, name, password, phone }: any) {
+        try {
+            const r = await MemberModel.create({
+                email, name, password
+            });
+            return { error: 0, data: toGqlMemberType(r) };
+        } catch (e) {
+            return { error: -1 };
+        }
+    }
+}

@@ -27,6 +27,19 @@ export class AppServer {
             email: String
             name: String
         }
+
+        type Mutation {
+            addMember(email: String!, name: String!, password: String!, phone: String): MemberResult
+        }
+
+        interface Result {
+            error: Int
+        }
+
+        type MemberResult implements Result {
+            error: Int
+            data: Member
+        }
         `;
 
         function createResolver(name: keyof ResolverModules) {
@@ -43,6 +56,9 @@ export class AppServer {
                 member: createResolver('memberResolver'),
                 members: createResolver('membersResolver'),
             },
+            Mutation: {
+                addMember: createResolver('addMemberResolver'),
+            }
         };
 
         const server = new ApolloServer({ typeDefs, resolvers });

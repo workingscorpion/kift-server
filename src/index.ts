@@ -4,7 +4,7 @@ import { MainContainerModules } from './modules';
 import { EnvService } from './services/env.service';
 import { DBService } from './services/db.service';
 import { HelloService } from './services/hello.service';
-import { MemberResolver, MembersResolver } from './resolvers/member.resolver';
+import { MemberResolver, MembersResolver, AddMemberResolver } from './resolvers/member.resolver';
 import { AppServer } from './server';
 
 async function start() {
@@ -15,6 +15,7 @@ async function start() {
         helloService: asClass(HelloService).scoped(),
         memberResolver: asClass(MemberResolver).scoped(),
         membersResolver: asClass(MembersResolver).scoped(),
+        addMemberResolver: asClass(AddMemberResolver).scoped(),
         appServer: asClass(AppServer).scoped(),
     };
     container.register(modules as any);
