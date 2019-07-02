@@ -14,6 +14,7 @@
     "@types/graphql": "^14.2.2",
     "@types/node": "^12.0.10",
     "@types/sequelize": "^4.28.3",
+    "@types/winston": "^2.4.4",
     "apollo-server-koa": "^2.7.0-alpha.3",
     "awilix": "^4.2.2",
     "awilix-koa": "^3.1.0",
@@ -24,6 +25,7 @@
     "sequelize-typescript": "^0.6.11",
     "sqlite3": "^4.0.9",
     "typescript": "^3.5.2",
+    "winston": "^3.2.1",
     "yenv": "^2.1.0"
   }
 }

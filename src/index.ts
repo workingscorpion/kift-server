@@ -5,8 +5,10 @@ import { EnvService } from './services/env.service';
 import { DBService } from './services/db.service';
 import { MemberResolver, MembersResolver, AddMemberResolver, MemberByEmailResolver } from './resolvers/member.resolver';
 import { AppServer } from './server';
+import { Logger } from './logger';
 
 async function start() {
+    
     const container = createContainer();
     const modules: MainContainerModules = {
         envService: asClass(EnvService).scoped(),
@@ -23,4 +25,5 @@ async function start() {
     await server.start(container);
 }
 
+Logger.info('Server starts');
 start();
