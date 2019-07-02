@@ -20,6 +20,17 @@ export class MemberResolver implements GraphQLResolver {
     }
 }
 
+export class MemberByEmailResolver implements GraphQLResolver {
+    constructor({ }) {
+    }
+
+    async resolve({ email }: any) {
+        const r = await MemberModel.findOne({ where: { email } });
+        if (!r) { return null; }
+        return toGqlMemberType(r);
+    }
+}
+
 export class MembersResolver implements GraphQLResolver {
     constructor({ }) {
     }

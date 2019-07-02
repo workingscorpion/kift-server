@@ -1,7 +1,12 @@
 import { Table, Column, Model, Sequelize } from 'sequelize-typescript';
 
 @Table({
-    modelName: 'member'
+    modelName: 'member',
+    indexes: [
+        {
+            fields: ['email']
+        },
+    ]
 })
 export class MemberModel extends Model<MemberModel> {
 

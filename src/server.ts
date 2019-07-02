@@ -17,8 +17,8 @@ export class AppServer {
         // Construct a schema, using GraphQL schema language
         const typeDefs = gql`
         type Query {
-            hello: String
             member(id: Int): Member
+            memberByEmail(email: String): Member
             members: [Member]
         }
 
@@ -52,8 +52,8 @@ export class AppServer {
         // Provide resolver functions for your schema fields
         const resolvers = {
             Query: {
-                hello: createResolver('helloService'),
                 member: createResolver('memberResolver'),
+                memberByEmail: createResolver('memberByEmailResolver'),
                 members: createResolver('membersResolver'),
             },
             Mutation: {
