@@ -2,6 +2,7 @@ import { createContainer, asClass } from 'awilix';
 import { nameof } from './lib/utils';
 import { MainContainerModules } from './modules';
 import { EnvService } from './services/env.service';
+import { CryptoService } from './services/crypto.service';
 import { DBService } from './services/db.service';
 import { MemberResolver, MembersResolver, AddMemberResolver, MemberByEmailResolver } from './resolvers/member.resolver';
 import { AppServer } from './server';
@@ -12,6 +13,7 @@ async function start() {
     const container = createContainer();
     const modules: MainContainerModules = {
         envService: asClass(EnvService).scoped(),
+        cryptoService: asClass(CryptoService).scoped(),
         dbService: asClass(DBService).scoped(),
         memberResolver: asClass(MemberResolver).scoped(),
         memberByEmailResolver: asClass(MemberByEmailResolver).scoped(),
