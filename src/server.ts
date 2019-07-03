@@ -68,7 +68,11 @@ export class AppServer {
         // alternatively you can get a composed middleware from the apollo server
         // app.use(server.getMiddleware());
 
-        app.listen({ port: 4000 }, () => console.log(`🚀 Server ready at http://localhost:${this.envService.get().PORT}${server.graphqlPath}`), );
+        app.listen({ port: this.envService.get().PORT }, () => {
+            console.log(`Typescript + Koa + Apollo API Server starts! (NODE_ENV: ${process.env.NODE_ENV}, port: ${this.envService.get().PORT}, GraphQL Endpoint: ${server.graphqlPath})`);
+        });
+
+        process.title = this.envService.get().APP_TITLE + `${process.env.NODE_ENV} - ${this.envService.get().PORT}`;
     }
     
     envService: EnvService;

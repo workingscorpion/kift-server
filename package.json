@@ -5,7 +5,29 @@
   "main": "src/index.js",
   "scripts": {
     "build": "./node_modules/.bin/tsc",
-    "start": "node $npm_package_main"
+    "start": "npm run start:dev",
+    "start:dev": "better-npm-run start:dev",
+    "start:prod": "better-npm-run start:prod",
+    "stop": "pkill --signal SIGINT ts-api-server",
+    "watch": "npm run watch:dev",
+    "watch:dev": "better-npm-run watch:dev",
+    "watch:prod": "better-npm-run watch:prod"
+  },
+  "betterScripts": {
+    "start:dev": "node $npm_package_main",
+    "start:prod": {
+      "command": "node $npm_package_main",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "watch:dev": "nodemon $npm_package_main",
+    "watch:prod": {
+      "command": "nodemon $npm_package_main",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
   },
   "author": "realcow",
   "license": "ISC",
@@ -19,6 +41,7 @@
     "apollo-server-koa": "^2.7.0-alpha.3",
     "awilix": "^4.2.2",
     "awilix-koa": "^3.1.0",
+    "better-npm-run": "^0.1.1",
     "crypto-js": "^3.1.9-1",
     "graphql": "^14.4.1",
     "koa": "^2.7.0",
@@ -30,5 +53,8 @@
     "typescript": "^3.5.2",
     "winston": "^3.2.1",
     "yenv": "^2.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
   }
 }
