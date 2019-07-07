@@ -1,6 +1,6 @@
-import { gql, makeExecutableSchema } from 'apollo-server-koa';
+import { gql, makeExecutableSchema, PubSub } from 'apollo-server-koa';
 import { GraphQLSchema } from 'graphql';
-import { AwilixContainer } from 'awilix';
+import { AwilixContainer, asValue } from 'awilix';
 import { GraphQLResolver } from './resolver';
 import { ResolverModules } from '../modules';
 
@@ -17,17 +17,16 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         webLogs: [String]
     }
 
-    type Member {
-        id: Int
-        email: String
-        name: String
-    }
-
     type Mutation {
         addMember(email: String!, name: String!, password: String!, phone: String): MemberResult
 
         setWebLoggingEnabled(enabled: Boolean): BooleanValueResult
         addWebLog(log: String): SimpleResult
+    }
+
+    type Subscription {
+        webLoggingEnabled: Boolean
+        webLogAdded: String
     }
 
     interface Result {
@@ -43,11 +42,20 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         value: Boolean
     }
 
+    type Member {
+        id: Int
+        email: String
+        name: String
+    }
+
     type MemberResult implements Result {
         error: Int
         data: Member
     }
     `;
+
+    const pubsub = new PubSub();
+    container.register('pubSub', asValue(pubsub));
 
     // Provide resolver functions for your schema fields
     function createResolver(name: keyof ResolverModules) {
@@ -70,6 +78,14 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
             addWebLog: createResolver('addWebLogResolver'),
             setWebLoggingEnabled: createResolver('setWebLoggingEnabledResolver'),
         },
+        Subscription: {
+            webLoggingEnabled: {
+                subscribe: () => pubsub.asyncIterator('webLoggingEnabled')
+            },
+            webLogAdded: {
+                subscribe: () => pubsub.asyncIterator('webLogAdded')
+            },
+        }
     };
 
     const schema = makeExecutableSchema({ typeDefs, resolvers });

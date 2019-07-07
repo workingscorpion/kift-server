@@ -42,15 +42,13 @@ export class MembersResolver implements GraphQLResolver {
 }
 
 export class AddMemberResolver implements GraphQLResolver {
-    constructor({ }) {
-    }
-
     async resolve({ email, name, password, phone }: any) {
         try {
             const r = await MemberModel.create({
                 email, name, password
             });
-            return { error: 0, data: toGqlMemberType(r) };
+            const data = toGqlMemberType(r);
+            return { error: 0, data };
         } catch (e) {
             return { error: -1 };
         }

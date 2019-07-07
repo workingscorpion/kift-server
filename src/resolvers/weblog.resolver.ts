@@ -1,4 +1,5 @@
 import { GraphQLResolver } from '../graphql/resolver';
+import { PubSub } from 'apollo-server-koa';
 
 
 let loggingEnabled = false;
@@ -13,10 +14,18 @@ export class WebLoggingEnabledResolver implements GraphQLResolver {
 }
 
 export class SetWebLoggingEnabledResolver implements GraphQLResolver {
+    constructor({ pubSub }: any) {
+        this.pubSub = pubSub;
+    }
+
     async resolve({ enabled }: any) {
         loggingEnabled = enabled;
+        this.pubSub.publish('webLoggingEnabled', {
+            webLoggingEnabled: enabled
+        });
         return { error: 0, value: loggingEnabled };
     }
+    pubSub: PubSub;
 }
 
 export class WebLogsResolver implements GraphQLResolver {
@@ -29,7 +38,8 @@ export class WebLogsResolver implements GraphQLResolver {
 }
 
 export class AddWebLogResolver implements GraphQLResolver {
-    constructor({ }) {
+    constructor({ pubSub }: any) {
+        this.pubSub = pubSub;
     }
 
     async resolve({ log }: any) {
@@ -37,6 +47,10 @@ export class AddWebLogResolver implements GraphQLResolver {
             return { error: -1 };
         }
         logs.push(log);
+        this.pubSub.publish('webLogAdded', {
+            webLogAdded: log
+        });
         return { error: 0 };
     }
+    pubSub: PubSub;
 }
