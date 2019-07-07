@@ -12,6 +12,9 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         member(id: Int): Member
         memberByEmail(email: String): Member
         members: [Member]
+
+        webLoggingEnabled: Boolean
+        webLogs: [String]
     }
 
     type Member {
@@ -22,10 +25,22 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
 
     type Mutation {
         addMember(email: String!, name: String!, password: String!, phone: String): MemberResult
+
+        setWebLoggingEnabled(enabled: Boolean): BooleanValueResult
+        addWebLog(log: String): SimpleResult
     }
 
     interface Result {
         error: Int
+    }
+
+    type SimpleResult implements Result {
+        error: Int
+    }
+
+    type BooleanValueResult implements Result {
+        error: Int
+        value: Boolean
     }
 
     type MemberResult implements Result {
@@ -47,9 +62,13 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
             member: createResolver('memberResolver'),
             memberByEmail: createResolver('memberByEmailResolver'),
             members: createResolver('membersResolver'),
+            webLoggingEnabled: createResolver('webLoggingEnabledResolver'),
+            webLogs: createResolver('webLogsResolver'),
         },
         Mutation: {
             addMember: createResolver('addMemberResolver'),
+            addWebLog: createResolver('addWebLogResolver'),
+            setWebLoggingEnabled: createResolver('setWebLoggingEnabledResolver'),
         },
     };
 
