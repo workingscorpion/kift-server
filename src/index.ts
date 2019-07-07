@@ -4,6 +4,7 @@ import { MainContainerModules } from './modules';
 import { EnvService } from './services/env.service';
 import { CryptoService } from './services/crypto.service';
 import { DBService } from './services/db.service';
+import { MemLogTransport } from './resolvers/memlogtransport';
 import { MemberResolver, MembersResolver, AddMemberResolver, MemberByEmailResolver } from './resolvers/member.resolver';
 import { WebLoggingEnabledResolver, SetWebLoggingEnabledResolver, WebLogsResolver, AddWebLogResolver } from './resolvers/weblog.resolver';
 import { AppServer } from './server';
@@ -16,6 +17,8 @@ async function start() {
         envService: asClass(EnvService).scoped(),
         cryptoService: asClass(CryptoService).scoped(),
         dbService: asClass(DBService).scoped(),
+        webLogTransport: asClass(MemLogTransport).singleton(),
+        
         // member
         memberResolver: asClass(MemberResolver).scoped(),
         memberByEmailResolver: asClass(MemberByEmailResolver).scoped(),

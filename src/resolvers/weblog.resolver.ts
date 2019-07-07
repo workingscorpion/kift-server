@@ -1,11 +1,10 @@
 import { GraphQLResolver } from '../graphql/resolver';
 import { PubSub } from 'apollo-server-koa';
+import { Logger } from '../logger';
+import { MemLogTransport } from './memlogtransport';
 
 
 let loggingEnabled = false;
-let logs: string[] = [
-    'foo', 'bar', 'baz'
-];
 
 export class WebLoggingEnabledResolver implements GraphQLResolver {
     async resolve() {
@@ -14,43 +13,49 @@ export class WebLoggingEnabledResolver implements GraphQLResolver {
 }
 
 export class SetWebLoggingEnabledResolver implements GraphQLResolver {
-    constructor({ pubSub }: any) {
+    constructor({ pubSub, webLogTransport }: any) {
         this.pubSub = pubSub;
+        this.webLogTransport = webLogTransport;
     }
 
     async resolve({ enabled }: any) {
-        loggingEnabled = enabled;
-        this.pubSub.publish('webLoggingEnabled', {
-            webLoggingEnabled: enabled
-        });
+        if (loggingEnabled != enabled) {
+            loggingEnabled = enabled;
+            if (enabled) {
+                Logger.add(this.webLogTransport);
+            } else {
+                Logger.remove(this.webLogTransport);
+            }
+            this.pubSub.publish('webLoggingEnabled', {
+                webLoggingEnabled: enabled
+            });
+        } else {
+            return { error: 1, value: loggingEnabled };
+        }
         return { error: 0, value: loggingEnabled };
     }
     pubSub: PubSub;
+    webLogTransport: MemLogTransport;
 }
 
 export class WebLogsResolver implements GraphQLResolver {
-    constructor({ }) {
+    constructor({ webLogTransport }: any) {
+        this.webLogTransport = webLogTransport;
     }
 
     async resolve() {
-        return logs;
+        return this.webLogTransport.getLogs();
     }
+
+    webLogTransport: MemLogTransport;
 }
 
 export class AddWebLogResolver implements GraphQLResolver {
-    constructor({ pubSub }: any) {
-        this.pubSub = pubSub;
-    }
-
     async resolve({ log }: any) {
         if (!loggingEnabled) {
             return { error: -1 };
         }
-        logs.push(log);
-        this.pubSub.publish('webLogAdded', {
-            webLogAdded: log
-        });
+        Logger.info(log);
         return { error: 0 };
     }
-    pubSub: PubSub;
 }
