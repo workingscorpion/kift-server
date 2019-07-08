@@ -115,3 +115,23 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
 
     return schema;
 }
+
+// 테스트 쿼리들
+export const QueryMemberByEmail = `# 멤버 조회 쿼리 예시
+query {
+    memberByEmail(email: "foo@email.com") {
+        id
+        email
+        name
+    }
+}`;
+
+export const QuerySettings = `# 설정 조회 쿼리 예시
+query {
+    setting(key: "AdminEmail")
+    
+    settings {
+        key
+        value
+    }
+}`;

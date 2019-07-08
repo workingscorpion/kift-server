@@ -3,7 +3,7 @@ import { AwilixContainer } from 'awilix';
 import { ApolloServer } from 'apollo-server-koa';
 import { execute, subscribe } from 'graphql';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
-import { constructGraphQLSChema } from './graphql/schema';
+import { constructGraphQLSChema, QueryMemberByEmail, QuerySettings } from './graphql/schema';
 import { EnvService } from './services/env.service';
 import { DBService } from './services/db.service';
 
@@ -19,8 +19,18 @@ export class AppServer {
         const schema = constructGraphQLSChema(container);
         const server = new ApolloServer({ schema, playground: {
             endpoint: '/graphql',
-            subscriptionEndpoint: '/subscriptions'
-        } });
+            subscriptionEndpoint: '/subscriptions',
+            tabs: [ // playground 각 탭에 종류별 테스트 쿼리를 띄운다.
+                {
+                    endpoint: '/graphql',
+                    query: QueryMemberByEmail,
+                },
+                {
+                    endpoint: '/graphql',
+                    query: QuerySettings
+                }
+            ],
+        }, });
 
         const app = new Koa();
         server.applyMiddleware({ app });
