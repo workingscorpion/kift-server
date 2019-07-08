@@ -1,4 +1,5 @@
 import { Resolver } from 'awilix';
+import { PubSub } from 'apollo-server-koa';
 import { EnvService } from './services/env.service';
 import { CryptoService } from './services/crypto.service';
 import { DBService } from './services/db.service';
@@ -9,13 +10,15 @@ import { WebLoggingEnabledResolver, SetWebLoggingEnabledResolver, WebLogsResolve
 import { SettingResolver, SettingsResolver, SetSettingResolver } from './resolvers/setting.resolver';
 import { AppServer } from './server';
 
-export interface ResolverModules {
+export interface ServiceModules {
     envService?: Resolver<EnvService>;
     cryptoService?: Resolver<CryptoService>;
     dbService?: Resolver<DBService>;
     webLogTransport?: Resolver<MemLogTransport>;
     settingsService?: Resolver<SettingsService>;
+}
 
+export interface ResolverModules {
     // member
     memberResolver?: Resolver<MemberResolver>;
     memberByEmailResolver?: Resolver<MemberByEmailResolver>;
@@ -36,8 +39,13 @@ export interface ResolverModules {
     appServer?: Resolver<AppServer>;
 }
 
-export type MainContainerModules = ResolverModules;
+export interface ValueModules {
+    pubSub?: Resolver<PubSub>;
+}
+
+export type MainContainerModules = ServiceModules & ResolverModules & ValueModules;
 
 export type DBServiceClient = { dbService: DBService };
 export type EnvServiceClient = { envService: EnvService };
 export type SettingsServiceClient = { settingsService: SettingsService };
+export type PubSubValueClient = { pubSub: PubSub };

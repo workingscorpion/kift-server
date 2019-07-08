@@ -32,6 +32,8 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
     type Subscription {
         webLoggingEnabled: Boolean
         webLogAdded: String
+
+        settingChanged(key: String!): String
     }
 
     interface Result {
@@ -103,6 +105,9 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
             webLogAdded: {
                 subscribe: () => pubsub.asyncIterator('webLogAdded')
             },
+            settingChanged: {
+                subscribe: (context: any, { key }: { key: string }) => pubsub.asyncIterator(`settingChanged_${key}`)
+            }
         }
     };
 

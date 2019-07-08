@@ -1,7 +1,8 @@
-import { GraphQLResolver } from '../graphql/resolver';
-import { SettingsServiceClient } from '../modules';
-import { SettingsService } from '../services/settings.service';
+import { PubSub } from 'apollo-server-koa';
 import _ from 'lodash';
+import { GraphQLResolver } from '../graphql/resolver';
+import { SettingsServiceClient, PubSubValueClient } from '../modules';
+import { SettingsService } from '../services/settings.service';
 
 export class SettingResolver implements GraphQLResolver, SettingsServiceClient {
     constructor({ settingsService }: SettingsServiceClient) {
@@ -27,13 +28,17 @@ export class SettingsResolver implements GraphQLResolver, SettingsServiceClient 
     settingsService: SettingsService;
 }
 
-export class SetSettingResolver implements GraphQLResolver, SettingsServiceClient {
-    constructor({ settingsService }: SettingsServiceClient) {
+export class SetSettingResolver implements GraphQLResolver, SettingsServiceClient, PubSubValueClient {
+    constructor({ settingsService, pubSub }: SettingsServiceClient & PubSubValueClient) {
         this.settingsService = settingsService;
+        this.pubSub = pubSub;
     }
 
     async resolve({ key, value }: { key: string, value: string }) {
         if (this.settingsService.setSafe(key, value)) {
+            this.pubSub.publish(`settingChanged_${key}`, { 
+                settingChanged: value
+            });
             await this.settingsService.save();
             return { error: 0, key, value };
         }
@@ -41,5 +46,5 @@ export class SetSettingResolver implements GraphQLResolver, SettingsServiceClien
     }
 
     settingsService: SettingsService;
+    pubSub: PubSub;
 }
-
