@@ -15,6 +15,9 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
 
         webLoggingEnabled: Boolean
         webLogs: [String]
+
+        setting(key: String!): String
+        settings: [Setting]
     }
 
     type Mutation {
@@ -22,6 +25,8 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
 
         setWebLoggingEnabled(enabled: Boolean): BooleanValueResult
         addWebLog(log: String): SimpleResult
+
+        setSetting(key: String!, value: String!): SettingResult
     }
 
     type Subscription {
@@ -52,6 +57,16 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         error: Int
         data: Member
     }
+
+    type Setting {
+        key: String
+        value: String
+    }
+
+    type SettingResult implements Result {
+        error: Int
+        data: Setting
+    }
     `;
 
     const pubsub = new PubSub();
@@ -72,11 +87,14 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
             members: createResolver('membersResolver'),
             webLoggingEnabled: createResolver('webLoggingEnabledResolver'),
             webLogs: createResolver('webLogsResolver'),
+            setting: createResolver('settingResolver'),
+            settings: createResolver('settingsResolver'),
         },
         Mutation: {
             addMember: createResolver('addMemberResolver'),
             addWebLog: createResolver('addWebLogResolver'),
             setWebLoggingEnabled: createResolver('setWebLoggingEnabledResolver'),
+            setSetting: createResolver('setSettingResolver'),
         },
         Subscription: {
             webLoggingEnabled: {

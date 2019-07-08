@@ -4,9 +4,11 @@ import { MainContainerModules } from './modules';
 import { EnvService } from './services/env.service';
 import { CryptoService } from './services/crypto.service';
 import { DBService } from './services/db.service';
+import { SettingsService } from './services/settings.service';
 import { MemLogTransport } from './resolvers/memlogtransport';
 import { MemberResolver, MembersResolver, AddMemberResolver, MemberByEmailResolver } from './resolvers/member.resolver';
 import { WebLoggingEnabledResolver, SetWebLoggingEnabledResolver, WebLogsResolver, AddWebLogResolver } from './resolvers/weblog.resolver';
+import { SettingResolver, SettingsResolver, SetSettingResolver } from './resolvers/setting.resolver';
 import { AppServer } from './server';
 import { Logger } from './logger';
 
@@ -18,17 +20,24 @@ async function start() {
         cryptoService: asClass(CryptoService).scoped(),
         dbService: asClass(DBService).scoped(),
         webLogTransport: asClass(MemLogTransport).singleton(),
+        settingsService: asClass(SettingsService).singleton(),
         
         // member
         memberResolver: asClass(MemberResolver).scoped(),
         memberByEmailResolver: asClass(MemberByEmailResolver).scoped(),
         membersResolver: asClass(MembersResolver).scoped(),
         addMemberResolver: asClass(AddMemberResolver).scoped(),
+        
         // web logging
         webLoggingEnabledResolver: asClass(WebLoggingEnabledResolver).scoped(),
         setWebLoggingEnabledResolver: asClass(SetWebLoggingEnabledResolver).scoped(),
         webLogsResolver: asClass(WebLogsResolver).scoped(),
         addWebLogResolver: asClass(AddWebLogResolver).scoped(),
+        
+        //
+        settingResolver: asClass(SettingResolver).scoped(),
+        settingsResolver: asClass(SettingsResolver).scoped(),
+        setSettingResolver: asClass(SetSettingResolver).scoped(),
         
         appServer: asClass(AppServer).scoped(),
     };
