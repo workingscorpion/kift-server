@@ -1,2 +1,9 @@
 /node_modules
-*.js
+/src/**/*.js
+/src/**/*.js.map
+
+/logs/*.log
+*.sqlite
+
+# osx
+.DS_Store
