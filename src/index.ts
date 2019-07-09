@@ -6,7 +6,8 @@ import { CryptoService } from './services/crypto.service';
 import { DBService } from './services/db.service';
 import { SettingsService } from './services/settings.service';
 import { MemLogTransport } from './resolvers/memlogtransport';
-import { MemberResolver, MembersResolver, AddMemberResolver, MemberByEmailResolver } from './resolvers/member.resolver';
+import { LoginResolver } from './resolvers/auth.resolver';
+import { MemberResolver, MembersResolver, AddMemberResolver, MemberByEmailResolver, UpdateMemberResolver } from './resolvers/member.resolver';
 import { WebLoggingEnabledResolver, SetWebLoggingEnabledResolver, WebLogsResolver, AddWebLogResolver } from './resolvers/weblog.resolver';
 import { SettingResolver, SettingsResolver, SetSettingResolver } from './resolvers/setting.resolver';
 import { AppServer } from './server';
@@ -22,11 +23,15 @@ async function start() {
         webLogTransport: asClass(MemLogTransport).singleton(),
         settingsService: asClass(SettingsService).singleton(),
         
+        // auth
+        loginResolver: asClass(LoginResolver).scoped(),
+        
         // member
         memberResolver: asClass(MemberResolver).scoped(),
         memberByEmailResolver: asClass(MemberByEmailResolver).scoped(),
         membersResolver: asClass(MembersResolver).scoped(),
         addMemberResolver: asClass(AddMemberResolver).scoped(),
+        updateMemberResolver: asClass(UpdateMemberResolver).scoped(),
         
         // web logging
         webLoggingEnabledResolver: asClass(WebLoggingEnabledResolver).scoped(),

@@ -5,9 +5,10 @@ import { CryptoService } from './services/crypto.service';
 import { DBService } from './services/db.service';
 import { SettingsService } from './services/settings.service';
 import { MemLogTransport } from './resolvers/memlogtransport';
-import { MemberResolver, MemberByEmailResolver, MembersResolver, AddMemberResolver } from './resolvers/member.resolver';
+import { MemberResolver, MemberByEmailResolver, MembersResolver, AddMemberResolver, UpdateMemberResolver } from './resolvers/member.resolver';
 import { WebLoggingEnabledResolver, SetWebLoggingEnabledResolver, WebLogsResolver, AddWebLogResolver } from './resolvers/weblog.resolver';
 import { SettingResolver, SettingsResolver, SetSettingResolver } from './resolvers/setting.resolver';
+import { LoginResolver } from './resolvers/auth.resolver';
 import { AppServer } from './server';
 
 export interface ServiceModules {
@@ -19,11 +20,16 @@ export interface ServiceModules {
 }
 
 export interface ResolverModules {
+
+    // auth
+    loginResolver?: Resolver<LoginResolver>;
+    
     // member
     memberResolver?: Resolver<MemberResolver>;
     memberByEmailResolver?: Resolver<MemberByEmailResolver>;
     membersResolver?: Resolver<MembersResolver>;
     addMemberResolver?: Resolver<AddMemberResolver>;
+    updateMemberResolver?: Resolver<UpdateMemberResolver>;
 
     // weblog
     webLoggingEnabledResolver?: Resolver<WebLoggingEnabledResolver>;

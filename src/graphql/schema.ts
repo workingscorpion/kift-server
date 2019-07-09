@@ -21,7 +21,10 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
     }
 
     type Mutation {
+        login(email: String!, password: String!): LoginResult
+
         addMember(email: String!, name: String!, password: String!, phone: String): MemberResult
+        updateMember(id: Int!, name: String, password: String): MemberResult
 
         setWebLoggingEnabled(enabled: Boolean): BooleanValueResult
         addWebLog(log: String): SimpleResult
@@ -55,6 +58,12 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         name: String
     }
 
+    type LoginResult implements Result {
+        error: Int
+        data: Member
+        token: String
+    }
+
     type MemberResult implements Result {
         error: Int
         data: Member
@@ -76,9 +85,9 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
 
     // Provide resolver functions for your schema fields
     function createResolver(name: keyof ResolverModules) {
-        return async (context: any, args: any) => {
+        return async (root: any, args: any, context: any) => {
             const resolver = container.resolve(name) as GraphQLResolver;
-            return await resolver.resolve(args);
+            return await resolver.resolve(context, args);
         };
     }
 
@@ -93,8 +102,10 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
             settings: createResolver('settingsResolver'),
         },
         Mutation: {
+            login: createResolver('loginResolver'),
             addMember: createResolver('addMemberResolver'),
             addWebLog: createResolver('addWebLogResolver'),
+            updateMember: createResolver('updateMemberResolver'),
             setWebLoggingEnabled: createResolver('setWebLoggingEnabledResolver'),
             setSetting: createResolver('setSettingResolver'),
         },
@@ -117,9 +128,50 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
 }
 
 // 테스트 쿼리들
+export const MutationLogin = `# 로그인 뮤테이션
+mutation {
+    login(email: "foo@email.com", password: "foo1234#!") {
+        error
+        token
+    }
+}`;
+
+export const MutationCreateTestMembers = `# 개발용 테스트 회원 데이타 생성
+mutation {
+    member1: addMember(email: "foo@email.com", name: "Foo", password: "foo1234#!") {
+        error
+        data {
+            id
+            email
+            name
+        }
+    }
+    member2: addMember(email: "bar@email.com", name: "Bar", password: "bar1234#!") {
+        error
+        data {
+            id
+            email
+            name
+        }
+    }
+    member3: addMember(email: "baz@email.com", name: "Baz", password: "baz1234#!") {
+        error
+        data {
+            id
+            email
+            name
+        }
+    }
+}`;
+
 export const QueryMemberByEmail = `# 멤버 조회 쿼리 예시
 query {
     memberByEmail(email: "foo@email.com") {
+        id
+        email
+        name
+    }
+    members {
         id
         email
         name
@@ -133,5 +185,12 @@ query {
     settings {
         key
         value
+    }
+}`;
+
+export const MutationUpdateMember = `# 회원정보 수정
+mutation {
+    updateMember(id: 1, name: "Goo") {
+        error
     }
 }`;

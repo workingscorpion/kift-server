@@ -7,7 +7,7 @@ import { MemLogTransport } from './memlogtransport';
 let loggingEnabled = false;
 
 export class WebLoggingEnabledResolver implements GraphQLResolver {
-    async resolve() {
+    async resolve(context: any) {
         return loggingEnabled;
     }
 }
@@ -18,7 +18,7 @@ export class SetWebLoggingEnabledResolver implements GraphQLResolver {
         this.webLogTransport = webLogTransport;
     }
 
-    async resolve({ enabled }: any) {
+    async resolve(context: any, { enabled }: any) {
         if (loggingEnabled != enabled) {
             loggingEnabled = enabled;
             if (enabled) {
@@ -43,7 +43,7 @@ export class WebLogsResolver implements GraphQLResolver {
         this.webLogTransport = webLogTransport;
     }
 
-    async resolve() {
+    async resolve(context: any) {
         return this.webLogTransport.getLogs();
     }
 
@@ -51,7 +51,7 @@ export class WebLogsResolver implements GraphQLResolver {
 }
 
 export class AddWebLogResolver implements GraphQLResolver {
-    async resolve({ log }: any) {
+    async resolve(context: any, { log }: any) {
         if (!loggingEnabled) {
             return { error: -1 };
         }
