@@ -8,6 +8,7 @@ import { MemLogTransport } from './resolvers/memlogtransport';
 import { MemberResolver, MemberByEmailResolver, MembersResolver, AddMemberResolver, UpdateMemberResolver } from './resolvers/member.resolver';
 import { WebLoggingEnabledResolver, SetWebLoggingEnabledResolver, WebLogsResolver, AddWebLogResolver } from './resolvers/weblog.resolver';
 import { SettingResolver, SettingsResolver, SetSettingResolver } from './resolvers/setting.resolver';
+import { ClearDbResolver } from './resolvers/dev.resolver';
 import { LoginResolver } from './resolvers/auth.resolver';
 import { AppServer } from './server';
 
@@ -41,6 +42,9 @@ export interface ResolverModules {
     settingResolver?: Resolver<SettingResolver>;
     settingsResolver?: Resolver<SettingsResolver>;
     setSettingResolver?: Resolver<SetSettingResolver>;
+
+    // dev
+    clearDbResolver?: Resolver<ClearDbResolver>;
     
     appServer?: Resolver<AppServer>;
 }

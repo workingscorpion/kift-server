@@ -22,6 +22,10 @@ export class EnvService {
         return !this.isProductionMode();
     }
 
+    isTestMode() {
+        return (process.env.NODE_ENV === 'test');
+    }
+
     get(): EnvironmentVariables {
         return this.env;
     }

@@ -10,6 +10,7 @@ import { LoginResolver } from './resolvers/auth.resolver';
 import { MemberResolver, MembersResolver, AddMemberResolver, MemberByEmailResolver, UpdateMemberResolver } from './resolvers/member.resolver';
 import { WebLoggingEnabledResolver, SetWebLoggingEnabledResolver, WebLogsResolver, AddWebLogResolver } from './resolvers/weblog.resolver';
 import { SettingResolver, SettingsResolver, SetSettingResolver } from './resolvers/setting.resolver';
+import { ClearDbResolver } from './resolvers/dev.resolver';
 import { AppServer } from './server';
 import { Logger } from './logger';
 
@@ -43,6 +44,9 @@ async function start() {
         settingResolver: asClass(SettingResolver).scoped(),
         settingsResolver: asClass(SettingsResolver).scoped(),
         setSettingResolver: asClass(SetSettingResolver).scoped(),
+
+        // dev
+        clearDbResolver: asClass(ClearDbResolver).scoped(),
         
         appServer: asClass(AppServer).scoped(),
     };

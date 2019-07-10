@@ -4,9 +4,12 @@ import { ApolloServer } from 'apollo-server-koa';
 import { execute, subscribe } from 'graphql';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
 import jwt from 'koa-jwt';
-import { constructGraphQLSChema, QueryMemberByEmail, QuerySettings, MutationLogin, MutationCreateTestMembers, MutationUpdateMember } from './graphql/schema';
 import { EnvService } from './services/env.service';
 import { DBService } from './services/db.service';
+import { constructGraphQLSChema } from './graphql/schema';
+import { TestQueries } from './graphql/testqueries';
+
+export let globalServer: ApolloServer;
 
 export class AppServer {
 
@@ -30,29 +33,30 @@ export class AppServer {
             tabs: [ // playground 각 탭에 종류별 테스트 쿼리를 띄운다.
                 {
                     endpoint: '/graphql',
-                    query: MutationLogin,
+                    query: TestQueries.MutationLogin,
                 },
                 {
                     endpoint: '/graphql',
-                    query: QueryMemberByEmail,
+                    query: TestQueries.QueryMemberByEmail,
                 },
                 {
                     endpoint: '/graphql',
-                    query: QuerySettings
+                    query: TestQueries.QuerySettings
                 },
                 {
                     endpoint: '/graphql',
-                    query: MutationCreateTestMembers,
+                    query: TestQueries.MutationCreateTestMembers,
                 },
                 {
                     endpoint: '/graphql',
-                    query: MutationUpdateMember,
+                    query: TestQueries.MutationUpdateMember,
                     headers: {
                         Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJmb29AZW1haWwuY29tIiwiaWF0IjoxNTYyNjcxNzg3LCJleHAiOjE1OTQyMDc3ODd9.vPinSTiWyrkY3xZ2P8Du4JnBwBkMhd7nfmgeDYzvLMA"
                     }
                 }
             ],
         }, });
+        globalServer = server;
 
         const app = new Koa();
 
@@ -65,18 +69,22 @@ export class AppServer {
         // alternatively you can get a composed middleware from the apollo server
         // app.use(server.getMiddleware());
 
-        const ws = app.listen({ port: this.envService.get().PORT }, () => {
-            const msg = 'Typescript + Koa + Apollo API Server starts!' + 
-                ` (NODE_ENV: ${process.env.NODE_ENV}, port: ${this.envService.get().PORT}, GraphQL Endpoint: ${server.graphqlPath})`;
-            console.log(msg);
-
-            new SubscriptionServer({
-                execute, subscribe, schema
-            }, {
-                server: ws,
-                path: '/subscriptions'
+        // 테스트 모드일 때는 포트를 열지 않는다. Apollo 테스트 도구는 포트를 거치지 않고 직접 쿼리를 호출하기 때문에 필요가 없고,
+        // 포트 충돌이 발생한다.
+        if (!this.envService.isTestMode()) {
+            const ws = app.listen({ port: this.envService.get().PORT }, () => {
+                const msg = 'Typescript + Koa + Apollo API Server starts!' + 
+                    ` (NODE_ENV: ${process.env.NODE_ENV}, port: ${this.envService.get().PORT}, GraphQL Endpoint: ${server.graphqlPath})`;
+                console.log(msg);
+    
+                new SubscriptionServer({
+                    execute, subscribe, schema
+                }, {
+                    server: ws,
+                    path: '/subscriptions'
+                });
             });
-        });
+        }
 
         process.title = this.envService.get().APP_TITLE + `${process.env.NODE_ENV} - ${this.envService.get().PORT}`;
     }

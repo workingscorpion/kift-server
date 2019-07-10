@@ -9,6 +9,7 @@
     "start:dev": "better-npm-run start:dev",
     "start:prod": "better-npm-run start:prod",
     "stop": "pkill --signal SIGINT ts-api-server",
+    "test": "better-npm-run test",
     "watch": "npm run watch:dev",
     "watch:dev": "better-npm-run watch:dev",
     "watch:prod": "better-npm-run watch:prod"
@@ -19,6 +20,12 @@
       "command": "node $npm_package_main",
       "env": {
         "NODE_ENV": "production"
+      }
+    },
+    "test": {
+      "command": "npx jest",
+      "env": {
+        "NODE_ENV": "test"
       }
     },
     "watch:dev": "nodemon $npm_package_main",
@@ -35,19 +42,22 @@
     "@types/crypto-js": "^3.1.43",
     "@types/glob": "^7.1.1",
     "@types/graphql": "^14.2.2",
+    "@types/jest": "^24.0.15",
     "@types/jsonwebtoken": "^8.3.2",
     "@types/koa-jwt": "^3.3.0",
     "@types/lodash": "^4.14.135",
     "@types/node": "^12.0.10",
     "@types/sequelize": "^4.28.3",
     "@types/winston": "^2.4.4",
-    "apollo-server-koa": "^2.7.0-alpha.3",
+    "apollo-server-koa": "^2.6.7",
+    "apollo-server-testing": "^2.6.7",
     "awilix": "^4.2.2",
     "awilix-koa": "^3.1.0",
     "better-npm-run": "^0.1.1",
     "crypto-js": "^3.1.9-1",
     "graphql": "^14.4.1",
     "graphql-subscriptions": "^1.1.0",
+    "jest": "^24.8.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.7.0",
     "koa-jwt": "^3.5.1",
@@ -59,6 +69,7 @@
     "sequelize-typescript": "^0.6.11",
     "sqlite3": "^4.0.9",
     "subscriptions-transport-ws": "^0.9.16",
+    "ts-jest": "^24.0.2",
     "typescript": "^3.5.2",
     "winston": "^3.2.1",
     "yenv": "^2.1.0"
