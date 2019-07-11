@@ -1,6 +1,7 @@
 import Koa from 'koa';
 import { Server } from 'http';
 import { AwilixContainer } from 'awilix';
+import { scopePerRequest, loadControllers } from 'awilix-koa';
 import { ApolloServer } from 'apollo-server-koa';
 import { execute, subscribe } from 'graphql';
 import { SubscriptionServer } from 'subscriptions-transport-ws';
@@ -64,6 +65,9 @@ export class AppServer {
             secret: this.envService.get().SECRET_KEY,
         }));
 
+        app.use(scopePerRequest(container));
+        app.use(loadControllers('routes/*.route.js', { cwd: __dirname }));
+
         server.applyMiddleware({ app });
         // alternatively you can get a composed middleware from the apollo server
         // app.use(server.getMiddleware());
@@ -83,6 +87,7 @@ export class AppServer {
                     path: '/subscriptions'
                 });
             });
+            this.httpServer = ws;
         }
 
         process.title = this.envService.get().APP_TITLE + `${process.env.NODE_ENV} - ${this.envService.get().PORT}`;
