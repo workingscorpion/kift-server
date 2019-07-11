@@ -1,10 +1,10 @@
 import '../index';
 import { createTestClient } from 'apollo-server-testing';
 import { gql } from 'apollo-server-koa';
-import { globalServer } from '../server';
 import { TestQueries } from '../graphql/testqueries';
+import { appServer } from '../index';
 
-const { query, mutate } = createTestClient(globalServer);
+const { query, mutate } = createTestClient(appServer!.apolloServer!);
 
 describe('Member mutations', async () => {
     await it('can add members', async () => {

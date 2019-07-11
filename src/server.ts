@@ -1,4 +1,5 @@
 import Koa from 'koa';
+import { Server } from 'http';
 import { AwilixContainer } from 'awilix';
 import { ApolloServer } from 'apollo-server-koa';
 import { execute, subscribe } from 'graphql';
@@ -8,8 +9,6 @@ import { EnvService } from './services/env.service';
 import { DBService } from './services/db.service';
 import { constructGraphQLSChema } from './graphql/schema';
 import { TestQueries } from './graphql/testqueries';
-
-export let globalServer: ApolloServer;
 
 export class AppServer {
 
@@ -56,7 +55,7 @@ export class AppServer {
                 }
             ],
         }, });
-        globalServer = server;
+        this.apolloServer = server;
 
         const app = new Koa();
 
@@ -88,7 +87,9 @@ export class AppServer {
 
         process.title = this.envService.get().APP_TITLE + `${process.env.NODE_ENV} - ${this.envService.get().PORT}`;
     }
-    
+
+    public httpServer: Server | undefined;
+    public apolloServer: ApolloServer | undefined;
     envService: EnvService;
     dbService: DBService;
 }

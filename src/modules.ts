@@ -18,6 +18,7 @@ export interface ServiceModules {
     dbService?: Resolver<DBService>;
     webLogTransport?: Resolver<MemLogTransport>;
     settingsService?: Resolver<SettingsService>;
+    appServer?: Resolver<AppServer>;
 }
 
 export interface ResolverModules {
@@ -44,9 +45,7 @@ export interface ResolverModules {
     setSettingResolver?: Resolver<SetSettingResolver>;
 
     // dev
-    clearDbResolver?: Resolver<ClearDbResolver>;
-    
-    appServer?: Resolver<AppServer>;
+    clearDbResolver?: Resolver<ClearDbResolver>;    
 }
 
 export interface ValueModules {
@@ -55,6 +54,7 @@ export interface ValueModules {
 
 export type MainContainerModules = ServiceModules & ResolverModules & ValueModules;
 
+export type AppServerClient = { appServer: AppServer };
 export type DBServiceClient = { dbService: DBService };
 export type EnvServiceClient = { envService: EnvService };
 export type SettingsServiceClient = { settingsService: SettingsService };

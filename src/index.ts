@@ -14,6 +14,9 @@ import { ClearDbResolver } from './resolvers/dev.resolver';
 import { AppServer } from './server';
 import { Logger } from './logger';
 
+// 테스트에서 앱 인스턴스에 접근하기 위한 변수
+export let appServer: AppServer | undefined;
+
 async function start() {
         
     const container = createContainer();
@@ -53,6 +56,7 @@ async function start() {
     container.register(modules as any);
 
     const server: AppServer = container.resolve(nameof<MainContainerModules>('appServer'));
+    appServer = server;
     await server.start(container);
 }
 
