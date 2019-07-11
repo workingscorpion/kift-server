@@ -23,7 +23,7 @@ async function start() {
     const modules: MainContainerModules = {
         envService: asClass(EnvService).scoped(),
         cryptoService: asClass(CryptoService).scoped(),
-        dbService: asClass(DBService).scoped(),
+        dbService: asClass(DBService).singleton(),
         webLogTransport: asClass(MemLogTransport).singleton(),
         settingsService: asClass(SettingsService).singleton(),
         
@@ -51,7 +51,7 @@ async function start() {
         // dev
         clearDbResolver: asClass(ClearDbResolver).scoped(),
         
-        appServer: asClass(AppServer).scoped(),
+        appServer: asClass(AppServer).singleton(),
     };
     container.register(modules as any);
 
