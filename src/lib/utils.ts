@@ -21,14 +21,16 @@ export function sleepSync(ms: number) {
 
 export const noop = () => {};
 
-export function randomString(possible: string, n: number) {
+const CharsetAlphanumericCase = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+export function randomString(n: number, possible: string = CharsetAlphanumericCase) {
     let text = '';
     for (let i = 0; i < n; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
+        text += possible.charAt((Math.random() * possible.length) | 0);
     }
     return text;
 };
 
-export function randomInt(n: number) {
-    return Math.floor(Math.random() * n);
+export function randomInt(n: number, m?: number) {
+    return m === undefined ? (Math.random() * n) | 0 :
+        n + ((Math.random() * (m - n)) | 0);
 }
