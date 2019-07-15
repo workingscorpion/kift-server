@@ -57,5 +57,6 @@ export type MainContainerModules = ServiceModules & ResolverModules & ValueModul
 export type AppServerClient = { appServer: AppServer };
 export type DBServiceClient = { dbService: DBService };
 export type EnvServiceClient = { envService: EnvService };
+export type CryptoServiceClient = { cryptoService: CryptoService };
 export type SettingsServiceClient = { settingsService: SettingsService };
 export type PubSubValueClient = { pubSub: PubSub };
