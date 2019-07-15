@@ -1,5 +1,7 @@
 import { GraphQLResolver } from '../graphql/resolver';
 import { MemberModel } from '../models/member.model';
+import { CryptoServiceClient } from '../modules';
+import { CryptoService } from '../services/crypto.service';
 
 function toGqlMemberType(mm: MemberModel) {
     return {
@@ -41,9 +43,17 @@ export class MembersResolver implements GraphQLResolver {
     }
 }
 
-export class AddMemberResolver implements GraphQLResolver {
+export class AddMemberResolver implements GraphQLResolver, CryptoServiceClient {
+    constructor({ cryptoService }: CryptoServiceClient) {
+        this.cryptoService = cryptoService;
+    }
+
     async resolve(context: any, { email, name, password, phone }: any) {
         try {
+
+            const hash = this.cryptoService.untwistPassword(password);
+            password = this.cryptoService.encryptPassword(hash);
+
             const r = await MemberModel.create({
                 email, name, password
             });
@@ -53,6 +63,8 @@ export class AddMemberResolver implements GraphQLResolver {
             return { error: -1 };
         }
     }
+
+    cryptoService: CryptoService;
 }
 
 export class UpdateMemberResolver implements GraphQLResolver {

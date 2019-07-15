@@ -13,7 +13,7 @@ mutation {
 
 export const MutationCreateTestMembers = `# 개발용 테스트 회원 데이타 생성
 mutation {
-    member1: addMember(email: "foo@email.com", name: "Foo", password: "foo1234#!") {
+    member1: addMember(email: "foo@email.com", name: "Foo", password: "368BsXOTwr75AG6ESon51IPhn4u6bGs5") { # foo1234#!
         error
         data {
             id
@@ -21,7 +21,7 @@ mutation {
             name
         }
     }
-    member2: addMember(email: "bar@email.com", name: "Bar", password: "bar1234#!") {
+    member2: addMember(email: "bar@email.com", name: "Bar", password: "imqpJaK3/HasbBbEMW9OAujAuKLulHp4") { # bar1234#!
         error
         data {
             id
@@ -29,7 +29,7 @@ mutation {
             name
         }
     }
-    member3: addMember(email: "baz@email.com", name: "Baz", password: "baz1234#!") {
+    member3: addMember(email: "baz@email.com", name: "Baz", password: "sm+sNDrF9jy2HI8qu96re4o05BhfOhl2") { # baz1234#!
         error
         data {
             id

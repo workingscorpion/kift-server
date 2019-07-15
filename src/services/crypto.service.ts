@@ -1,5 +1,6 @@
 import CryptoJS from 'crypto-js';
 const randomNumber = require('random-number-csprng');
+import * as bcrypt from 'bcrypt';
 import { EnvServiceClient } from '../modules';
 
 type MyDependencies = EnvServiceClient;
@@ -32,6 +33,23 @@ export class CryptoService {
     async generateRandomCode(length: number) {
         const ret = ('' + (await randomNumber(0, Math.pow(10, length)))).padStart(length, '0');
         return ret;
+    }
+
+    // 
+    untwistPassword(passwordTwisted: string) {
+        const wa = CryptoJS.enc.Base64.parse(passwordTwisted);
+        wa.words.pop();
+        wa.words.pop();
+        wa.sigBytes -= 8;
+        return CryptoJS.enc.Hex.stringify(wa);
+    }
+
+    matchPassword(passwordHash: string, passwordStored: string) {
+        return bcrypt.compareSync(passwordHash, passwordStored!);
+    }
+
+    encryptPassword(password: string) {
+        return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
     }
 
     readonly key: string;

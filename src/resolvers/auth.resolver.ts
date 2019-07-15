@@ -1,12 +1,14 @@
 import * as jsonwebtoken from 'jsonwebtoken';
 import { GraphQLResolver } from '../graphql/resolver';
 import { MemberModel } from '../models/member.model';
-import { EnvServiceClient } from '../modules';
+import { EnvServiceClient, CryptoServiceClient } from '../modules';
 import { EnvService } from '../services/env.service';
+import { CryptoService } from '../services/crypto.service';
 
-export class LoginResolver implements GraphQLResolver, EnvServiceClient {
-    constructor({ envService }: EnvServiceClient) {
+export class LoginResolver implements GraphQLResolver, EnvServiceClient, CryptoServiceClient {
+    constructor({ envService, cryptoService }: EnvServiceClient & CryptoServiceClient) {
         this.envService = envService;
+        this.cryptoService = cryptoService;
     }
 
     async resolve(context: any, { email, password }: any) {
@@ -14,6 +16,14 @@ export class LoginResolver implements GraphQLResolver, EnvServiceClient {
 
         // 회원 없음
         if (!mm) {
+            return {
+                error: -1,
+            };
+        }
+
+        //
+        const hash = this.cryptoService.untwistPassword(password);
+        if (!this.cryptoService.matchPassword(hash, mm.password!)) {
             return {
                 error: -1,
             };
@@ -32,4 +42,5 @@ export class LoginResolver implements GraphQLResolver, EnvServiceClient {
     }
 
     envService: EnvService;
+    cryptoService: CryptoService;
 }
