@@ -45,7 +45,7 @@ export interface ResolverModules {
     setSettingResolver?: Resolver<SetSettingResolver>;
 
     // dev
-    clearDbResolver?: Resolver<ClearDbResolver>;    
+    clearDbResolver?: Resolver<ClearDbResolver>;
 }
 
 export interface ValueModules {
