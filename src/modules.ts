@@ -6,6 +6,7 @@ import { DBService } from './services/db.service';
 import { SettingsService } from './services/settings.service';
 import { MemLogTransport } from './resolvers/memlogtransport';
 import { MemberResolver, MemberByEmailResolver, MembersResolver, AddMemberResolver, UpdateMemberResolver } from './resolvers/member.resolver';
+import { MessageListResolver, MessageDataResolver, UploadMessageResolver, RemoveMessageResolver } from './resolvers/messageboard.resolver';
 import { WebLoggingEnabledResolver, SetWebLoggingEnabledResolver, WebLogsResolver, AddWebLogResolver } from './resolvers/weblog.resolver';
 import { SettingResolver, SettingsResolver, SetSettingResolver } from './resolvers/setting.resolver';
 import { ClearDbResolver } from './resolvers/dev.resolver';
@@ -25,13 +26,19 @@ export interface ResolverModules {
 
     // auth
     loginResolver?: Resolver<LoginResolver>;
-    
+
     // member
     memberResolver?: Resolver<MemberResolver>;
     memberByEmailResolver?: Resolver<MemberByEmailResolver>;
     membersResolver?: Resolver<MembersResolver>;
     addMemberResolver?: Resolver<AddMemberResolver>;
     updateMemberResolver?: Resolver<UpdateMemberResolver>;
+
+    // messageboard
+    messageListResolver?: Resolver<MessageListResolver>;
+    messageDataResolver?: Resolver<MessageDataResolver>;
+    uploadMessageResolver?: Resolver<UploadMessageResolver>;
+    removeMessageResolver?: Resolver<RemoveMessageResolver>;
 
     // weblog
     webLoggingEnabledResolver?: Resolver<WebLoggingEnabledResolver>;

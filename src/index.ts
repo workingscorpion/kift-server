@@ -8,6 +8,7 @@ import { SettingsService } from './services/settings.service';
 import { MemLogTransport } from './resolvers/memlogtransport';
 import { LoginResolver } from './resolvers/auth.resolver';
 import { MemberResolver, MembersResolver, AddMemberResolver, MemberByEmailResolver, UpdateMemberResolver } from './resolvers/member.resolver';
+import { MessageListResolver, MessageDataResolver, UploadMessageResolver, RemoveMessageResolver } from './resolvers/messageboard.resolver';
 import { WebLoggingEnabledResolver, SetWebLoggingEnabledResolver, WebLogsResolver, AddWebLogResolver } from './resolvers/weblog.resolver';
 import { SettingResolver, SettingsResolver, SetSettingResolver } from './resolvers/setting.resolver';
 import { ClearDbResolver } from './resolvers/dev.resolver';
@@ -18,7 +19,7 @@ import { Logger } from './logger';
 export let appServer: AppServer | undefined;
 
 async function start() {
-        
+
     const container = createContainer();
     const modules: MainContainerModules = {
         envService: asClass(EnvService).scoped(),
@@ -26,23 +27,29 @@ async function start() {
         dbService: asClass(DBService).singleton(),
         webLogTransport: asClass(MemLogTransport).singleton(),
         settingsService: asClass(SettingsService).singleton(),
-        
+
         // auth
         loginResolver: asClass(LoginResolver).scoped(),
-        
+
         // member
         memberResolver: asClass(MemberResolver).scoped(),
         memberByEmailResolver: asClass(MemberByEmailResolver).scoped(),
         membersResolver: asClass(MembersResolver).scoped(),
         addMemberResolver: asClass(AddMemberResolver).scoped(),
         updateMemberResolver: asClass(UpdateMemberResolver).scoped(),
-        
+
+        // messageboard
+        messageListResolver: asClass(MessageListResolver).scoped(),
+        messageDataResolver: asClass(MessageDataResolver).scoped(),
+        uploadMessageResolver: asClass(UploadMessageResolver).scoped(),
+        removeMessageResolver: asClass(RemoveMessageResolver).scoped(),
+
         // web logging
         webLoggingEnabledResolver: asClass(WebLoggingEnabledResolver).scoped(),
         setWebLoggingEnabledResolver: asClass(SetWebLoggingEnabledResolver).scoped(),
         webLogsResolver: asClass(WebLogsResolver).scoped(),
         addWebLogResolver: asClass(AddWebLogResolver).scoped(),
-        
+
         //
         settingResolver: asClass(SettingResolver).scoped(),
         settingsResolver: asClass(SettingsResolver).scoped(),
@@ -50,7 +57,7 @@ async function start() {
 
         // dev
         clearDbResolver: asClass(ClearDbResolver).scoped(),
-        
+
         appServer: asClass(AppServer).singleton(),
     };
     container.register(modules as any);

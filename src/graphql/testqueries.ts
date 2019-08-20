@@ -65,10 +65,41 @@ query {
     }
 }`;
 
+export const QueryMessages = `# 게시판 조회 예시
+query {
+    messages(boardId: "free") {
+      	error
+      	messages {
+        		id
+        		subject
+      	}
+    }
+  	message(id: 1) {
+      	error
+    		message {
+          	id
+          	subject
+          	content
+        }
+    }
+}`;
+
+export const MutationUploadMessages = `# 게시판 글 작성 예시
+mutation {
+    uploadMessage(boardId: "free", subject: "hello, 세계!", content: "착한 얼굴에 그렇지 못한 태도\\n가녀린 몸매 속 가려진 volume은 두 배로\\n거침없이 직진 굳이 보진 않지 눈치\\nBlack 하면 Pink 우린 예쁘장한 savage (Blackpink)") {
+        error
+        message {
+            id
+            subject
+            content
+        }
+    }
+}`;
+
 export const QuerySettings = `# 설정 조회 쿼리 예시
 query {
     setting(key: "AdminEmail")
-    
+
     settings {
         key
         value

@@ -13,6 +13,9 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         memberByEmail(email: String): Member
         members: [Member]
 
+        messages(boardId: String!): MessageListResult
+        message(id: Int!): MessageResult
+
         webLoggingEnabled: Boolean
         webLogs: [String]
 
@@ -25,6 +28,9 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
 
         addMember(email: String!, name: String!, password: String!, phone: String): MemberResult
         updateMember(id: Int!, name: String, password: String): MemberResult
+
+        uploadMessage(boardId: String!, subject: String!, content: String!): MessageResult
+        removeMessage(id: Int!): SimpleResult
 
         setWebLoggingEnabled(enabled: Boolean): BooleanValueResult
         addWebLog(log: String): SimpleResult
@@ -71,6 +77,22 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         data: Member
     }
 
+    type MessageListResult implements Result {
+        error: Int
+        messages: [Message]
+    }
+
+    type Message {
+        id: Int
+        subject: String
+        content: String
+    }
+
+    type MessageResult implements Result {
+        error: Int
+        message: Message
+    }
+
     type Setting {
         key: String
         value: String
@@ -98,6 +120,8 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
             member: createResolver('memberResolver'),
             memberByEmail: createResolver('memberByEmailResolver'),
             members: createResolver('membersResolver'),
+            messages: createResolver('messageListResolver'),
+            message: createResolver('messageDataResolver'),
             webLoggingEnabled: createResolver('webLoggingEnabledResolver'),
             webLogs: createResolver('webLogsResolver'),
             setting: createResolver('settingResolver'),
@@ -108,6 +132,8 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
             addMember: createResolver('addMemberResolver'),
             addWebLog: createResolver('addWebLogResolver'),
             updateMember: createResolver('updateMemberResolver'),
+            uploadMessage: createResolver('uploadMessageResolver'),
+            removeMessage: createResolver('removeMessageResolver'),
             setWebLoggingEnabled: createResolver('setWebLoggingEnabledResolver'),
             setSetting: createResolver('setSettingResolver'),
             clearDb: createResolver('clearDbResolver'),

@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import 'sqlite3';
 import { MemberModel } from '../models/member.model';
 import { KeyValModel } from '../models/keyval.model';
+import { MessageBoardModel } from '../models/messageboard.model';
 import { EnvService } from './env.service';
 
 export class DBService {
@@ -28,7 +29,7 @@ export class DBService {
         });
         this.sequelize = sequelize;
 
-        const models = [MemberModel, KeyValModel];
+        const models = [MemberModel, KeyValModel, MessageBoardModel];
         sequelize.addModels(models);
         const birds: PromiseLike<any>[] = [];
         for (let model of models) {

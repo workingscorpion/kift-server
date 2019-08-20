@@ -21,7 +21,7 @@ export class AppServer {
     async start(container: AwilixContainer) {
 
         const schema = constructGraphQLSChema(container);
-        const server = new ApolloServer({ schema, 
+        const server = new ApolloServer({ schema,
             context: async ({ ctx }) => {
                 return {
                     user: ctx ? ctx.state ? ctx.state.user : undefined : undefined
@@ -38,6 +38,14 @@ export class AppServer {
                 {
                     endpoint: '/graphql',
                     query: TestQueries.QueryMemberByEmail,
+                },
+                {
+                    endpoint: '/graphql',
+                    query: TestQueries.QueryMessages
+                },
+                {
+                    endpoint: '/graphql',
+                    query: TestQueries.MutationUploadMessages
                 },
                 {
                     endpoint: '/graphql',
@@ -76,10 +84,10 @@ export class AppServer {
         // 포트 충돌이 발생한다.
         if (!this.envService.isTestMode()) {
             const ws = app.listen({ port: this.envService.get().PORT }, () => {
-                const msg = 'Typescript + Koa + Apollo API Server starts!' + 
+                const msg = 'Typescript + Koa + Apollo API Server starts!' +
                     ` (NODE_ENV: ${process.env.NODE_ENV}, port: ${this.envService.get().PORT}, GraphQL Endpoint: ${server.graphqlPath})`;
                 console.log(msg);
-    
+
                 new SubscriptionServer({
                     execute, subscribe, schema
                 }, {
