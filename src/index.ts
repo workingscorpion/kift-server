@@ -10,6 +10,7 @@ import { LoginResolver } from './resolvers/auth.resolver';
 import { MemberResolver, MembersResolver, AddMemberResolver, MemberByEmailResolver, UpdateMemberResolver } from './resolvers/member.resolver';
 import { MessageListResolver, MessageDataResolver, UploadMessageResolver, RemoveMessageResolver } from './resolvers/messageboard.resolver';
 import { WebLoggingEnabledResolver, SetWebLoggingEnabledResolver, WebLogsResolver, AddWebLogResolver } from './resolvers/weblog.resolver';
+import { UploadResolver } from './resolvers/upload.resolver';
 import { SettingResolver, SettingsResolver, SetSettingResolver } from './resolvers/setting.resolver';
 import { ClearDbResolver } from './resolvers/dev.resolver';
 import { AppServer } from './server';
@@ -49,6 +50,9 @@ async function start() {
         setWebLoggingEnabledResolver: asClass(SetWebLoggingEnabledResolver).scoped(),
         webLogsResolver: asClass(WebLogsResolver).scoped(),
         addWebLogResolver: asClass(AddWebLogResolver).scoped(),
+
+        // file upload
+        uploadResolver: asClass(UploadResolver).scoped(),
 
         //
         settingResolver: asClass(SettingResolver).scoped(),

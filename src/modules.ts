@@ -8,6 +8,7 @@ import { MemLogTransport } from './resolvers/memlogtransport';
 import { MemberResolver, MemberByEmailResolver, MembersResolver, AddMemberResolver, UpdateMemberResolver } from './resolvers/member.resolver';
 import { MessageListResolver, MessageDataResolver, UploadMessageResolver, RemoveMessageResolver } from './resolvers/messageboard.resolver';
 import { WebLoggingEnabledResolver, SetWebLoggingEnabledResolver, WebLogsResolver, AddWebLogResolver } from './resolvers/weblog.resolver';
+import { UploadResolver } from './resolvers/upload.resolver';
 import { SettingResolver, SettingsResolver, SetSettingResolver } from './resolvers/setting.resolver';
 import { ClearDbResolver } from './resolvers/dev.resolver';
 import { LoginResolver } from './resolvers/auth.resolver';
@@ -45,6 +46,9 @@ export interface ResolverModules {
     setWebLoggingEnabledResolver?: Resolver<SetWebLoggingEnabledResolver>;
     webLogsResolver?: Resolver<WebLogsResolver>;
     addWebLogResolver?: Resolver<AddWebLogResolver>;
+
+    // file upload
+    uploadResolver?: Resolver<UploadResolver>;
 
     // setting
     settingResolver?: Resolver<SettingResolver>;

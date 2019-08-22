@@ -8,6 +8,9 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
 
     // Construct a schema, using GraphQL schema language
     const typeDefs = gql`
+
+    scalar Upload
+
     type Query {
         member(id: Int): Member
         memberByEmail(email: String): Member
@@ -18,6 +21,8 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
 
         webLoggingEnabled: Boolean
         webLogs: [String]
+
+        uploads: [File]
 
         setting(key: String!): String
         settings: [Setting]
@@ -34,6 +39,8 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
 
         setWebLoggingEnabled(enabled: Boolean): BooleanValueResult
         addWebLog(log: String): SimpleResult
+
+        upload(file: Upload!): File!
 
         setSetting(key: String!, value: String!): SettingResult
 
@@ -102,6 +109,12 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         error: Int
         data: Setting
     }
+
+    type File {
+        filename: String!
+        mimetype: String!
+        encoding: String!
+    }
     `;
 
     const pubsub = new PubSub();
@@ -134,6 +147,7 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
             updateMember: createResolver('updateMemberResolver'),
             uploadMessage: createResolver('uploadMessageResolver'),
             removeMessage: createResolver('removeMessageResolver'),
+            upload: createResolver('uploadResolver'),
             setWebLoggingEnabled: createResolver('setWebLoggingEnabledResolver'),
             setSetting: createResolver('setSettingResolver'),
             clearDb: createResolver('clearDbResolver'),
