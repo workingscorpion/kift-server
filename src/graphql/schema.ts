@@ -35,6 +35,7 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         updateMember(id: Int!, name: String, password: String): MemberResult
 
         uploadMessage(boardId: String!, subject: String!, content: String!): MessageResult
+        updateMessage(id: Int!, subject: String, content: String): MessageResult
         removeMessage(id: Int!): SimpleResult
 
         setWebLoggingEnabled(enabled: Boolean): BooleanValueResult
@@ -93,6 +94,7 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         id: Int
         subject: String
         content: String
+        date: Int
     }
 
     type MessageResult implements Result {
@@ -146,6 +148,7 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
             addWebLog: createResolver('addWebLogResolver'),
             updateMember: createResolver('updateMemberResolver'),
             uploadMessage: createResolver('uploadMessageResolver'),
+            updateMessage: createResolver('updateMessageResolver'),
             removeMessage: createResolver('removeMessageResolver'),
             upload: createResolver('uploadResolver'),
             setWebLoggingEnabled: createResolver('setWebLoggingEnabledResolver'),

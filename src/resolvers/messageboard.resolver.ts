@@ -1,5 +1,6 @@
 import { GraphQLResolver } from '../graphql/resolver';
 import { MessageBoardModel } from '../models/messageboard.model';
+import { nameof } from '../lib/utils';
 
 
 export class MessageListResolver implements GraphQLResolver {
@@ -23,7 +24,15 @@ export class MessageDataResolver implements GraphQLResolver {
             where: { id }
         });
         if (message) {
-            return { error: 0, message: { id: message!.id, subject: message!.subject, content: message!.content } };
+            return {
+                error: 0,
+                message: {
+                    id: message!.id,
+                    subject: message!.subject,
+                    content: message!.content,
+                    date: message!.upload_time,
+                }
+            };
         } else {
             return { error: -1 };
         }
@@ -39,6 +48,23 @@ export class UploadMessageResolver implements GraphQLResolver {
             upload_time: ~~(Date.now() / 1000),
         });
         return { error: 0, message: { id: ret.id, boardId, subject, content  } };
+    }
+}
+
+// 글 수정
+export class UpdateMessageResolver implements GraphQLResolver {
+    async resolve(context: any, { id, subject, content }: { id: number, subject?: string, content?: string }) {
+        const fields = [];
+        if (subject) { fields.push(nameof<MessageBoardModel>('subject')); }
+        if (content) { fields.push(nameof<MessageBoardModel>('content')); }
+        const res = await MessageBoardModel.update({
+            subject,
+            content
+        }, { where: { id }, fields });
+        if (res[0] == 0) {
+            return { error: -1 };
+        }
+        return { error: 0 };
     }
 }
 

@@ -49,6 +49,10 @@ export class AppServer {
                 },
                 {
                     endpoint: '/graphql',
+                    query: TestQueries.MutationUpdateMessages
+                },
+                {
+                    endpoint: '/graphql',
                     query: TestQueries.QuerySettings
                 },
                 {

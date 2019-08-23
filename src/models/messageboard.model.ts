@@ -5,9 +5,22 @@ import { Table, Column, Model, Sequelize } from 'sequelize-typescript';
         {
             fields: ['board_id']
         },
+        {
+            fields: ['author_id']
+        },
+        {
+            fields: ['board_id', 'upload_time']
+        },
     ]
 })
 export class MessageBoardModel extends Model<MessageBoardModel> {
+
+    @Column({
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    })
+    id?: number;
 
     @Column({
         type: Sequelize.CHAR(32),
