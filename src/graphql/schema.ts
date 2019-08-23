@@ -16,7 +16,7 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         memberByEmail(email: String): Member
         members: [Member]
 
-        messages(boardId: String!): MessageListResult
+        messages(boardId: String!, offset: Int, limit: Int): MessageListResult
         message(id: Int!): MessageResult
 
         webLoggingEnabled: Boolean
@@ -145,8 +145,8 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         Mutation: {
             login: createResolver('loginResolver'),
             addMember: createResolver('addMemberResolver'),
-            addWebLog: createResolver('addWebLogResolver'),
             updateMember: createResolver('updateMemberResolver'),
+            addWebLog: createResolver('addWebLogResolver'),
             uploadMessage: createResolver('uploadMessageResolver'),
             updateMessage: createResolver('updateMessageResolver'),
             removeMessage: createResolver('removeMessageResolver'),

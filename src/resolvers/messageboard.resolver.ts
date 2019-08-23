@@ -4,8 +4,14 @@ import { nameof } from '../lib/utils';
 
 
 export class MessageListResolver implements GraphQLResolver {
-    async resolve(context: any, { boardId }: { boardId: string }) {
-        const messages = await MessageBoardModel.findAll();
+    async resolve(context: any, { boardId, offset, limit }: { boardId: string, offset?: number, limit?: number }) {
+        const messages = await MessageBoardModel.findAll({
+            where: {
+                board_id: boardId
+            },
+            offset, limit,
+            order: [ ['upload_time', 'DESC'] ]
+        });
         const a = messages.map(m => ({
             id: m.id,
             subject: m.subject,
