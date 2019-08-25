@@ -8,7 +8,7 @@ import { SettingsService } from './services/settings.service';
 import { MemLogTransport } from './resolvers/memlogtransport';
 import { LoginResolver } from './resolvers/auth.resolver';
 import { MemberResolver, MembersResolver, AddMemberResolver, MemberByEmailResolver, UpdateMemberResolver } from './resolvers/member.resolver';
-import { MessageListResolver, MessageDataResolver, UploadMessageResolver, RemoveMessageResolver, UpdateMessageResolver } from './resolvers/messageboard.resolver';
+import { MessageListResolver, MessageDataResolver, UploadMessageResolver, RemoveMessageResolver, UpdateMessageResolver, MessageBoardInfoResolver } from './resolvers/messageboard.resolver';
 import { WebLoggingEnabledResolver, SetWebLoggingEnabledResolver, WebLogsResolver, AddWebLogResolver } from './resolvers/weblog.resolver';
 import { UploadResolver } from './resolvers/upload.resolver';
 import { SettingResolver, SettingsResolver, SetSettingResolver } from './resolvers/setting.resolver';
@@ -41,6 +41,7 @@ async function start() {
 
         // messageboard
         messageListResolver: asClass(MessageListResolver).scoped(),
+        messageBoardInfoResolver: asClass(MessageBoardInfoResolver).scoped(),
         messageDataResolver: asClass(MessageDataResolver).scoped(),
         uploadMessageResolver: asClass(UploadMessageResolver).scoped(),
         updateMessageResolver: asClass(UpdateMessageResolver).scoped(),

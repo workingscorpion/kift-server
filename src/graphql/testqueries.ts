@@ -84,6 +84,9 @@ query {
             date
         }
     }
+    messageBoardInfo(boardId: "free") {
+        count
+    }
 }`;
 
 export const MutationUploadMessages = `# 게시판 글 작성 예시

@@ -17,6 +17,7 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         members: [Member]
 
         messages(boardId: String!, offset: Int, limit: Int): MessageListResult
+        messageBoardInfo(boardId: String!): BoardInfoResult
         message(id: Int!): MessageResult
 
         webLoggingEnabled: Boolean
@@ -90,6 +91,11 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
         messages: [Message]
     }
 
+    type BoardInfoResult implements Result {
+        error: Int
+        count: Int
+    }
+
     type Message {
         id: Int
         subject: String
@@ -136,6 +142,7 @@ export function constructGraphQLSChema(container: AwilixContainer): GraphQLSchem
             memberByEmail: createResolver('memberByEmailResolver'),
             members: createResolver('membersResolver'),
             messages: createResolver('messageListResolver'),
+            messageBoardInfo: createResolver('messageBoardInfoResolver'),
             message: createResolver('messageDataResolver'),
             webLoggingEnabled: createResolver('webLoggingEnabledResolver'),
             webLogs: createResolver('webLogsResolver'),

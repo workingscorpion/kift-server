@@ -24,6 +24,19 @@ export class MessageListResolver implements GraphQLResolver {
     }
 }
 
+export class MessageBoardInfoResolver implements GraphQLResolver {
+    async resolve(context: any, { boardId }: { boardId: string }) {
+        const count = await MessageBoardModel.count({
+            where: {
+                board_id: boardId
+            },
+        });
+        return {
+            count
+        };
+    }
+}
+
 export class MessageDataResolver implements GraphQLResolver {
     async resolve(context: any, { id }: { id: number }) {
         const message = await MessageBoardModel.findOne({

@@ -6,7 +6,7 @@ import { DBService } from './services/db.service';
 import { SettingsService } from './services/settings.service';
 import { MemLogTransport } from './resolvers/memlogtransport';
 import { MemberResolver, MemberByEmailResolver, MembersResolver, AddMemberResolver, UpdateMemberResolver } from './resolvers/member.resolver';
-import { MessageListResolver, MessageDataResolver, UploadMessageResolver, RemoveMessageResolver, UpdateMessageResolver } from './resolvers/messageboard.resolver';
+import { MessageListResolver, MessageDataResolver, UploadMessageResolver, RemoveMessageResolver, UpdateMessageResolver, MessageBoardInfoResolver } from './resolvers/messageboard.resolver';
 import { WebLoggingEnabledResolver, SetWebLoggingEnabledResolver, WebLogsResolver, AddWebLogResolver } from './resolvers/weblog.resolver';
 import { UploadResolver } from './resolvers/upload.resolver';
 import { SettingResolver, SettingsResolver, SetSettingResolver } from './resolvers/setting.resolver';
@@ -37,6 +37,7 @@ export interface ResolverModules {
 
     // messageboard
     messageListResolver?: Resolver<MessageListResolver>;
+    messageBoardInfoResolver?: Resolver<MessageBoardInfoResolver>;
     messageDataResolver?: Resolver<MessageDataResolver>;
     uploadMessageResolver?: Resolver<UploadMessageResolver>;
     updateMessageResolver?: Resolver<UpdateMessageResolver>;
