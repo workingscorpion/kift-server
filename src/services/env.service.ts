@@ -6,6 +6,7 @@ interface EnvironmentVariables {
     USE_SQLITE: boolean,
     SQLITE_STORAGE: string,
     LOG_DIR: string,
+    UPLOAD_DIR: string,
     SECRET_KEY: string,
 };
 
