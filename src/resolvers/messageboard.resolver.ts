@@ -16,6 +16,7 @@ export class MessageListResolver implements GraphQLResolver {
             id: m.id,
             subject: m.subject,
             date: m.upload_time,
+            content: m!.content,
         }));
         return {
             error: 0,
