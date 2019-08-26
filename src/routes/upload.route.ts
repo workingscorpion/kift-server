@@ -26,20 +26,22 @@ export default class UploadAPI implements MyDependencies {
                 callback(null, file.originalname);
             }
         });
-        this.uploadMiddleware = multer({ storage: storageImage }).single('file');
+        this.singleUploadMiddleware = multer({ storage: storageImage }).single('file');
+        this.multiUploadMiddleware = multer({ storage: storageImage }).array('files');
     }
 
     @route('/single')
     @PUT()
     async uploadSingle(ctx: Koa.Context, next: () => Promise<any>) {
-        await this.uploadMiddleware(ctx, next);
+        await this.singleUploadMiddleware(ctx, next);
         ctx.response.body = { };
         ctx.response.status = HttpStatus.OK;
     }
 
     @route('/multi')
     @PUT()
-    async uploadMulti(ctx: Koa.Context) {
+    async uploadMulti(ctx: Koa.Context, next: () => Promise<any>) {
+        await this.multiUploadMiddleware(ctx, next);
         ctx.response.body = { };
         ctx.response.status = HttpStatus.OK;
     }
@@ -47,5 +49,6 @@ export default class UploadAPI implements MyDependencies {
     dbService: DBService;
     appServer: AppServer;
     envService: EnvService;
-    uploadMiddleware: Koa.Middleware;
+    singleUploadMiddleware: Koa.Middleware;
+    multiUploadMiddleware: Koa.Middleware;
 }
