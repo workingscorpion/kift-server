@@ -19,10 +19,11 @@ export class DBService {
             }
         }
         const sequelize = new Sequelize({
-            database: 'dbname',
-            username: 'username',
-            password: 'pwd',
-            host: 'http://dbhost', port: 3311,
+            database: 'db',
+            username: this.envService.get().DB_ID,
+            password: this.envService.get().DB_PW,
+            host: this.envService.get().DB_HOST,
+            port: this.envService.get().PORT,
             operatorsAliases: false,
             dialect: this.envService.get().USE_SQLITE ? 'sqlite' : 'mysql',
             storage: this.envService.get().SQLITE_STORAGE
