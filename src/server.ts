@@ -20,6 +20,8 @@ export class AppServer {
 
     async start(container: AwilixContainer) {
 
+        await this.dbService.initDb();
+
         const schema = constructGraphQLSChema(container);
         const server = new ApolloServer({ schema,
             context: async ({ ctx }) => {

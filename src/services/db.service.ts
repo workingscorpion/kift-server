@@ -10,7 +10,11 @@ export class DBService {
 
     constructor({ envService }: any) {
         this.envService = envService;
+        this.sequelize = null as unknown as Sequelize;
+    }
 
+    // DB접속을 초기화 한다.
+    async initDb() {
         if (this.envService.get().USE_SQLITE) {
             // 파일이 없으면 DB 초기화를 못하는 문제 때문에 빈 파일이을 만들어줌. #TODO: 최신 버전 SQLite에서도 해결 안된 문제인지 확인
             if (!fs.existsSync(this.envService.get().SQLITE_STORAGE)) {
@@ -32,15 +36,12 @@ export class DBService {
 
         const models = [MemberModel, KeyValModel, MessageBoardModel];
         sequelize.addModels(models);
-        const birds: PromiseLike<any>[] = [];
-        for (let model of models) {
-            birds.push(model.sync());
-        }
-        Promise.all(birds).then(() => {
-            this.initialized = true;
-            this.postInitCallbacks.forEach(c => c());
-            this.postInitCallbacks = [];
-        });
+        await sequelize.sync();
+
+        //
+        this.initialized = true;
+        this.postInitCallbacks.forEach(c => c());
+        this.postInitCallbacks = [];
     }
 
     async cleanupDb() {

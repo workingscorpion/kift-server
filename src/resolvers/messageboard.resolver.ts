@@ -1,6 +1,6 @@
 import { GraphQLResolver } from '../graphql/resolver';
 import { MessageBoardModel } from '../models/messageboard.model';
-import { nameof } from '../lib/utils';
+import { nameof } from '../lib/typeutils';
 
 
 export class MessageListResolver implements GraphQLResolver {

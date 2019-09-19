@@ -5,7 +5,7 @@ export namespace TestQueries {
 
 export const MutationLogin = `# 로그인 뮤테이션
 mutation {
-    login(email: "foo@email.com", password: "foo1234#!") {
+    login(email: "foo@email.com", password: "368BsXOTwr75AG6ESon51IPhn4u6bGs5") { # foo1234#!
         error
         token
     }

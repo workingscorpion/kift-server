@@ -1,5 +1,5 @@
 import { createContainer, asClass } from 'awilix';
-import { nameof } from './lib/utils';
+import { nameof } from './lib/typeutils';
 import { MainContainerModules } from './modules';
 import { EnvService } from './services/env.service';
 import { CryptoService } from './services/crypto.service';
