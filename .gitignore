@@ -3,7 +3,7 @@
 /src/**/*.js.map
 
 /logs/*.log
-*.sqlite
+/db
 
 # osx
 .DS_Store

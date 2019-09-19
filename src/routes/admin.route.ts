@@ -20,7 +20,6 @@ export default class AdminAPI implements MyDependencies {
     @GET()
     async shutdown(ctx: Koa.Context) {
         this.appServer.httpServer!.close(async () => {
-            await this.dbService.cleanupDb();
             process.exit(0);
         });
         ctx.response.body = { };

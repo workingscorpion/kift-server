@@ -20,8 +20,6 @@ export class AppServer {
 
     async start(container: AwilixContainer) {
 
-        await this.dbService.initDb();
-
         const schema = constructGraphQLSChema(container);
         const server = new ApolloServer({ schema,
             context: async ({ ctx }) => {
@@ -90,7 +88,7 @@ export class AppServer {
         // 포트 충돌이 발생한다.
         if (!this.envService.isTestMode()) {
             const ws = app.listen({ port: this.envService.get().PORT }, () => {
-                const msg = 'Typescript + Koa + Apollo API Server starts!' +
+                const msg = 'Typescript + Koa + Apollo + MongoDB API Server starts!' +
                     ` (NODE_ENV: ${process.env.NODE_ENV}, port: ${this.envService.get().PORT}, GraphQL Endpoint: ${server.graphqlPath})`;
                 console.log(msg);
 

@@ -10,9 +10,6 @@ export class ClearDbResolver implements GraphQLResolver, EnvServiceClient, DBSer
     }
 
     async resolve(context: any) {
-        await Promise.all(Object.values(this.dbService.sequelize.models).map(model => {
-            return model.destroy({ truncate: true });
-        }));
         return {
             error: 0,
         };

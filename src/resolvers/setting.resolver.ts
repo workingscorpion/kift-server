@@ -10,7 +10,7 @@ export class SettingResolver implements GraphQLResolver, SettingsServiceClient {
     }
 
     async resolve(context: any, { key }: { key: string }) {
-        return this.settingsService.settingsCache[key];
+        return null;
     }
 
     settingsService: SettingsService;
@@ -22,7 +22,7 @@ export class SettingsResolver implements GraphQLResolver, SettingsServiceClient 
     }
 
     async resolve(context: any) {
-        return _.map(this.settingsService.settingsCache, (value, key) => { return { key, value }; });
+        return null;
     }
 
     settingsService: SettingsService;
@@ -35,14 +35,7 @@ export class SetSettingResolver implements GraphQLResolver, SettingsServiceClien
     }
 
     async resolve(context: any, { key, value }: { key: string, value: string }) {
-        if (this.settingsService.setSafe(key, value)) {
-            this.pubSub.publish(`settingChanged_${key}`, { 
-                settingChanged: value
-            });
-            await this.settingsService.save();
-            return { error: 0, key, value };
-        }
-        return { error: -1 };
+        return null;
     }
 
     settingsService: SettingsService;
