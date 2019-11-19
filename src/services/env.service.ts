@@ -11,6 +11,7 @@ interface EnvironmentVariables {
     DB_PW: string;
     DB_PORT: number;
     DB_NAME: string;
+    BODYDATA_PATH: string;
 }
 
 export class EnvService {
@@ -19,7 +20,7 @@ export class EnvService {
     }
 
     isProductionMode() {
-        return (process.env.NODE_ENV === 'production');
+        return process.env.NODE_ENV === 'production';
     }
 
     isDevelopmentMode() {
@@ -27,7 +28,7 @@ export class EnvService {
     }
 
     isTestMode() {
-        return (process.env.NODE_ENV === 'test');
+        return process.env.NODE_ENV === 'test';
     }
 
     get(): EnvironmentVariables {

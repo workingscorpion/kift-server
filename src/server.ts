@@ -96,7 +96,8 @@ export class AppServer {
         if (!this.envService.isTestMode()) {
             const ws = app.listen({port: this.envService.get().PORT}, () => {
                 const msg =
-                    'Typescript + Koa + Apollo + MongoDB API Server starts!' + ` (NODE_ENV: ${process.env.NODE_ENV}, port: ${this.envService.get().PORT}, GraphQL Endpoint: ${server.graphqlPath})`;
+                    'Macpie-Tech Server starts! ' +
+                    ` (NODE_ENV: ${process.env.NODE_ENV}, port: ${this.envService.get().PORT}, GraphQL Endpoint: ${server.graphqlPath}), BodyData: ${this.envService.get().BODYDATA_PATH}`;
                 console.log(msg);
 
                 new SubscriptionServer(

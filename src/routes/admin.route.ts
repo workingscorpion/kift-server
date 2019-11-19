@@ -1,16 +1,15 @@
 import Koa from 'koa';
-import { route, GET } from 'awilix-koa';
+import {route, GET} from 'awilix-koa';
 import * as HttpStatus from 'http-status-codes';
-import { DBService } from '../services/db.service';
-import { DBServiceClient, AppServerClient } from '../modules';
-import { AppServer } from '../server';
+import {DBService} from '../services/db.service';
+import {DBServiceClient, AppServerClient} from '../modules';
+import {AppServer} from '../server';
 
 type MyDependencies = DBServiceClient & AppServerClient;
 
 @route('/api/v1/admin')
 export default class AdminAPI implements MyDependencies {
-
-    constructor({ dbService, appServer }: MyDependencies) {
+    constructor({dbService, appServer}: MyDependencies) {
         this.dbService = dbService;
         this.appServer = appServer;
     }
@@ -22,7 +21,7 @@ export default class AdminAPI implements MyDependencies {
         this.appServer.httpServer!.close(async () => {
             process.exit(0);
         });
-        ctx.response.body = { };
+        ctx.response.body = {};
         ctx.response.status = HttpStatus.OK;
     }
 
