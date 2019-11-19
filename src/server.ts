@@ -10,73 +10,84 @@ import { EnvService } from './services/env.service';
 import { DBService } from './services/db.service';
 import { constructGraphQLSChema } from './graphql/schema';
 import { TestQueries } from './graphql/testqueries';
+// import bodyParser from 'body-parser';
+import * as bodyparser from 'koa-bodyparser';
 
 export class AppServer {
-
     constructor({ envService, dbService }: any) {
         this.envService = envService;
         this.dbService = dbService;
     }
 
     async start(container: AwilixContainer) {
-
         const schema = constructGraphQLSChema(container);
-        const server = new ApolloServer({ schema,
+        const server = new ApolloServer({
+            schema,
             context: async ({ ctx }) => {
                 return {
-                    user: ctx ? ctx.state ? ctx.state.user : undefined : undefined
+                    user: ctx
+                        ? ctx.state
+                            ? ctx.state.user
+                            : undefined
+                        : undefined
                 };
             },
             playground: {
-            endpoint: '/graphql',
-            subscriptionEndpoint: '/subscriptions',
-            tabs: [ // playground 각 탭에 종류별 테스트 쿼리를 띄운다.
-                {
-                    endpoint: '/graphql',
-                    query: TestQueries.MutationLogin,
-                },
-                {
-                    endpoint: '/graphql',
-                    query: TestQueries.QueryMemberByEmail,
-                },
-                {
-                    endpoint: '/graphql',
-                    query: TestQueries.QueryMessages
-                },
-                {
-                    endpoint: '/graphql',
-                    query: TestQueries.MutationUploadMessages
-                },
-                {
-                    endpoint: '/graphql',
-                    query: TestQueries.MutationUpdateMessages
-                },
-                {
-                    endpoint: '/graphql',
-                    query: TestQueries.QuerySettings
-                },
-                {
-                    endpoint: '/graphql',
-                    query: TestQueries.MutationCreateTestMembers,
-                },
-                {
-                    endpoint: '/graphql',
-                    query: TestQueries.MutationUpdateMember,
-                    headers: {
-                        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJmb29AZW1haWwuY29tIiwiaWF0IjoxNTYyNjcxNzg3LCJleHAiOjE1OTQyMDc3ODd9.vPinSTiWyrkY3xZ2P8Du4JnBwBkMhd7nfmgeDYzvLMA"
+                endpoint: '/graphql',
+                subscriptionEndpoint: '/subscriptions',
+                tabs: [
+                    // playground 각 탭에 종류별 테스트 쿼리를 띄운다.
+                    {
+                        endpoint: '/graphql',
+                        query: TestQueries.MutationLogin
+                    },
+                    {
+                        endpoint: '/graphql',
+                        query: TestQueries.QueryMemberByEmail
+                    },
+                    {
+                        endpoint: '/graphql',
+                        query: TestQueries.QueryMessages
+                    },
+                    {
+                        endpoint: '/graphql',
+                        query: TestQueries.MutationUploadMessages
+                    },
+                    {
+                        endpoint: '/graphql',
+                        query: TestQueries.MutationUpdateMessages
+                    },
+                    {
+                        endpoint: '/graphql',
+                        query: TestQueries.QuerySettings
+                    },
+                    {
+                        endpoint: '/graphql',
+                        query: TestQueries.MutationCreateTestMembers
+                    },
+                    {
+                        endpoint: '/graphql',
+                        query: TestQueries.MutationUpdateMember,
+                        headers: {
+                            Authorization:
+                                'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJmb29AZW1haWwuY29tIiwiaWF0IjoxNTYyNjcxNzg3LCJleHAiOjE1OTQyMDc3ODd9.vPinSTiWyrkY3xZ2P8Du4JnBwBkMhd7nfmgeDYzvLMA'
+                        }
                     }
-                }
-            ],
-        }, });
+                ]
+            }
+        });
         this.apolloServer = server;
 
         const app = new Koa();
 
-        app.use(jwt({
-            passthrough: true,
-            secret: this.envService.get().SECRET_KEY,
-        }));
+        app.use(
+            jwt({
+                passthrough: true,
+                secret: this.envService.get().SECRET_KEY
+            })
+        );
 
+        app.use(bodyparser.default());
         app.use(scopePerRequest(container));
         app.use(loadControllers('routes/*.route.js', { cwd: __dirname }));
 
@@ -88,21 +99,31 @@ export class AppServer {
         // 포트 충돌이 발생한다.
         if (!this.envService.isTestMode()) {
             const ws = app.listen({ port: this.envService.get().PORT }, () => {
-                const msg = 'Typescript + Koa + Apollo + MongoDB API Server starts!' +
-                    ` (NODE_ENV: ${process.env.NODE_ENV}, port: ${this.envService.get().PORT}, GraphQL Endpoint: ${server.graphqlPath})`;
+                const msg =
+                    'Typescript + Koa + Apollo + MongoDB API Server starts!' +
+                    ` (NODE_ENV: ${process.env.NODE_ENV}, port: ${
+                        this.envService.get().PORT
+                    }, GraphQL Endpoint: ${server.graphqlPath})`;
                 console.log(msg);
 
-                new SubscriptionServer({
-                    execute, subscribe, schema
-                }, {
-                    server: ws,
-                    path: '/subscriptions'
-                });
+                new SubscriptionServer(
+                    {
+                        execute,
+                        subscribe,
+                        schema
+                    },
+                    {
+                        server: ws,
+                        path: '/subscriptions'
+                    }
+                );
             });
             this.httpServer = ws;
         }
 
-        process.title = this.envService.get().APP_TITLE + `${process.env.NODE_ENV} - ${this.envService.get().PORT}`;
+        process.title =
+            this.envService.get().APP_TITLE +
+            `${process.env.NODE_ENV} - ${this.envService.get().PORT}`;
     }
 
     public httpServer: Server | undefined;
