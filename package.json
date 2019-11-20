@@ -15,9 +15,9 @@
     "watch:prod": "better-npm-run watch:prod"
   },
   "betterScripts": {
-    "start:dev": "node $npm_package_main",
+    "start:dev": "node src/index.js",
     "start:prod": {
-      "command": "node $npm_package_main",
+      "command": "node src/index.js",
       "env": {
         "NODE_ENV": "production"
       }
@@ -28,9 +28,9 @@
         "NODE_ENV": "test"
       }
     },
-    "watch:dev": "nodemon $npm_package_main",
+    "watch:dev": "nodemon src/index.js",
     "watch:prod": {
-      "command": "nodemon $npm_package_main",
+      "command": "nodemon src/index.js",
       "env": {
         "NODE_ENV": "production"
       }
@@ -39,7 +39,9 @@
   "author": "realcow",
   "license": "ISC",
   "dependencies": {
+    "@koa/cors": "^3.0.0",
     "@types/bcrypt": "^3.0.0",
+    "@types/cors": "^2.8.6",
     "@types/crypto-js": "^3.1.43",
     "@types/glob": "^7.1.1",
     "@types/graphql": "^14.2.2",
@@ -48,6 +50,7 @@
     "@types/jest": "^24.0.15",
     "@types/jsonwebtoken": "^8.3.2",
     "@types/koa-bodyparser": "^4.3.0",
+    "@types/koa-cors": "0.0.0",
     "@types/koa-jwt": "^3.3.0",
     "@types/koa-multer": "^1.0.0",
     "@types/lodash": "^4.14.135",
@@ -68,6 +71,7 @@
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
+    "koa-cors": "0.0.16",
     "koa-jwt": "^3.5.1",
     "koa-multer": "^1.0.2",
     "lodash": "^4.17.11",
