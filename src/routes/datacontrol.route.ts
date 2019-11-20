@@ -9,7 +9,7 @@ import {MongoClient} from 'mongodb';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
-interface inbody {
+interface Inbody {
     id: string;
     childNum?: number;
     height?: number;
@@ -49,7 +49,7 @@ export default class DataControlAPI implements MyDependencies {
         const body = ctx.request.body;
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
-        const col = await db.collection<inbody>(this.CollectionName);
+        const col = await db.collection<Inbody>(this.CollectionName);
         const result = await col.insert({
             id: body.id,
             childNum: body.childNum,
@@ -79,7 +79,7 @@ export default class DataControlAPI implements MyDependencies {
         const {childNum} = ctx.request.query;
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
-        const col = await db.collection<inbody>(this.CollectionName);
+        const col = await db.collection<Inbody>(this.CollectionName);
         const result = await col.findOne({id: id, childNum: childNum});
         ctx.response.body = {result};
         ctx.response.status = HttpStatus.OK;
@@ -91,7 +91,7 @@ export default class DataControlAPI implements MyDependencies {
         const body = ctx.request.body;
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
-        const col = await db.collection<inbody>(this.CollectionName);
+        const col = await db.collection<Inbody>(this.CollectionName);
         const result = await col.findOneAndUpdate(
             {id: body.id, childNum: body.childNum},
             {
@@ -127,7 +127,7 @@ export default class DataControlAPI implements MyDependencies {
         const body = ctx.request.query;
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
-        const col = await db.collection<inbody>(this.CollectionName);
+        const col = await db.collection<Inbody>(this.CollectionName);
         const result = await col.remove({id: body.id, childNum: body.childNum});
         ctx.response.body = {result};
         ctx.response.status = HttpStatus.OK;

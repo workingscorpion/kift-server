@@ -10,7 +10,7 @@ import {requiredSubselectionMessage} from 'graphql/validation/rules/ScalarLeafs'
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
-interface User {
+interface UserAuth {
     id?: string;
     pw?: string;
 }
@@ -37,7 +37,7 @@ export default class AuthAPI implements MyDependencies {
         const {pw} = ctx.request.body;
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
-        const col = await db.collection<User>(this.CollectionName);
+        const col = await db.collection<UserAuth>(this.CollectionName);
         const result = await col.insert({id: id, pw: pw});
         ctx.response.body = {result};
         ctx.response.status = HttpStatus.OK;
