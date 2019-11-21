@@ -1,5 +1,5 @@
 import Koa from 'koa';
-import {route, GET} from 'awilix-koa';
+import {route, GET, POST} from 'awilix-koa';
 import * as HttpStatus from 'http-status-codes';
 import {DBService} from '../services/db.service';
 import {EnvService} from '../services/env.service';
@@ -38,6 +38,7 @@ export default class AdminAPI implements MyDependencies {
         const results = await col.find({}).toArray();
         const result = results.map(doc => doc.id);
         ctx.response.body = {result};
+        ctx.set('Access-Control-Allow-Origin', '*');
         ctx.response.status = HttpStatus.OK;
     }
 

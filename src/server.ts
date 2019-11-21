@@ -10,10 +10,12 @@ import {EnvService} from './services/env.service';
 import {DBService} from './services/db.service';
 import {constructGraphQLSChema} from './graphql/schema';
 import {TestQueries} from './graphql/testqueries';
-import cors from 'koa-cors';
+// import cors from 'koa-cors';
 // import bodyParser from 'body-parser';
 import * as bodyparser from 'koa-bodyparser';
-// import * as cors from '@koa/cors';
+import * as cors from '@koa/cors';
+import multer from 'koa-multer';
+// import bodyParser from 'body-parser';
 
 export class AppServer {
     constructor({envService, dbService}: any) {
@@ -118,19 +120,12 @@ export class AppServer {
         }
 
         if (this.envService.isDevelopmentMode()) {
-            // const option: cors.CorsOptions = {
-            //     origin: '*',
-            //     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
-            //     methods: ['GET', 'POST', 'DELETE', 'PATCH', 'PUT']
-            // };
-            app.use(
-                cors({
-                    origin: '*',
-                    headers: 'Origin, X-Requested-With, Content-Type, Accept',
-                    methods: ['GET', 'POST', 'DELETE', 'PATCH', 'PUT']
-                })
-            );
-            // app.use(cors(option));
+            const options = {
+                origin: '*',
+                allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Access-Control-Allow-Headers', 'Access-Control-Allow-Origin'],
+                methods: ['GET', 'POST', 'DELETE', 'PATCH', 'PUT', 'OPTIONS']
+            };
+            app.use(cors.default(options));
         }
 
         process.title = this.envService.get().APP_TITLE + `${process.env.NODE_ENV} - ${this.envService.get().PORT}`;
