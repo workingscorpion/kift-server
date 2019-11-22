@@ -10,7 +10,7 @@ import {MongoClient} from 'mongodb';
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
 interface UserList {
-    id?: string;
+    email?: string;
 }
 
 @route('/api/v1/admin')
@@ -36,7 +36,7 @@ export default class AdminAPI implements MyDependencies {
         this.CollectionName = 'user';
         const col = await db.collection<UserList>(this.CollectionName);
         const results = await col.find({}).toArray();
-        const result = results.map(doc => doc.id);
+        const result = results.map(doc => doc.email);
         ctx.response.body = {result};
         ctx.set('Access-Control-Allow-Origin', '*');
         ctx.response.status = HttpStatus.OK;

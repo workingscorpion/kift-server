@@ -42,28 +42,11 @@ export default class UploadAPI implements MyDependencies {
     async uploadSingle(ctx: Koa.Context, next: () => Promise<any>) {
         await this.singleUploadMiddleware(ctx, next);
         ctx.request.body = 'done';
-        // console.log('ctx.request :', ctx);
-        // // ctx.response.body = ctx.request.body;
-        // console.log('ctx.response.req :', ctx.response.req);
-        // // console.log('ctx.response.res :', ctx.response.res);
-        // console.log('ctx.response.socket :', ctx.response.socket);
-
-        // const body = ctx.request.body;
-
-        // ctx.response.body = name;
         ctx.response.status = HttpStatus.OK;
-        // const {name} = ctx.reqeust.body;
-        // const {upload} = ctx.request.body;
-        // const client = await MongoClient.connect(this.DBUrl);
-        // const db = await client.db(this.DB);
-        // const col = await db.collection(this.CollectionName);
-        // const result = await col.insert({imagename: name, image: upload});
-        // ctx.response.body = {result};
-        // ctx.response.status = HttpStatus.OK;
     }
 
     @route('/multi')
-    @PUT()
+    @POST()
     async uploadMulti(ctx: Koa.Context, next: () => Promise<any>) {
         await this.multiUploadMiddleware(ctx, next);
         ctx.response.body = {};

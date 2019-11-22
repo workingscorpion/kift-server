@@ -75,12 +75,13 @@ export default class DataControlAPI implements MyDependencies {
     @route('/query')
     @GET()
     async query(ctx: Koa.Context) {
-        const {id} = ctx.request.query;
+        const {email} = ctx.request.query;
         const {childNum} = ctx.request.query;
+        const {datatype} = ctx.params;
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
         const col = await db.collection<Inbody>(this.CollectionName);
-        const result = await col.findOne({id: id, childNum: childNum});
+        const result = await col.find({email: email, childNum: childNum}).toArray();
         ctx.response.body = {result};
         ctx.response.status = HttpStatus.OK;
     }

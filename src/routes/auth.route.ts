@@ -10,9 +10,14 @@ import {requiredSubselectionMessage} from 'graphql/validation/rules/ScalarLeafs'
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
-interface UserAuth {
-    id?: string;
+interface User {
+    email?: string;
     pw?: string;
+    joindate?: string;
+    name?: string;
+    birth?: string;
+    gender?: string;
+    address?: string;
 }
 
 @route('/api/v1/auth')
@@ -33,12 +38,12 @@ export default class AuthAPI implements MyDependencies {
     @route('/join')
     @POST()
     async join(ctx: Koa.Context) {
-        const {id} = ctx.request.body;
-        const {pw} = ctx.request.body;
+        const body = ctx.request.body;
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
-        const col = await db.collection<UserAuth>(this.CollectionName);
-        const result = await col.insert({id: id, pw: pw});
+        const col = await db.collection<User>(this.CollectionName);
+        console.log('String(Date.now()) :', String(Date.now()));
+        const result = await col.insert({email: body.email, pw: body.pw, name: body.name, birth: body.birth, gender: body.gender, address: body.address, joindate: String(Date.now())});
         ctx.response.body = {result};
         ctx.response.status = HttpStatus.OK;
     }
@@ -46,13 +51,12 @@ export default class AuthAPI implements MyDependencies {
     @route('/login')
     @POST()
     async login(ctx: Koa.Context) {
-        const {id} = ctx.request.body;
-        const {pw} = ctx.request.body;
+        const body = ctx.request.body;
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
         const col = await db.collection(this.CollectionName);
-        const result = await col.findOne({id: id});
-        ctx.response.body = pw === result.pw ? 'true' : 'false';
+        const result = await col.findOne({email: body.email});
+        ctx.response.body = body.pw === result.pw ? 'true' : 'false';
         ctx.response.status = HttpStatus.OK;
     }
 
