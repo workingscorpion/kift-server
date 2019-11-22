@@ -10,7 +10,7 @@ import {MongoClient} from 'mongodb';
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
 interface Inbody {
-    id: string;
+    email: string;
     childNum?: number;
     height?: number;
     weight?: number;
@@ -27,6 +27,25 @@ interface Inbody {
     metabolism?: number;
     bonemass?: number;
 }
+
+/**
+ *
+ * @api {post} /api/v1/data/insert insert data
+ * @apiName insert
+ * @apiGroup Owners
+ *
+ * @api {get} /api/v1/data/query query
+ * @apiName query
+ * @apiGroup Owners
+ *
+ * @api {post} /api/v1/data/update update
+ * @apiName update
+ * @apiGroup Owners
+ *
+ * @api {delete} /api/v1/data/delete delete
+ * @apiName delete
+ * @apiGroup Owners
+ */
 
 @route('/api/v1/data')
 export default class DataControlAPI implements MyDependencies {
@@ -51,7 +70,7 @@ export default class DataControlAPI implements MyDependencies {
         const db = await client.db(this.DB);
         const col = await db.collection<Inbody>(this.CollectionName);
         const result = await col.insert({
-            id: body.id,
+            email: body.email,
             childNum: body.childNum,
             height: body.height,
             weight: body.weight,
@@ -94,10 +113,10 @@ export default class DataControlAPI implements MyDependencies {
         const db = await client.db(this.DB);
         const col = await db.collection<Inbody>(this.CollectionName);
         const result = await col.findOneAndUpdate(
-            {id: body.id, childNum: body.childNum},
+            {email: body.email, childNum: body.childNum},
             {
                 $set: {
-                    id: body.id,
+                    email: body.email,
                     childNum: body.childNum,
                     height: body.height,
                     weight: body.weight,
@@ -129,7 +148,7 @@ export default class DataControlAPI implements MyDependencies {
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
         const col = await db.collection<Inbody>(this.CollectionName);
-        const result = await col.remove({id: body.id, childNum: body.childNum});
+        const result = await col.remove({email: body.email, childNum: body.childNum});
         ctx.response.body = {result};
         ctx.response.status = HttpStatus.OK;
     }

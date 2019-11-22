@@ -20,6 +20,17 @@ interface User {
     address?: string;
 }
 
+/**
+ * @api {post} /api/v1/auth/join sign up
+ * @apiName join
+ * @apiGroup Owners
+ *
+ * @api {post} /api/v1/auth/login login check
+ * @apiName login
+ * @apiGroup Owners
+ *
+ */
+
 @route('/api/v1/auth')
 export default class AuthAPI implements MyDependencies {
     constructor({dbService, appServer, envService}: MyDependencies) {

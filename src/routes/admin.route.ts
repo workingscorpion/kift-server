@@ -13,6 +13,21 @@ interface UserList {
     email?: string;
 }
 
+/**
+ *
+ * @api {get} /api/v1/admin/queryuser userlist
+ * @apiName queryuser
+ * @apiGroup Owners
+ *
+ * @api {get} /api/v1/admin/queryuser/:user userdata
+ * @apiName querysuser
+ * @apiGroup Owners
+ *
+ * @api {get} /api/v1/admin/shutdown shutdown
+ * @apiName shutdown
+ * @apiGroup Owners
+ */
+
 @route('/api/v1/admin')
 export default class AdminAPI implements MyDependencies {
     constructor({dbService, appServer, envService}: MyDependencies) {
