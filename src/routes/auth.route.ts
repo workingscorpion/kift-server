@@ -12,7 +12,7 @@ type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 interface User {
     email?: string;
     pw?: string;
-    joindate?: Date;
+    joindate?: number;
     name?: string;
     birth?: string;
     isMale?: boolean;
@@ -56,10 +56,7 @@ export default class AuthAPI implements MyDependencies {
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
         const col = await db.collection<User>(this.CollectionName);
-        const date = new Date();
-        // const joindate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
-        const joindate = date.toLocaleDateString();
-        const result = await col.insert({email: body.email, pw: body.pw, name: body.name, birth: body.birth, isMale: body.isMale, address: body.address, joindate: Date(joindate)});
+        const result = await col.insert({email: body.email, pw: body.pw, name: body.name, birth: body.birth, isMale: body.isMale, address: body.address, joindate: Date.now()});
         ctx.response.body = {result};
         ctx.response.status = HttpStatus.OK;
     }
