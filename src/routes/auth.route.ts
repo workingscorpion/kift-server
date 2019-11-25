@@ -42,7 +42,7 @@ export default class AuthAPI implements MyDependencies {
         this.envService = envService;
         this.DBUrl = 'mongodb://' + this.envService.get().DB_HOST + ':' + this.envService.get().DB_PORT;
         this.DB = this.envService.get().DB_NAME;
-        this.CollectionName = 'macpie';
+        this.CollectionName = 'magpie';
     }
 
     DBUrl: string;
@@ -56,9 +56,21 @@ export default class AuthAPI implements MyDependencies {
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
         const col = await db.collection<User>(this.CollectionName);
-        const result = await col.insert({email: body.email, pw: body.pw, name: body.name, birth: body.birth, isMale: body.isMale, address: body.address, joindate: Date.now()});
-        ctx.response.body = {result};
-        ctx.response.status = HttpStatus.OK;
+
+        const findResult = await col.findOne({email: body.email});
+        console.log('findResult :', findResult);
+        if (findResult) {
+            if (findResult.email === body.email) {
+                console.log('check');
+                ctx.response.body = '해당 계정이 이미 존재합니다.';
+                ctx.response.status = HttpStatus.OK;
+            }
+        } else {
+            console.log('else2');
+            const result = await col.insert({email: body.email, pw: body.pw, name: body.name, birth: body.birth, isMale: body.isMale, address: body.address, joindate: Date.now()});
+            ctx.response.body = {result};
+            ctx.response.status = HttpStatus.OK;
+        }
     }
 
     @route('/login')
