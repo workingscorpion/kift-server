@@ -21,7 +21,7 @@ interface Inbody {
     foot?: number;
     bodyfat?: number;
     muscle?: number;
-    Moisture?: number;
+    moisture?: number;
     protein?: number;
     internalfat?: number;
     metabolism?: number;
@@ -68,24 +68,32 @@ export default class DataControlAPI implements MyDependencies {
         const body = ctx.request.body;
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
+
+        //추후 비만 여부를 확인하기 위해 성별을 가져올 구문
+        // const findcol = await db.collection('user');
+        // const findresult = await findcol.findOne({email: body.email}).then(json => json.isMale);
+        // console.log('findresult :', findresult);
+        // if(findresult === true){
+
+        // }
         const col = await db.collection<Inbody>(this.CollectionName);
         const result = await col.insert({
             email: body.email,
-            childNum: body.childNum,
-            height: body.height,
-            weight: body.weight,
-            BMI: body.BMI,
-            headround: body.headround,
-            sight: body.sight,
-            waist: body.waist,
-            foot: body.foot,
-            bodyfat: body.bodyfat,
-            muscle: body.muscle,
-            Moisture: body.Moisture,
-            protein: body.protein,
-            internalfat: body.internalfat,
-            metabolism: body.metabolism,
-            bonemass: body.bonemass
+            childNum: Number(body.childNum),
+            height: Number(body.height),
+            weight: Number(body.weight),
+            BMI: Number((body.weight / (body.height * 0.01 * (body.height * 0.01))).toFixed(2)),
+            headround: Number(body.headround),
+            sight: Number(body.sight),
+            waist: Number(body.waist),
+            foot: Number(body.foot),
+            bodyfat: Number(body.bodyfat),
+            muscle: Number(body.muscle),
+            moisture: Number(body.moisture),
+            protein: Number(body.protein),
+            internalfat: Number(body.internalfat),
+            metabolism: Number(body.metabolism),
+            bonemass: Number(body.bonemass)
         });
         ctx.response.body = {result};
         ctx.response.status = HttpStatus.OK;
