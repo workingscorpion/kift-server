@@ -16,7 +16,7 @@ interface User {
     joindate?: string;
     name?: string;
     birth?: string;
-    gender?: string;
+    isMale?: boolean;
     address?: string;
 }
 
@@ -54,7 +54,7 @@ export default class AuthAPI implements MyDependencies {
         const db = await client.db(this.DB);
         const col = await db.collection<User>(this.CollectionName);
         console.log('String(Date.now()) :', String(Date.now()));
-        const result = await col.insert({email: body.email, pw: body.pw, name: body.name, birth: body.birth, gender: body.gender, address: body.address, joindate: String(Date.now())});
+        const result = await col.insert({email: body.email, pw: body.pw, name: body.name, birth: body.birth, isMale: body.isMale, address: body.address, joindate: String(Date.now())});
         ctx.response.body = {result};
         ctx.response.status = HttpStatus.OK;
     }
