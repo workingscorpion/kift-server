@@ -95,7 +95,7 @@ export default class AuthAPI implements MyDependencies {
     @route('/findid')
     @GET()
     async findid(ctx: Koa.Context) {
-        const {query} = ctx.request.query;
+        const query = ctx.request.query;
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
         const col = await db.collection(this.CollectionName);
@@ -107,12 +107,12 @@ export default class AuthAPI implements MyDependencies {
     @route('/findpw')
     @POST()
     async findpw(ctx: Koa.Context) {
-        const {body} = ctx.request.body;
+        const body = ctx.request.body;
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
         const col = await db.collection(this.CollectionName);
         const newpw = await password.randomPassword({characters: [password.upper, password.symbols, password.lower, password.digits]});
-        await col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, address: body.address}, {pw: newpw});
+        await col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, address: body.address}, {$set: {pw: newpw}});
         console.log('newpw :', newpw);
         // ctx.response.body = result.email;
         ctx.response.status = HttpStatus.OK;
