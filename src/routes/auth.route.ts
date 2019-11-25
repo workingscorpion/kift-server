@@ -32,6 +32,15 @@ interface User {
  * @apiName signout
  * @apiGroup Owners
  *
+ *
+ * @api {get} /api/v1/auth/findid findid
+ * @apiName findid
+ * @apiGroup Owners
+ *
+ * @api {get} /api/v1/auth/findpw findpw
+ * @apiName findpw
+ * @apiGroup Owners
+ *
  */
 
 @route('/api/v1/auth')
@@ -82,6 +91,18 @@ export default class AuthAPI implements MyDependencies {
         const col = await db.collection(this.CollectionName);
         const result = await col.findOne({email: body.email});
         ctx.response.body = body.pw === result.pw ? 'true' : 'false';
+        ctx.response.status = HttpStatus.OK;
+    }
+
+    @route('/findid')
+    @GET()
+    async findid(ctx: Koa.Context) {
+        const {query} = ctx.request.query;
+        const client = await MongoClient.connect(this.DBUrl);
+        const db = await client.db(this.DB);
+        const col = await db.collection(this.CollectionName);
+        const result = await col.findOne({name: query.name, birth: query.birth, address: query.address});
+        ctx.response.body = result.email;
         ctx.response.status = HttpStatus.OK;
     }
 
