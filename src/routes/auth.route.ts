@@ -42,7 +42,7 @@ export default class AuthAPI implements MyDependencies {
         this.envService = envService;
         this.DBUrl = 'mongodb://' + this.envService.get().DB_HOST + ':' + this.envService.get().DB_PORT;
         this.DB = this.envService.get().DB_NAME;
-        this.CollectionName = 'magpie';
+        this.CollectionName = 'user';
     }
 
     DBUrl: string;
