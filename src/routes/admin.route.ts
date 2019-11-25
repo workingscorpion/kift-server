@@ -48,7 +48,7 @@ export default class AdminAPI implements MyDependencies {
     async queryuser(ctx: Koa.Context) {
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
-        this.CollectionName = 'user';
+        this.CollectionName = 'macpie';
         const col = await db.collection<UserList>(this.CollectionName);
         const results = await col.find({}).toArray();
         const result = results.map(doc => doc.email);

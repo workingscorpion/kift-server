@@ -6,14 +6,13 @@ import {EnvService} from '../services/env.service';
 import {DBServiceClient, AppServerClient, EnvServiceClient} from '../modules';
 import {AppServer} from '../server';
 import {MongoClient, Db, Collection, Cursor} from 'mongodb';
-import {requiredSubselectionMessage} from 'graphql/validation/rules/ScalarLeafs';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
 interface User {
     email?: string;
     pw?: string;
-    joindate?: string;
+    joindate?: Date;
     name?: string;
     birth?: string;
     isMale?: boolean;
@@ -29,6 +28,10 @@ interface User {
  * @apiName login
  * @apiGroup Owners
  *
+ * @api {post} /api/v1/auth/signout signout
+ * @apiName signout
+ * @apiGroup Owners
+ *
  */
 
 @route('/api/v1/auth')
@@ -39,7 +42,7 @@ export default class AuthAPI implements MyDependencies {
         this.envService = envService;
         this.DBUrl = 'mongodb://' + this.envService.get().DB_HOST + ':' + this.envService.get().DB_PORT;
         this.DB = this.envService.get().DB_NAME;
-        this.CollectionName = 'user';
+        this.CollectionName = 'macpie';
     }
 
     DBUrl: string;
@@ -53,8 +56,10 @@ export default class AuthAPI implements MyDependencies {
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
         const col = await db.collection<User>(this.CollectionName);
-        console.log('String(Date.now()) :', String(Date.now()));
-        const result = await col.insert({email: body.email, pw: body.pw, name: body.name, birth: body.birth, isMale: body.isMale, address: body.address, joindate: String(Date.now())});
+        const date = new Date();
+        // const joindate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + ' ' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+        const joindate = date.toLocaleDateString();
+        const result = await col.insert({email: body.email, pw: body.pw, name: body.name, birth: body.birth, isMale: body.isMale, address: body.address, joindate: Date(joindate)});
         ctx.response.body = {result};
         ctx.response.status = HttpStatus.OK;
     }
@@ -62,6 +67,18 @@ export default class AuthAPI implements MyDependencies {
     @route('/login')
     @POST()
     async login(ctx: Koa.Context) {
+        const body = ctx.request.body;
+        const client = await MongoClient.connect(this.DBUrl);
+        const db = await client.db(this.DB);
+        const col = await db.collection(this.CollectionName);
+        const result = await col.findOne({email: body.email});
+        ctx.response.body = body.pw === result.pw ? 'true' : 'false';
+        ctx.response.status = HttpStatus.OK;
+    }
+
+    @route('/signout')
+    @POST()
+    async signout(ctx: Koa.Context) {
         const body = ctx.request.body;
         const client = await MongoClient.connect(this.DBUrl);
         const db = await client.db(this.DB);
