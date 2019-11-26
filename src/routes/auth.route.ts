@@ -74,7 +74,13 @@ export default class AuthAPI implements MyDependencies {
                 }
             } else {
                 const result = await col.insert({
-                    email: body.email, pw: body.pw, name: body.name, birth: body.birth, isMale: body.isMale, address: body.address, joindate: Date.now()
+                    email: body.email,
+                    pw: body.pw,
+                    name: body.name,
+                    birth: body.birth,
+                    isMale: body.isMale,
+                    address: body.address,
+                    joindate: Date.now()
                 });
                 ctx.response.body = {result};
                 ctx.response.status = HttpStatus.OK;
@@ -86,50 +92,50 @@ export default class AuthAPI implements MyDependencies {
     @POST()
     async login(ctx: Koa.Context) {
         const body = ctx.request.body;
-        const client = await MongoClient.connect(this.DBUrl);
-        const db = await client.db(this.DB);
-        const col = await db.collection(this.CollectionName);
-        const result = await col.findOne({email: body.email});
-        ctx.response.body = body.pw === result.pw ? 'true' : 'false';
-        ctx.response.status = HttpStatus.OK;
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection(this.CollectionName);
+            const result = await col.findOne({email: body.email});
+            ctx.response.body = body.pw === result.pw ? 'true' : 'false';
+            ctx.response.status = HttpStatus.OK;
+        });
     }
 
     @route('/findid')
     @GET()
     async findid(ctx: Koa.Context) {
         const query = ctx.request.query;
-        const client = await MongoClient.connect(this.DBUrl);
-        const db = await client.db(this.DB);
-        const col = await db.collection(this.CollectionName);
-        const result = await col.findOne({name: query.name, birth: query.birth, address: query.address});
-        ctx.response.body = result.email;
-        ctx.response.status = HttpStatus.OK;
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection(this.CollectionName);
+            const result = await col.findOne({name: query.name, birth: query.birth, address: query.address});
+            ctx.response.body = result.email;
+            ctx.response.status = HttpStatus.OK;
+        });
     }
 
     @route('/findpw')
     @POST()
     async findpw(ctx: Koa.Context) {
         const body = ctx.request.body;
-        const client = await MongoClient.connect(this.DBUrl);
-        const db = await client.db(this.DB);
-        const col = await db.collection(this.CollectionName);
-        const newpw = await password.randomPassword({characters: [password.upper, password.symbols, password.lower, password.digits]});
-        await col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, address: body.address}, {$set: {pw: newpw}});
-        console.log('newpw :', newpw);
-        // ctx.response.body = result.email;
-        ctx.response.status = HttpStatus.OK;
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection(this.CollectionName);
+            const newpw = await password.randomPassword({characters: [password.upper, password.symbols, password.lower, password.digits]});
+            await col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, address: body.address}, {$set: {pw: newpw}});
+            console.log('newpw :', newpw);
+            // ctx.response.body = result.email;
+            ctx.response.status = HttpStatus.OK;
+        });
     }
 
     @route('/signout')
     @POST()
     async signout(ctx: Koa.Context) {
         const body = ctx.request.body;
-        const client = await MongoClient.connect(this.DBUrl);
-        const db = await client.db(this.DB);
-        const col = await db.collection(this.CollectionName);
-        const result = await col.findOne({email: body.email});
-        ctx.response.body = body.pw === result.pw ? 'true' : 'false';
-        ctx.response.status = HttpStatus.OK;
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection(this.CollectionName);
+            const result = await col.findOne({email: body.email});
+            ctx.response.body = body.pw === result.pw ? 'true' : 'false';
+            ctx.response.status = HttpStatus.OK;
+        });
     }
 
     dbService: DBService;

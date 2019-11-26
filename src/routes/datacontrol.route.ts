@@ -66,37 +66,36 @@ export default class DataControlAPI implements MyDependencies {
     @POST()
     async insert(ctx: Koa.Context) {
         const body = ctx.request.body;
-        const client = await MongoClient.connect(this.DBUrl);
-        const db = await client.db(this.DB);
+        await this.dbService.performWithDB(async db => {
+            //추후 비만 여부를 확인하기 위해 성별을 가져올 구문
+            // const findcol = await db.collection('user');
+            // const findresult = await findcol.findOne({email: body.email}).then(json => json.isMale);
+            // console.log('findresult :', findresult);
+            // if(findresult === true){
 
-        //추후 비만 여부를 확인하기 위해 성별을 가져올 구문
-        // const findcol = await db.collection('user');
-        // const findresult = await findcol.findOne({email: body.email}).then(json => json.isMale);
-        // console.log('findresult :', findresult);
-        // if(findresult === true){
-
-        // }
-        const col = await db.collection<Inbody>(this.CollectionName);
-        const result = await col.insert({
-            email: body.email,
-            childNum: Number(body.childNum),
-            height: Number(body.height),
-            weight: Number(body.weight),
-            BMI: Number((body.weight / (body.height * 0.01 * (body.height * 0.01))).toFixed(2)),
-            headround: Number(body.headround),
-            sight: Number(body.sight),
-            waist: Number(body.waist),
-            foot: Number(body.foot),
-            bodyfat: Number(body.bodyfat),
-            muscle: Number(body.muscle),
-            moisture: Number(body.moisture),
-            protein: Number(body.protein),
-            internalfat: Number(body.internalfat),
-            metabolism: Number(body.metabolism),
-            bonemass: Number(body.bonemass)
+            // }
+            const col = await db.collection<Inbody>(this.CollectionName);
+            const result = await col.insert({
+                email: body.email,
+                childNum: Number(body.childNum),
+                height: Number(body.height),
+                weight: Number(body.weight),
+                BMI: Number((body.weight / (body.height * 0.01 * (body.height * 0.01))).toFixed(2)),
+                headround: Number(body.headround),
+                sight: Number(body.sight),
+                waist: Number(body.waist),
+                foot: Number(body.foot),
+                bodyfat: Number(body.bodyfat),
+                muscle: Number(body.muscle),
+                moisture: Number(body.moisture),
+                protein: Number(body.protein),
+                internalfat: Number(body.internalfat),
+                metabolism: Number(body.metabolism),
+                bonemass: Number(body.bonemass)
+            });
+            ctx.response.body = {result};
+            ctx.response.status = HttpStatus.OK;
         });
-        ctx.response.body = {result};
-        ctx.response.status = HttpStatus.OK;
     }
 
     @route('/query')
@@ -105,46 +104,46 @@ export default class DataControlAPI implements MyDependencies {
         const {email} = ctx.request.query;
         const {childNum} = ctx.request.query;
         const {datatype} = ctx.params;
-        const client = await MongoClient.connect(this.DBUrl);
-        const db = await client.db(this.DB);
-        const col = await db.collection<Inbody>(this.CollectionName);
-        const result = await col.find({email: email, childNum: childNum}).toArray();
-        ctx.response.body = {result};
-        ctx.response.status = HttpStatus.OK;
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection<Inbody>(this.CollectionName);
+            const result = await col.find({email: email, childNum: childNum}).toArray();
+            ctx.response.body = {result};
+            ctx.response.status = HttpStatus.OK;
+        });
     }
 
     @route('/update')
     @POST()
     async update(ctx: Koa.Context) {
         const body = ctx.request.body;
-        const client = await MongoClient.connect(this.DBUrl);
-        const db = await client.db(this.DB);
-        const col = await db.collection<Inbody>(this.CollectionName);
-        const result = await col.findOneAndUpdate(
-            {email: body.email, childNum: body.childNum},
-            {
-                $set: {
-                    email: body.email,
-                    childNum: body.childNum,
-                    height: body.height,
-                    weight: body.weight,
-                    BMI: body.BMI,
-                    headround: body.headround,
-                    sight: body.sight,
-                    waist: body.waist,
-                    foot: body.foot,
-                    bodyfat: body.bodyfat,
-                    muscle: body.muscle,
-                    Moisture: body.Moisture,
-                    protein: body.protein,
-                    internalfat: body.internalfat,
-                    metabolism: body.metabolism,
-                    bonemass: body.bonemass
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection<Inbody>(this.CollectionName);
+            const result = await col.findOneAndUpdate(
+                {email: body.email, childNum: body.childNum},
+                {
+                    $set: {
+                        email: body.email,
+                        childNum: body.childNum,
+                        height: body.height,
+                        weight: body.weight,
+                        BMI: body.BMI,
+                        headround: body.headround,
+                        sight: body.sight,
+                        waist: body.waist,
+                        foot: body.foot,
+                        bodyfat: body.bodyfat,
+                        muscle: body.muscle,
+                        Moisture: body.Moisture,
+                        protein: body.protein,
+                        internalfat: body.internalfat,
+                        metabolism: body.metabolism,
+                        bonemass: body.bonemass
+                    }
                 }
-            }
-        );
-        ctx.response.body = {result};
-        ctx.response.status = HttpStatus.OK;
+            );
+            ctx.response.body = {result};
+            ctx.response.status = HttpStatus.OK;
+        });
     }
 
     //추후에 리코드를 뿌려줄때 ID도 같이 보내줬다가 삭제할때 RecordID도 같이 받아서 해당 리코드만 삭제할 수 있게 수정
@@ -153,12 +152,12 @@ export default class DataControlAPI implements MyDependencies {
     @DELETE()
     async delete(ctx: Koa.Context) {
         const body = ctx.request.query;
-        const client = await MongoClient.connect(this.DBUrl);
-        const db = await client.db(this.DB);
-        const col = await db.collection<Inbody>(this.CollectionName);
-        const result = await col.remove({email: body.email, childNum: body.childNum});
-        ctx.response.body = {result};
-        ctx.response.status = HttpStatus.OK;
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection<Inbody>(this.CollectionName);
+            const result = await col.remove({email: body.email, childNum: body.childNum});
+            ctx.response.body = {result};
+            ctx.response.status = HttpStatus.OK;
+        });
     }
 
     dbService: DBService;

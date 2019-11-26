@@ -46,21 +46,21 @@ export default class AdminAPI implements MyDependencies {
     @route('/queryuser')
     @GET()
     async queryuser(ctx: Koa.Context) {
-        const client = await MongoClient.connect(this.DBUrl);
-        const db = await client.db(this.DB);
-        this.CollectionName = 'user';
-        const col = await db.collection<UserList>(this.CollectionName);
-        const results = await col.find({}).toArray();
-        const result = results.map(doc => doc.email);
-        ctx.response.body = {result};
-        ctx.set('Access-Control-Allow-Origin', '*');
-        ctx.response.status = HttpStatus.OK;
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection<UserList>('user');
+            const results = await col.find({}).toArray();
+            const result = results.map(doc => doc.email);
+            ctx.response.body = {result};
+            ctx.set('Access-Control-Allow-Origin', '*');
+            ctx.response.status = HttpStatus.OK;
+        });
     }
 
     @route('/queryuser/:user')
     @GET()
     async querysuser(ctx: Koa.Context) {
         // #TODO: 특정 유저의 정보를 가져오는 routing
+        await this.dbService.performWithDB(async db => {});
     }
 
     // #TODO: 한 번 호출하면 잘 종료가 안되고, 두 번 호출해야 종료 되는데 이유 조사할 것.
