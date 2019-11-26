@@ -7,6 +7,7 @@ import {DBServiceClient, AppServerClient, EnvServiceClient} from '../modules';
 import {AppServer} from '../server';
 import * as password from 'secure-random-password';
 import * as nodemailer from 'nodemailer';
+import {Collection} from 'mongodb';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
@@ -53,10 +54,7 @@ export default class AuthAPI implements MyDependencies {
         this.dbService = dbService;
         this.appServer = appServer;
         this.envService = envService;
-        this.DB = this.envService.get().DB_NAME;
     }
-
-    DB: string;
 
     @route('/join')
     @POST()
@@ -124,10 +122,9 @@ export default class AuthAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
             const newpw = await password.randomPassword({characters: [password.upper, password.symbols, password.lower, password.digits]});
-            await col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, address: body.address}, {$set: {pw: newpw}});
+            await setpw(col, body, newpw);
+            // await col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, address: body.address}, {$set: {pw: newpw}});
             const newinfo = await col.findOne({email: body.email});
-            console.log('newpw :', newpw);
-            // ctx.response.body = result.email;
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
@@ -139,8 +136,8 @@ export default class AuthAPI implements MyDependencies {
                 const email = {
                     from: this.envService.env.SENDER,
                     to: newinfo.email,
-                    subject: 'Login Secret for PHR',
-                    html: `Hello! Your login secret is <h2>${newinfo.pw}</h2>.<br /> Copy and paste on the app/website to log in`
+                    subject: 'Login Password for PHR',
+                    html: `Hello! Your login Password is <h2>${newinfo.pw}</h2>.<br /> Copy and paste on the app/website to log in`
                 } as nodemailer.SendMailOptions;
                 await transporter.sendMail(email, (err, info) => {
                     if (err) {
@@ -150,15 +147,23 @@ export default class AuthAPI implements MyDependencies {
                     }
                 });
             }
-            // sendSecretMail();
-
+            ctx.response.body = `email : ${body.email}<br /> newpw : ${newpw}`;
             ctx.response.status = HttpStatus.OK;
         });
     }
 
     @route('/changepw')
     @POST()
-    async changepw(ctx: Koa.Context) {}
+    async changepw(ctx: Koa.Context) {
+        const body = ctx.request.body;
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection<User>(DBService.UserCollection);
+            const result = await setpw(col, body, body.newpw);
+            if (result) {
+                console.log('result :', result);
+            }
+        });
+    }
 
     @route('/signout')
     @POST()
@@ -179,13 +184,6 @@ export default class AuthAPI implements MyDependencies {
     envService: EnvService;
 }
 
-// const sendMail = email => null;
-
-// const sendSecretMail = (address: string, secret: string) => {
-//     const email = {
-//         from: 'PHRadmin@gmail.com',
-//         to: address,
-//         subject: 'Login Secret for PHR',
-//         html: `Hello! Your login secret is ${secret}.<br /> Copy and paste on the app/website to log in`
-//     };
-// };
+const setpw = (col: Collection<User>, body: any, newpw: string): any => {
+    return col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, address: body.address, pw: body.pw}, {$set: {pw: newpw}});
+};
