@@ -36,7 +36,7 @@ export default class AdminAPI implements MyDependencies {
         this.envService = envService;
         this.DBUrl = 'mongodb://' + this.envService.get().DB_HOST + ':' + this.envService.get().DB_PORT;
         this.DB = this.envService.get().DB_NAME;
-        this.CollectionName = '';
+        this.CollectionName = 'user';
     }
 
     DBUrl: string;
@@ -47,7 +47,7 @@ export default class AdminAPI implements MyDependencies {
     @GET()
     async queryuser(ctx: Koa.Context) {
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection<UserList>('user');
+            const col = await db.collection<UserList>(this.CollectionName);
             const results = await col.find({}).toArray();
             const result = results.map(doc => doc.email);
             ctx.response.body = {result};

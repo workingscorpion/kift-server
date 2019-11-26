@@ -7,6 +7,8 @@ import {DBServiceClient, AppServerClient, EnvServiceClient} from '../modules';
 import {AppServer} from '../server';
 import {MongoClient} from 'mongodb';
 import * as password from 'secure-random-password';
+import * as nodemailer from 'nodemailer';
+import {exportDefaultSpecifier} from '@babel/types';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
@@ -42,6 +44,9 @@ interface User {
  * @apiName findpw
  * @apiGroup Owners
  *
+ * @api {post} /api/v1/auth/changepw changepw
+ * @apiName changepw
+ * @apiGroup Owners
  */
 
 @route('/api/v1/auth')
@@ -120,11 +125,38 @@ export default class AuthAPI implements MyDependencies {
             const col = await db.collection(this.CollectionName);
             const newpw = await password.randomPassword({characters: [password.upper, password.symbols, password.lower, password.digits]});
             await col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, address: body.address}, {$set: {pw: newpw}});
+            const newinfo = await col.findOne({email: body.email});
             console.log('newpw :', newpw);
             // ctx.response.body = result.email;
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: this.envService.env.SENDER,
+                    pass: this.envService.env.SENDERPW
+                }
+            });
+            const email = {
+                from: this.envService.env.SENDER,
+                to: newinfo.email,
+                subject: 'Login Secret for PHR',
+                html: `Hello! Your login secret is <h2>${newinfo.pw}</h2>.<br /> Copy and paste on the app/website to log in`
+            };
+            // sendSecretMail();
+            transporter.sendMail(email, (err, info) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(info);
+                }
+            });
+
             ctx.response.status = HttpStatus.OK;
         });
     }
+
+    @route('/changepw')
+    @POST()
+    async changepw(ctx: Koa.Context) {}
 
     @route('/signout')
     @POST()
@@ -142,3 +174,14 @@ export default class AuthAPI implements MyDependencies {
     appServer: AppServer;
     envService: EnvService;
 }
+
+// const sendMail = email => null;
+
+// const sendSecretMail = (address: string, secret: string) => {
+//     const email = {
+//         from: 'PHRadmin@gmail.com',
+//         to: address,
+//         subject: 'Login Secret for PHR',
+//         html: `Hello! Your login secret is ${secret}.<br /> Copy and paste on the app/website to log in`
+//     };
+// };
