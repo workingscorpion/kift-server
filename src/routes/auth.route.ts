@@ -92,9 +92,13 @@ export default class AuthAPI implements MyDependencies {
     async login(ctx: Koa.Context) {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection(DBService.UserCollection);
+            const col = await db.collection<User>(DBService.UserCollection);
             const result = await col.findOne({email: body.email});
-            ctx.response.body = body.pw === result.pw ? 'true' : 'false';
+            if (!result) {
+                ctx.response.body = false;
+            } else {
+                ctx.response.body = (body.pw === result.pw ? true : false);
+            }
             ctx.response.status = HttpStatus.OK;
         });
     }
@@ -104,7 +108,7 @@ export default class AuthAPI implements MyDependencies {
     async findid(ctx: Koa.Context) {
         const query = ctx.request.query;
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection(DBService.UserCollection);
+            const col = await db.collection<User>(DBService.UserCollection);
             const result = await col.findOne({name: query.name, birth: query.birth, address: query.address});
             ctx.response.body = result.email;
             ctx.response.status = HttpStatus.OK;
@@ -116,7 +120,7 @@ export default class AuthAPI implements MyDependencies {
     async findpw(ctx: Koa.Context) {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection(DBService.UserCollection);
+            const col = await db.collection<User>(DBService.UserCollection);
             const newpw = await password.randomPassword({characters: [password.upper, password.symbols, password.lower, password.digits]});
             await col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, address: body.address}, {$set: {pw: newpw}});
             const newinfo = await col.findOne({email: body.email});
@@ -157,7 +161,7 @@ export default class AuthAPI implements MyDependencies {
     async signout(ctx: Koa.Context) {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection(DBService.UserCollection);
+            const col = await db.collection<User>(DBService.UserCollection);
             const result = await col.findOne({email: body.email});
             ctx.response.body = (body.pw === result.pw);
             ctx.response.status = HttpStatus.OK;
