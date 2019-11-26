@@ -13,9 +13,9 @@ type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 interface User {
     email?: string;
     pw?: string;
-    joindate?: number;
+    joindate?: Date;
     name?: string;
-    birth?: string;
+    birth?: Date;
     isMale?: boolean;
     address?: string;
 }
@@ -76,10 +76,10 @@ export default class AuthAPI implements MyDependencies {
                     email: body.email,
                     pw: body.pw,
                     name: body.name,
-                    birth: body.birth,
+                    birth: new Date(body.birth),
                     isMale: body.isMale,
                     address: body.address,
-                    joindate: Date.now()
+                    joindate: new Date(Date.now())
                 });
                 ctx.response.body = {result};
                 ctx.response.status = HttpStatus.OK;
