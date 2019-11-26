@@ -5,7 +5,6 @@ import {DBService} from '../services/db.service';
 import {EnvService} from '../services/env.service';
 import {DBServiceClient, AppServerClient, EnvServiceClient} from '../modules';
 import {AppServer} from '../server';
-import {MongoClient} from 'mongodb';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
@@ -30,12 +29,12 @@ interface Inbody {
 
 /**
  *
- * @api {post} /api/v1/data/insert insert data
- * @apiName insert
+ * @api {post} /api/v1/data/create create data
+ * @apiName create
  * @apiGroup Owners
  *
- * @api {get} /api/v1/data/query query
- * @apiName query
+ * @api {get} /api/v1/data/read read
+ * @apiName read
  * @apiGroup Owners
  *
  * @api {post} /api/v1/data/update update
@@ -53,18 +52,11 @@ export default class DataControlAPI implements MyDependencies {
         this.dbService = dbService;
         this.appServer = appServer;
         this.envService = envService;
-        this.DBUrl = 'mongodb://' + this.envService.get().DB_HOST + ':' + this.envService.get().DB_PORT;
-        this.DB = this.envService.get().DB_NAME;
-        this.CollectionName = 'inbody';
     }
 
-    DBUrl: string;
-    DB: string;
-    CollectionName: string;
-
-    @route('/insert')
+    @route('/create')
     @POST()
-    async insert(ctx: Koa.Context) {
+    async create(ctx: Koa.Context) {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
             //추후 비만 여부를 확인하기 위해 성별을 가져올 구문
@@ -74,7 +66,7 @@ export default class DataControlAPI implements MyDependencies {
             // if(findresult === true){
 
             // }
-            const col = await db.collection<Inbody>(this.CollectionName);
+            const col = await db.collection<Inbody>(DBService.InbodyCollection);
             const result = await col.insert({
                 email: body.email,
                 childNum: Number(body.childNum),
@@ -98,14 +90,13 @@ export default class DataControlAPI implements MyDependencies {
         });
     }
 
-    @route('/query')
+    @route('/read')
     @GET()
-    async query(ctx: Koa.Context) {
+    async read(ctx: Koa.Context) {
         const {email} = ctx.request.query;
         const {childNum} = ctx.request.query;
-        const {datatype} = ctx.params;
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection<Inbody>(this.CollectionName);
+            const col = await db.collection<Inbody>(DBService.InbodyCollection);
             const result = await col.find({email: email, childNum: childNum}).toArray();
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
@@ -117,7 +108,7 @@ export default class DataControlAPI implements MyDependencies {
     async update(ctx: Koa.Context) {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection<Inbody>(this.CollectionName);
+            const col = await db.collection<Inbody>(DBService.InbodyCollection);
             const result = await col.findOneAndUpdate(
                 {email: body.email, childNum: body.childNum},
                 {
@@ -153,7 +144,7 @@ export default class DataControlAPI implements MyDependencies {
     async delete(ctx: Koa.Context) {
         const body = ctx.request.query;
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection<Inbody>(this.CollectionName);
+            const col = await db.collection<Inbody>(DBService.InbodyCollection);
             const result = await col.remove({email: body.email, childNum: body.childNum});
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;

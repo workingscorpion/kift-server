@@ -23,17 +23,10 @@ type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
 @route('/api/v1/upload')
 export default class UploadAPI implements MyDependencies {
-    DBUrl: string;
-    DB: string;
-    CollectionName: string;
-
     constructor({dbService, appServer, envService}: MyDependencies) {
         this.dbService = dbService;
         this.appServer = appServer;
         this.envService = envService;
-        this.DBUrl = 'mongodb://' + this.envService.get().DB_HOST + ':' + this.envService.get().DB_PORT;
-        this.DB = this.envService.get().DB_NAME;
-        this.CollectionName = 'images';
 
         // 프로필 이미지 업로드 미들웨어 설정
         const storageImage = multer.diskStorage({

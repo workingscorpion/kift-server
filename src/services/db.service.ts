@@ -1,9 +1,8 @@
-import { MongoClient, Db } from 'mongodb';
-import { EnvService } from './env.service';
+import {MongoClient, Db} from 'mongodb';
+import {EnvService} from './env.service';
 
 export class DBService {
-
-    constructor({ envService }: any) {
+    constructor({envService}: any) {
         this.envService = envService;
         this.MongodbUri = `mongodb://${this.envService.get().DB_HOST}:${this.envService.get().DB_PORT}`;
         this.dbName = envService.get().DB_NAME;
@@ -38,7 +37,8 @@ export class DBService {
     initialized = false;
     postInitCallbacks: CallableFunction[] = [];
     MongodbUri: string;
-    dbName = 'mydb';
+    dbName = 'magpie';
+    static readonly InbodyCollection = 'inbody';
     static readonly UserCollection = 'user';
     static readonly SettingCollection = 'setting';
 }
