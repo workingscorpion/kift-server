@@ -63,21 +63,23 @@ export default class AuthAPI implements MyDependencies {
     @POST()
     async join(ctx: Koa.Context) {
         const body = ctx.request.body;
-        const client = await MongoClient.connect(this.DBUrl);
-        const db = await client.db(this.DB);
-        const col = await db.collection<User>(this.CollectionName);
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection<User>(this.CollectionName);
 
-        const findResult = await col.findOne({email: body.email});
-        if (findResult) {
-            if (findResult.email === body.email) {
-                ctx.response.body = '해당 계정이 이미 존재합니다.';
+            const findResult = await col.findOne({email: body.email});
+            if (findResult) {
+                if (findResult.email === body.email) {
+                    ctx.response.body = '해당 계정이 이미 존재합니다.';
+                    ctx.response.status = HttpStatus.OK;
+                }
+            } else {
+                const result = await col.insert({
+                    email: body.email, pw: body.pw, name: body.name, birth: body.birth, isMale: body.isMale, address: body.address, joindate: Date.now()
+                });
+                ctx.response.body = {result};
                 ctx.response.status = HttpStatus.OK;
             }
-        } else {
-            const result = await col.insert({email: body.email, pw: body.pw, name: body.name, birth: body.birth, isMale: body.isMale, address: body.address, joindate: Date.now()});
-            ctx.response.body = {result};
-            ctx.response.status = HttpStatus.OK;
-        }
+        });
     }
 
     @route('/login')

@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, Db } from 'mongodb';
 import { EnvService } from './env.service';
 
 export class DBService {
@@ -18,6 +18,16 @@ export class DBService {
         const conn = await MongoClient.connect(this.MongodbUri);
         try {
             await fn(conn);
+        } finally {
+            await conn.close();
+        }
+    }
+
+    async performWithDB(fn: (db: Db) => Promise<any>) {
+        const conn = await MongoClient.connect(this.MongodbUri);
+        try {
+            const db = await conn.db(this.dbName);
+            await fn(db);
         } finally {
             await conn.close();
         }
