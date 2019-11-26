@@ -1,14 +1,12 @@
 import Koa from 'koa';
-import {route, GET, POST, PUT, findControllers, DELETE} from 'awilix-koa';
+import {route, GET, POST} from 'awilix-koa';
 import * as HttpStatus from 'http-status-codes';
 import {DBService} from '../services/db.service';
 import {EnvService} from '../services/env.service';
 import {DBServiceClient, AppServerClient, EnvServiceClient} from '../modules';
 import {AppServer} from '../server';
-import {MongoClient} from 'mongodb';
 import * as password from 'secure-random-password';
 import * as nodemailer from 'nodemailer';
-import {exportDefaultSpecifier} from '@babel/types';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
@@ -55,21 +53,17 @@ export default class AuthAPI implements MyDependencies {
         this.dbService = dbService;
         this.appServer = appServer;
         this.envService = envService;
-        this.DBUrl = 'mongodb://' + this.envService.get().DB_HOST + ':' + this.envService.get().DB_PORT;
         this.DB = this.envService.get().DB_NAME;
-        this.CollectionName = 'user';
     }
 
-    DBUrl: string;
     DB: string;
-    CollectionName: string;
 
     @route('/join')
     @POST()
     async join(ctx: Koa.Context) {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection<User>(this.CollectionName);
+            const col = await db.collection<User>(DBService.UserCollection);
 
             const findResult = await col.findOne({email: body.email});
             if (findResult) {
@@ -98,7 +92,7 @@ export default class AuthAPI implements MyDependencies {
     async login(ctx: Koa.Context) {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection(this.CollectionName);
+            const col = await db.collection(DBService.UserCollection);
             const result = await col.findOne({email: body.email});
             ctx.response.body = body.pw === result.pw ? 'true' : 'false';
             ctx.response.status = HttpStatus.OK;
@@ -110,7 +104,7 @@ export default class AuthAPI implements MyDependencies {
     async findid(ctx: Koa.Context) {
         const query = ctx.request.query;
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection(this.CollectionName);
+            const col = await db.collection(DBService.UserCollection);
             const result = await col.findOne({name: query.name, birth: query.birth, address: query.address});
             ctx.response.body = result.email;
             ctx.response.status = HttpStatus.OK;
@@ -122,7 +116,7 @@ export default class AuthAPI implements MyDependencies {
     async findpw(ctx: Koa.Context) {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection(this.CollectionName);
+            const col = await db.collection(DBService.UserCollection);
             const newpw = await password.randomPassword({characters: [password.upper, password.symbols, password.lower, password.digits]});
             await col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, address: body.address}, {$set: {pw: newpw}});
             const newinfo = await col.findOne({email: body.email});
@@ -140,9 +134,9 @@ export default class AuthAPI implements MyDependencies {
                 to: newinfo.email,
                 subject: 'Login Secret for PHR',
                 html: `Hello! Your login secret is <h2>${newinfo.pw}</h2>.<br /> Copy and paste on the app/website to log in`
-            };
+            } as nodemailer.SendMailOptions;
             // sendSecretMail();
-            transporter.sendMail(email, (err, info) => {
+            await transporter.sendMail(email, (err, info) => {
                 if (err) {
                     console.log(err);
                 } else {
@@ -163,9 +157,9 @@ export default class AuthAPI implements MyDependencies {
     async signout(ctx: Koa.Context) {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection(this.CollectionName);
+            const col = await db.collection(DBService.UserCollection);
             const result = await col.findOne({email: body.email});
-            ctx.response.body = body.pw === result.pw ? 'true' : 'false';
+            ctx.response.body = (body.pw === result.pw);
             ctx.response.status = HttpStatus.OK;
         });
     }
