@@ -97,7 +97,7 @@ export default class AuthAPI implements MyDependencies {
             if (!result) {
                 ctx.response.body = false;
             } else {
-                ctx.response.body = (body.pw === result.pw ? true : false);
+                ctx.response.body = body.pw === result.pw ? true : false;
             }
             ctx.response.status = HttpStatus.OK;
         });
@@ -110,8 +110,10 @@ export default class AuthAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
             const result = await col.findOne({name: query.name, birth: query.birth, address: query.address});
-            ctx.response.body = result.email;
-            ctx.response.status = HttpStatus.OK;
+            if (result) {
+                ctx.response.body = result.email;
+                ctx.response.status = HttpStatus.OK;
+            }
         });
     }
 
@@ -133,20 +135,22 @@ export default class AuthAPI implements MyDependencies {
                     pass: this.envService.env.SENDERPW
                 }
             });
-            const email = {
-                from: this.envService.env.SENDER,
-                to: newinfo.email,
-                subject: 'Login Secret for PHR',
-                html: `Hello! Your login secret is <h2>${newinfo.pw}</h2>.<br /> Copy and paste on the app/website to log in`
-            } as nodemailer.SendMailOptions;
+            if (newinfo) {
+                const email = {
+                    from: this.envService.env.SENDER,
+                    to: newinfo.email,
+                    subject: 'Login Secret for PHR',
+                    html: `Hello! Your login secret is <h2>${newinfo.pw}</h2>.<br /> Copy and paste on the app/website to log in`
+                } as nodemailer.SendMailOptions;
+                await transporter.sendMail(email, (err, info) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(info);
+                    }
+                });
+            }
             // sendSecretMail();
-            await transporter.sendMail(email, (err, info) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log(info);
-                }
-            });
 
             ctx.response.status = HttpStatus.OK;
         });
@@ -163,8 +167,10 @@ export default class AuthAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
             const result = await col.findOne({email: body.email});
-            ctx.response.body = (body.pw === result.pw);
-            ctx.response.status = HttpStatus.OK;
+            if (result) {
+                ctx.response.body = body.pw === result.pw;
+                ctx.response.status = HttpStatus.OK;
+            }
         });
     }
 
