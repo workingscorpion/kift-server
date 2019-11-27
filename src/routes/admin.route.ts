@@ -84,7 +84,7 @@ export default class AdminAPI implements MyDependencies {
                 // result = JSON.parse(JSON.stringify(result1) + `{children: ${result2}}`);
                 result = Object.assign(result1, result2);
             }
-
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
