@@ -78,7 +78,7 @@ export default class AdminAPI implements MyDependencies {
             let result2;
             let result;
             if (result1) {
-                result2 = await col1.find({parent: result1.email}).toArray();
+                result2 = {childrenInfo: await col1.find({parent: result1.email}).toArray()};
                 console.log('result2 :', result2);
                 // result = JSON.stringify(result1) + `,{"children": "${result2}"}`;
                 // result = JSON.parse(JSON.stringify(result1) + `{children: ${result2}}`);
