@@ -17,8 +17,9 @@ interface User {
     joindate?: Date;
     name?: string;
     birth?: Date;
-    isMale?: boolean;
+    isMale?: Boolean;
     address?: string;
+    children?: string[];
 }
 
 /**
@@ -70,15 +71,21 @@ export default class AuthAPI implements MyDependencies {
                     ctx.response.status = HttpStatus.OK;
                 }
             } else {
+                let gender = false;
+                if (body.isMale === 'true') {
+                    gender = true;
+                }
                 const result = await col.insert({
                     email: body.email,
                     pw: body.pw,
                     name: body.name,
                     birth: new Date(body.birth),
-                    isMale: body.isMale,
+                    isMale: gender,
                     address: body.address,
-                    joindate: new Date(Date.now())
+                    joindate: new Date(Date.now()),
+                    children: []
                 });
+                console.log('join result :', result);
                 ctx.response.body = {result};
                 ctx.response.status = HttpStatus.OK;
             }

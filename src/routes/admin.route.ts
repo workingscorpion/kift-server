@@ -21,8 +21,9 @@ interface User {
     joindate?: Date;
     name?: string;
     birth?: Date;
-    isMale?: boolean;
+    isMale?: Boolean;
     address?: string;
+    children?: number;
 }
 
 /**
@@ -71,7 +72,7 @@ export default class AdminAPI implements MyDependencies {
         const params = ctx.params;
         console.log('params :', params);
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection<User>('user');
+            const col = await db.collection<User>(DBService.UserCollection);
             const result = await col.findOne({email: params.email});
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
