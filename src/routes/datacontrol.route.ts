@@ -11,7 +11,7 @@ type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
 interface Inbody {
     email: string;
-    childNum?: number;
+    childrenId?: number;
     height?: number;
     weight?: number;
     BMI?: number;
@@ -80,7 +80,7 @@ export default class DataControlAPI implements MyDependencies {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
             const result = await col.insert({
                 email: body.email,
-                childNum: Number(body.childNum),
+                childrenId: Number(body.childrenId),
                 height: Number(body.height),
                 weight: Number(body.weight),
                 BMI: Number((body.weight / (body.height * 0.01 * (body.height * 0.01))).toFixed(2)),
@@ -105,10 +105,10 @@ export default class DataControlAPI implements MyDependencies {
     @GET()
     async read(ctx: Koa.Context) {
         const {email} = ctx.request.query;
-        const {childNum} = ctx.request.query;
+        const {childrenId} = ctx.request.query;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
-            const result = await col.find({email: email, childNum: childNum}).toArray();
+            const result = await col.find({email: email, childrenId: childrenId}).toArray();
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -121,11 +121,11 @@ export default class DataControlAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
             const result = await col.findOneAndUpdate(
-                {email: body.email, childNum: body.childNum},
+                {email: body.email, childrenId: body.childrenId},
                 {
                     $set: {
                         email: body.email,
-                        childNum: body.childNum,
+                        childrenId: body.childrenId,
                         height: body.height,
                         weight: body.weight,
                         BMI: body.BMI,
@@ -156,7 +156,7 @@ export default class DataControlAPI implements MyDependencies {
         const body = ctx.request.query;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
-            const result = await col.remove({email: body.email, childNum: body.childNum});
+            const result = await col.remove({email: body.email, childrenId: body.childrenId});
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
