@@ -5,6 +5,7 @@ import {DBService} from '../services/db.service';
 import {EnvService} from '../services/env.service';
 import {DBServiceClient, AppServerClient, EnvServiceClient} from '../modules';
 import {AppServer} from '../server';
+import multer from 'koa-multer';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
@@ -52,6 +53,16 @@ export default class DataControlAPI implements MyDependencies {
         this.dbService = dbService;
         this.appServer = appServer;
         this.envService = envService;
+
+        const storageImage = multer.diskStorage({
+            destination: (req, file, callback) => {
+                callback(null, `${this.envService.get().UPLOAD_DIR}/`);
+            },
+            filename: (req, file, callback) => {
+                callback(null, file.originalname);
+            }
+        });
+        this.singleUploadMiddleware = multer({storage: storageImage}).single('file');
     }
 
     @route('/create')
@@ -151,7 +162,33 @@ export default class DataControlAPI implements MyDependencies {
         });
     }
 
+    @route('/createChild')
+    @GET()
+    async createChild(ctx: Koa.Context, next: () => Promise<any>) {
+        const query = ctx.request.query;
+        await this.singleUploadMiddleware(ctx, next);
+        await this.dbService.performWithDB(async db => {
+            const col1 = await db.collection(DBService.ChildrenCollection);
+            let gender = false;
+            if (query.isMale === 'true') {
+                gender = true;
+            }
+            const childId = await col1.insert({parent: query.email, name: query.name, birth: new Date(query.birth), profile: query.image, isMale: gender}).then(json => json.insertedIds);
+
+            const col = await db.collection(DBService.UserCollection);
+            let childrenresult = await col.findOne({email: query.email}).then(json => json.children);
+            if (childrenresult === (null || undefined)) {
+                childrenresult = [];
+            }
+            childrenresult.push(childId);
+            const result = await col.findOneAndUpdate({email: query.email}, {$set: {children: childrenresult}});
+            ctx.response.body = {result};
+            ctx.response.status = HttpStatus.OK;
+        });
+    }
+
     dbService: DBService;
     appServer: AppServer;
     envService: EnvService;
+    singleUploadMiddleware: Koa.Middleware;
 }
