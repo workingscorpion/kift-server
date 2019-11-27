@@ -41,9 +41,12 @@ export default class AdminAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<UserList>(DBService.UserCollection);
             const results = await col.find({}).toArray();
-            const result = results.map(doc => doc.email);
-            ctx.response.body = {result};
+            console.log('results.length :', results.length);
+            ctx.response.body = {results};
+            // ctx.set('Access-Control-Allow-Origin', 'http://localhost:3000');
             ctx.set('Access-Control-Allow-Origin', '*');
+            // ctx.set('Access-COntrol-Allow-Credentials', 'true');
+
             ctx.response.status = HttpStatus.OK;
         });
     }
