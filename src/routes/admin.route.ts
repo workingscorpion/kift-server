@@ -23,7 +23,6 @@ interface User {
     birth?: Date;
     isMale?: Boolean;
     address?: string;
-    children?: number;
 }
 
 /**
@@ -83,6 +82,27 @@ export default class AdminAPI implements MyDependencies {
                 // result = JSON.stringify(result1) + `,{"children": "${result2}"}`;
                 // result = JSON.parse(JSON.stringify(result1) + `{children: ${result2}}`);
                 result = Object.assign(result1, result2);
+            }
+            ctx.set('Access-Control-Allow-Origin', '*');
+            ctx.response.body = {result};
+            ctx.response.status = HttpStatus.OK;
+        });
+    }
+
+    @route('/search/:payload')
+    @GET()
+    async search(ctx: Koa.Context) {
+        // #TODO: 특정 유저의 정보를 가져오는 routing
+        const params = ctx.params;
+        const query = ctx.request.query;
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection<User>(DBService.UserCollection);
+            let result;
+            // if (params.payload.indexOf('@') === -1) {
+            if (query.searchWay === 'name') {
+                result = await col.find({name: new RegExp(params.payload)}).toArray();
+            } else if (query.searchWay === 'email') {
+                result = await col.find({email: new RegExp(params.payload)}).toArray();
             }
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
