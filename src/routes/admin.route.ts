@@ -10,6 +10,19 @@ type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
 interface UserList {
     email?: string;
+    name?: string;
+    isMale?: Boolean;
+    joindate?: Date;
+}
+
+interface User {
+    email?: string;
+    pw?: string;
+    joindate?: Date;
+    name?: string;
+    birth?: Date;
+    isMale?: boolean;
+    address?: string;
 }
 
 /**
@@ -51,11 +64,18 @@ export default class AdminAPI implements MyDependencies {
         });
     }
 
-    @route('/queryuser/:user')
+    @route('/queryuser/:email')
     @GET()
     async querysuser(ctx: Koa.Context) {
         // #TODO: 특정 유저의 정보를 가져오는 routing
-        await this.dbService.performWithDB(async db => {});
+        const params = ctx.params;
+        console.log('params :', params);
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection<User>('user');
+            const result = await col.findOne({email: params.email});
+            ctx.response.body = {result};
+            ctx.response.status = HttpStatus.OK;
+        });
     }
 
     // #TODO: 한 번 호출하면 잘 종료가 안되고, 두 번 호출해야 종료 되는데 이유 조사할 것.
