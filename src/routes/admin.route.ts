@@ -73,7 +73,18 @@ export default class AdminAPI implements MyDependencies {
         console.log('params :', params);
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
-            const result = await col.findOne({email: params.email});
+            const result1 = await col.findOne({email: params.email});
+            const col1 = await db.collection<User>(DBService.ChildrenCollection);
+            let result2;
+            let result;
+            if (result1) {
+                result2 = await col1.find({parent: result1.email}).toArray();
+                console.log('result2 :', result2);
+                // result = JSON.stringify(result1) + `,{"children": "${result2}"}`;
+                // result = JSON.parse(JSON.stringify(result1) + `{children: ${result2}}`);
+                result = Object.assign(result1, result2);
+            }
+
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
