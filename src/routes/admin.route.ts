@@ -5,6 +5,8 @@ import {DBService} from '../services/db.service';
 import {EnvService} from '../services/env.service';
 import {DBServiceClient, AppServerClient, EnvServiceClient} from '../modules';
 import {AppServer} from '../server';
+import {BooleanLiteralTypeAnnotation} from '@babel/types';
+import {http} from 'winston';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
@@ -34,6 +36,7 @@ interface User {
  * @api {get} /api/v1/admin/queryuser/:user userdata
  * @apiName querysuser
  * @apiGroup Owners
+ *
  *
  * @api {get} /api/v1/admin/shutdown shutdown
  * @apiName shutdown
@@ -79,8 +82,6 @@ export default class AdminAPI implements MyDependencies {
             if (result1) {
                 result2 = {childrenInfo: await col1.find({parent: result1.email}).toArray()};
                 console.log('result2 :', result2);
-                // result = JSON.stringify(result1) + `,{"children": "${result2}"}`;
-                // result = JSON.parse(JSON.stringify(result1) + `{children: ${result2}}`);
                 result = Object.assign(result1, result2);
             }
             ctx.set('Access-Control-Allow-Origin', '*');
@@ -98,7 +99,6 @@ export default class AdminAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
             let result;
-            // if (params.payload.indexOf('@') === -1) {
             if (query.searchWay === 'name') {
                 result = await col.find({name: new RegExp(params.payload)}).toArray();
             } else if (query.searchWay === 'email') {
@@ -106,6 +106,42 @@ export default class AdminAPI implements MyDependencies {
             }
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
+            ctx.response.status = HttpStatus.OK;
+        });
+    }
+
+    @route('/update/:payload')
+    @POST()
+    async update(ctx: Koa.Context) {
+        const params = ctx.params;
+        const body = ctx.request.body;
+
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection(DBService.UserCollection);
+            let updatequery;
+            for (let i in body) {
+                if (i === 'isMale') {
+                    if (body[i] === 'true') {
+                        body[i] = true;
+                    } else {
+                        body[i] === false;
+                    }
+                    updatequery = {isMale: body[i]};
+                }
+                if (i === 'birth') {
+                    body[i] = new Date(body[i]);
+                    updatequery = {birth: body[i]};
+                }
+                if (i === 'name') {
+                    updatequery = {name: body[i]};
+                }
+
+                console.log('updatequery :', updatequery);
+                await col.findOneAndUpdate({email: params.payload}, {$set: updatequery});
+            }
+            const result = await col.findOne({email: params.payload});
+
+            ctx.response.body = result;
             ctx.response.status = HttpStatus.OK;
         });
     }
