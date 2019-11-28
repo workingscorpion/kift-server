@@ -37,6 +37,17 @@ interface User {
  * @apiName querysuser
  * @apiGroup Owners
  *
+ * @api {get} /api/v1/admin/queryuser/:email specific member query
+ * @apiName querysuser
+ * @apiGroup Owners
+ *
+ * @api {get} /api/v1/admin/search/:payload search
+ * @apiName search
+ * @apiGroup Owners
+ *
+ * @api {post} /api/v1/admin/update/:payload member information update
+ * @apiName update
+ * @apiGroup Owners
  *
  * @api {get} /api/v1/admin/shutdown shutdown
  * @apiName shutdown
