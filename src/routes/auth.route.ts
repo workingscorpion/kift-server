@@ -18,7 +18,6 @@ interface User {
     name?: string;
     birth?: Date;
     isMale?: Boolean;
-    address?: string;
     children?: string[];
 }
 
@@ -81,7 +80,6 @@ export default class AuthAPI implements MyDependencies {
                     name: body.name,
                     birth: new Date(body.birth),
                     isMale: gender,
-                    address: body.address,
                     joindate: new Date(Date.now()),
                     children: []
                 });
@@ -114,7 +112,7 @@ export default class AuthAPI implements MyDependencies {
         const query = ctx.request.query;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
-            const result = await col.findOne({name: query.name, birth: query.birth, address: query.address});
+            const result = await col.findOne({name: query.name, birth: query.birth});
             if (result) {
                 ctx.response.body = result.email;
                 ctx.response.status = HttpStatus.OK;
@@ -130,7 +128,7 @@ export default class AuthAPI implements MyDependencies {
             const col = await db.collection<User>(DBService.UserCollection);
             const newpw = await password.randomPassword({characters: [password.upper, password.symbols, password.lower, password.digits]});
             await setpw(col, body, newpw);
-            // await col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, address: body.address}, {$set: {pw: newpw}});
+            // await col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth}, {$set: {pw: newpw}});
             const newinfo = await col.findOne({email: body.email});
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
@@ -192,5 +190,5 @@ export default class AuthAPI implements MyDependencies {
 }
 
 const setpw = (col: Collection<User>, body: any, newpw: string): any => {
-    return col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, address: body.address, pw: body.pw}, {$set: {pw: newpw}});
+    return col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, pw: body.pw}, {$set: {pw: newpw}});
 };

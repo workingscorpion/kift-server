@@ -5,8 +5,6 @@ import {DBService} from '../services/db.service';
 import {EnvService} from '../services/env.service';
 import {DBServiceClient, AppServerClient, EnvServiceClient} from '../modules';
 import {AppServer} from '../server';
-import {BooleanLiteralTypeAnnotation} from '@babel/types';
-import {http} from 'winston';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
@@ -24,7 +22,7 @@ interface User {
     name?: string;
     birth?: Date;
     isMale?: Boolean;
-    address?: string;
+    children?: string[];
 }
 
 /**
