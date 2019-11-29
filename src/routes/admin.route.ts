@@ -12,7 +12,7 @@ interface UserList {
     email?: string;
     name?: string;
     isMale?: Boolean;
-    joindate?: Date;
+    joindate?: number;
 }
 
 interface User {
@@ -20,7 +20,7 @@ interface User {
     pw?: string;
     joindate?: Date;
     name?: string;
-    birth?: Date;
+    birth?: string;
     isMale?: Boolean;
     children?: string[];
 }
@@ -127,28 +127,28 @@ export default class AdminAPI implements MyDependencies {
 
         await this.dbService.performWithDB(async db => {
             const col = await db.collection(DBService.UserCollection);
-            let updatequery;
-            for (let i in body) {
-                if (i === 'isMale') {
-                    if (body[i] === 'true') {
-                        body[i] = true;
-                    } else {
-                        body[i] === false;
-                    }
-                    updatequery = {isMale: body[i]};
-                }
-                if (i === 'birth') {
-                    body[i] = new Date(body[i]);
-                    updatequery = {birth: body[i]};
-                }
-                if (i === 'name') {
-                    updatequery = {name: body[i]};
-                }
+            // let updatequery;
+            // for (let i in body) {
+            //     if (i === 'isMale') {
+            //         if (body[i] === 'true') {
+            //             body[i] = true;
+            //         } else {
+            //             body[i] === false;
+            //         }
+            //         updatequery = {isMale: body[i]};
+            //     }
+            //     if (i === 'birth') {
+            //         updatequery = {birth: body[i]};
+            //     }
+            //     if (i === 'name') {
+            //         updatequery = {name: body[i]};
+            //     }
 
-                console.log('updatequery :', updatequery);
-                await col.findOneAndUpdate({email: params.payload}, {$set: updatequery});
-            }
-            const result = await col.findOne({email: params.payload});
+            //     console.log('updatequery :', updatequery);
+            //     await col.findOneAndUpdate({email: params.payload}, {$set: updatequery});
+            // }
+            const result = await col.findOneAndUpdate({email: params.payload}, {$set: body});
+            // const result = await col.findOne({email: params.payload});
 
             ctx.response.body = result;
             ctx.response.status = HttpStatus.OK;
