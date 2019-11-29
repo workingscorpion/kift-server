@@ -127,28 +127,13 @@ export default class AdminAPI implements MyDependencies {
 
         await this.dbService.performWithDB(async db => {
             const col = await db.collection(DBService.UserCollection);
-            // let updatequery;
-            // for (let i in body) {
-            //     if (i === 'isMale') {
-            //         if (body[i] === 'true') {
-            //             body[i] = true;
-            //         } else {
-            //             body[i] === false;
-            //         }
-            //         updatequery = {isMale: body[i]};
-            //     }
-            //     if (i === 'birth') {
-            //         updatequery = {birth: body[i]};
-            //     }
-            //     if (i === 'name') {
-            //         updatequery = {name: body[i]};
-            //     }
-
-            //     console.log('updatequery :', updatequery);
-            //     await col.findOneAndUpdate({email: params.payload}, {$set: updatequery});
-            // }
+            console.log('update body :', body);
+            delete body['_id'];
+            console.log('delete body:', body);
             const result = await col.findOneAndUpdate({email: params.payload}, {$set: body});
             // const result = await col.findOne({email: params.payload});
+
+            // ctx.set('Access-Control-Allow-Origin', '*');
 
             ctx.response.body = result;
             ctx.response.status = HttpStatus.OK;
