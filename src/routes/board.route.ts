@@ -5,6 +5,7 @@ import {DBService} from '../services/db.service';
 import {EnvService} from '../services/env.service';
 import {DBServiceClient, AppServerClient, EnvServiceClient} from '../modules';
 import {AppServer} from '../server';
+import mongodb from 'mongodb';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
@@ -132,12 +133,15 @@ export default class BoardAPI implements MyDependencies {
 
     //리스트에서 삭제할 경우
     @route('/delete')
-    @DELETE()
+    @GET()
     async delete(ctx: Koa.Context) {
-        const params = ctx.params;
+        const {id} = ctx.request.query;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            const result = await col.remove({_id: params.id});
+            for (let i in id) {
+                await col.remove({_id: new mongodb.ObjectId(id[i])});
+            }
+            const result = await col.find({}).toArray();
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
