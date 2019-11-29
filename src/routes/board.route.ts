@@ -10,7 +10,7 @@ import mongodb from 'mongodb';
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
 interface Board {
-    _id?: string;
+    _id?: mongodb.ObjectID;
     title?: string;
     description?: string;
     writer?: string;
@@ -85,10 +85,10 @@ export default class BoardAPI implements MyDependencies {
     @route('/read/:id')
     @GET()
     async read(ctx: Koa.Context) {
-        const params = ctx.params;
+        const {id} = ctx.params;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            const result = await col.findOne({_id: params.id});
+            const result = await col.findOne({_id: new mongodb.ObjectId(id)});
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -102,7 +102,7 @@ export default class BoardAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
             const result = await col.findOneAndUpdate(
-                {_id: params.id},
+                {_id: new mongodb.ObjectId(params.id)},
                 {
                     $set: {
                         title: body.title,
@@ -125,7 +125,7 @@ export default class BoardAPI implements MyDependencies {
         const params = ctx.params;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            const result = await col.remove({_id: params.id});
+            const result = await col.remove({_id: new mongodb.ObjectId(params.id)});
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
