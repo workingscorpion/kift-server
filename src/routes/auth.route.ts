@@ -14,7 +14,7 @@ type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 interface User {
     email?: string;
     pw?: string;
-    joindate?: Date;
+    joindate?: number;
     name?: string;
     birth?: Date;
     isMale?: Boolean;
@@ -70,17 +70,13 @@ export default class AuthAPI implements MyDependencies {
                     ctx.response.status = HttpStatus.OK;
                 }
             } else {
-                let gender = false;
-                if (body.isMale === 'true') {
-                    gender = true;
-                }
                 const result = await col.insert({
                     email: body.email,
                     pw: body.pw,
                     name: body.name,
                     birth: new Date(body.birth),
-                    isMale: gender,
-                    joindate: new Date(Date.now()),
+                    isMale: body.isMale === 'true' ? true : false,
+                    joindate: Date.now(),
                     children: []
                 });
                 console.log('join result :', result);
