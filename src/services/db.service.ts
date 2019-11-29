@@ -42,4 +42,5 @@ export class DBService {
     static readonly UserCollection = 'user';
     static readonly SettingCollection = 'setting';
     static readonly ChildrenCollection = 'children';
+    static readonly BoardCollection = 'board';
 }

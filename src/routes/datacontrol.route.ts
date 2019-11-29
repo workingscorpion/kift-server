@@ -12,6 +12,7 @@ type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 interface Inbody {
     email: string;
     childrenId?: number;
+    // bodydata?:[]
     height?: number;
     weight?: number;
     BMI?: number;
