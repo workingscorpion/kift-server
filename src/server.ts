@@ -15,6 +15,8 @@ import {TestQueries} from './graphql/testqueries';
 import * as bodyparser from 'koa-bodyparser';
 import * as cors from '@koa/cors';
 import multer from 'koa-multer';
+import mount from 'koa-mount';
+import serve from 'koa-static';
 // import bodyParser from 'body-parser';
 
 export class AppServer {
@@ -87,6 +89,7 @@ export class AppServer {
             })
         );
 
+        app.use(mount('/', serve('./www')));
         app.use(bodyparser.default());
         app.use(scopePerRequest(container));
         app.use(loadControllers('routes/*.route.js', {cwd: __dirname}));
