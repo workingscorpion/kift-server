@@ -131,6 +131,7 @@ export default class AdminAPI implements MyDependencies {
             delete body['_id'];
             console.log('delete body:', body);
             const result = await col.findOneAndUpdate({email: params.payload}, {$set: body});
+            ctx.set('Access-Control-Allow-Origin', '*');
             // const result = await col.findOne({email: params.payload});
 
             // ctx.set('Access-Control-Allow-Origin', '*');
