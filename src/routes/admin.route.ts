@@ -65,7 +65,8 @@ export default class AdminAPI implements MyDependencies {
     async queryuser(ctx: Koa.Context) {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<UserList>(DBService.UserCollection);
-            const results = await col.find({}).toArray();
+            const results = await col.find({}, {projection: {pw: 0}}).toArray();
+            // const results = await col.find({}).toArray();
             console.log('results.length :', results.length);
             ctx.response.body = {results};
             // ctx.set('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -84,7 +85,7 @@ export default class AdminAPI implements MyDependencies {
         console.log('params :', params);
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
-            const result1 = await col.findOne({email: params.email});
+            const result1 = await col.findOne({email: params.email}, {projection: {pw: 0, children: 0}});
             const col1 = await db.collection<User>(DBService.ChildrenCollection);
             let result2;
             let result;
@@ -109,16 +110,15 @@ export default class AdminAPI implements MyDependencies {
             const col = await db.collection<User>(DBService.UserCollection);
             let result;
             if (query.searchWay === 'name') {
-                result = await col.find({name: new RegExp(params.payload)}).toArray();
+                result = await col.find({name: new RegExp(params.payload)}, {projection: {pw: 0, children: 0}}).toArray();
             } else if (query.searchWay === 'email') {
-                result = await col.find({email: new RegExp(params.payload)}).toArray();
+                result = await col.find({email: new RegExp(params.payload)}, {projection: {pw: 0, children: 0}}).toArray();
             }
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
     }
-
     @route('/update/:payload')
     @POST()
     async update(ctx: Koa.Context) {
