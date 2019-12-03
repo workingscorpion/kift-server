@@ -39,6 +39,7 @@ export default class BoardAPI implements MyDependencies {
                 writedate: Date.now(),
                 fix: body.fix === 'true' ? true : false
             });
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -109,6 +110,7 @@ export default class BoardAPI implements MyDependencies {
                 }
             );
             const result = await col.findOne({_id: new mongodb.ObjectId(params.id)});
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
