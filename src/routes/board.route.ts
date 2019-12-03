@@ -23,23 +23,37 @@ interface Board {
  * @apiVersion 0.0.0
  * @apiName board create
  * @apiGroup scorpion
- * @apiParam {object} body x-www-form-urlencoded 데이터
+ * @apiParam {string} title 공지사항 제목
+ * @apiParam {string} description 공지사항 내용
+ * @apiParam {string} writer 작성자
+ * @apiParam {boolean} fix 상단고정 여부
  * @apiParamExample {json} Request-Example:
  *     {
  *      "title": "공지사항 제목입니다",
  *      "description" : "공지사항 내용입니다",
  *      "writer" : "admin@naver.com",
- *      "writedate" : "19-11-12",
  *      "fix" : true
  *     }
- * @apiSuccess {object} response DB에 저장된 데이터값
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/create
+ * @apiSuccess {string} _id ObjectId
+ * @apiSuccess {string} title 공지사항 제목
+ * @apiSuccess {string} description 공지사항 내용
+ * @apiSuccess {string} writer 작성자
+ * @apiSuccess {number} writedate 작성일
+ * @apiSuccess {boolean} fix 상단고정 여부
  */
 /**
  * @api {get} /api/v1/board/adlist 관리자용 공지사항 리스트 출력 API
  * @apiVersion 0.0.0
  * @apiName board admin list
  * @apiGroup scorpion
- * @apiSuccess {object} response 관리자용 공지사항 전체 출력
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/adlist
+ * @apiSuccess {string} _id ObjectId
+ * @apiSuccess {string} title 공지사항 제목
+ * @apiSuccess {string} description 공지사항 내용
+ * @apiSuccess {string} writer 작성자
+ * @apiSuccess {number} writedate 작성일
+ * @apiSuccess {boolean} fix 상단고정 여부
  */
 
 /**
@@ -47,7 +61,10 @@ interface Board {
  * @apiVersion 0.0.0
  * @apiName board list
  * @apiGroup scorpion
- * @apiSuccess {object} response 사용자용 공지사항 전체 출력
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/list
+ * @apiSuccess {string} _id ObjectId
+ * @apiSuccess {string} title 공지사항 제목
+ * @apiSuccess {number} writedate 작성일
  */
 
 /**
@@ -57,7 +74,12 @@ interface Board {
  * @apiGroup scorpion
  * @apiParam {string} id 상세보기할 해당 공지사항 ObjectId
  * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/read/5de089d569296802f0982b44/
- * @apiSuccess {object} response 조회한 ObjectId를 가진 공지사항 게시물 데이터
+ * @apiSuccess {string} _id ObjectId
+ * @apiSuccess {string} title 공지사항 제목
+ * @apiSuccess {string} description 공지사항 내용
+ * @apiSuccess {string} writer 작성자
+ * @apiSuccess {number} writedate 작성일
+ * @apiSuccess {boolean} fix 상단고정 여부
  */
 
 /**
@@ -65,7 +87,11 @@ interface Board {
  * @apiVersion 0.0.0
  * @apiName board update
  * @apiGroup scorpion
- * @apiParam {object} body x-www-form-urlencoded 데이터
+ * @apiParam {string} id 상세보기할 해당 공지사항 ObjectId
+ * @apiParam {string} title 공지사항 제목
+ * @apiParam {string} description 공지사항 내용
+ * @apiParam {string} writer 작성자
+ * @apiParam {boolean} fix 상단고정 여부
  * @apiParamExample {json} Request-Example:
  *     {
  *      "title": "수정된 공지사항 제목입니다",
@@ -75,7 +101,12 @@ interface Board {
  *      "fix" : false
  *     }
  * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/update/5de089d569296802f0982b44/
- * @apiSuccess {object} response 수정된 데이터값
+ * @apiSuccess {string} _id ObjectId
+ * @apiSuccess {string} title 공지사항 제목
+ * @apiSuccess {string} description 공지사항 내용
+ * @apiSuccess {string} writer 작성자
+ * @apiSuccess {number} writedate 작성일
+ * @apiSuccess {boolean} fix 상단고정 여부
  */
 
 /**
@@ -94,12 +125,11 @@ interface Board {
  * @apiGroup scorpion
  * @apiParam {string} query 삭제할 공지사항 ObjectId 여러개
  * @apiParam {string} query 삭제할 공지사항 ObjectId 여러개
- * @apiParam {string} query 삭제할 공지사항 ObjectId 여러개
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/delete?id=5de089d569296802f0982b44&id=5de0bc65188c5712c8e177ea
  * @apiParamExample {string[]} Request-Example:
  *     {
  *      "id": "5de089d569296802f0982b44",
- *      "id" : "5de089d569296802f0982b45",
- *      "id" : "5de089d569296802f0982b46",
+ *      "id" : "5de0bc65188c5712c8e177ea"
  *     }
  */
 
@@ -141,6 +171,7 @@ export default class BoardAPI implements MyDependencies {
                 .toArray();
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
+            ctx.set('Access-Control-Allow-Origin', '*');
         });
     }
 
@@ -185,7 +216,7 @@ export default class BoardAPI implements MyDependencies {
                         title: body.title,
                         description: body.description,
                         writer: body.writer,
-                        writedate: Date.now(),
+                        // writedate: Date.now(),
                         fix: body.fix === 'true' ? true : false
                     }
                 }

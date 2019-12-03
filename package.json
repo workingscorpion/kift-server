@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "npm run apidoc && npm run build && npm run start:dev",
+    "start": "npm run build && npm run apidoc && npm run start:dev",
     "start:dev": "better-npm-run start:dev",
     "start:prod": "better-npm-run start:prod",
     "stop": "pkill --signal SIGINT ts-api-server",
@@ -105,7 +105,7 @@
   },
   "apidoc": {
     "name": "magpie-tech API",
-    "version": "0.1.0",
+    "version": "0.0.0",
     "description": "magpie-tech API",
     "title": "magpie-tech API",
     "url": "http://192.168.0.84:3002"
