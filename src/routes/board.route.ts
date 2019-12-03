@@ -37,7 +37,7 @@ export default class BoardAPI implements MyDependencies {
                 description: body.description,
                 writer: body.writer,
                 writedate: Date.now(),
-                fix: body.fix === 'true' ? true : false
+                fix: body.fix
             });
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
@@ -105,7 +105,7 @@ export default class BoardAPI implements MyDependencies {
                         description: body.description,
                         writer: body.writer,
                         // writedate: Date.now(),
-                        fix: body.fix === 'true' ? true : false
+                        fix: body.fix
                     }
                 }
             );
