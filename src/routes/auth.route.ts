@@ -63,6 +63,11 @@ export default class AuthAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
 
+            //bcrypt 적용
+            // let hspw;
+            // await bcrypt.hash(body.pw, 10).then(newpw => (hspw = newpw));
+            // console.log('hspw :', hspw);
+
             const findResult = await col.findOne({email: body.email});
             if (findResult) {
                 if (findResult.email === body.email) {
@@ -72,6 +77,7 @@ export default class AuthAPI implements MyDependencies {
             } else {
                 const result = await col.insert({
                     email: body.email,
+                    // pw: hspw,
                     pw: body.pw,
                     name: body.name,
                     birth: new Date(body.birth),
