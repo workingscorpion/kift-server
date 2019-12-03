@@ -25,33 +25,6 @@ interface User {
     children?: string[];
 }
 
-/**
- *
- * @api {get} /api/v1/admin/queryuser userlist
- * @apiName queryuser
- * @apiGroup Owners
- *
- * @api {get} /api/v1/admin/queryuser/:user userdata
- * @apiName querysuser
- * @apiGroup Owners
- *
- * @api {get} /api/v1/admin/queryuser/:email specific member query
- * @apiName querysuser
- * @apiGroup Owners
- *
- * @api {get} /api/v1/admin/search/:payload search
- * @apiName search
- * @apiGroup Owners
- *
- * @api {post} /api/v1/admin/update/:payload member information update
- * @apiName update
- * @apiGroup Owners
- *
- * @api {get} /api/v1/admin/shutdown shutdown
- * @apiName shutdown
- * @apiGroup Owners
- */
-
 @route('/api/v1/admin')
 export default class AdminAPI implements MyDependencies {
     constructor({dbService, appServer, envService}: MyDependencies) {
@@ -136,7 +109,19 @@ export default class AdminAPI implements MyDependencies {
 
             // ctx.set('Access-Control-Allow-Origin', '*');
 
-            ctx.response.body = result;
+            ctx.response.body = 'true';
+            ctx.response.status = HttpStatus.OK;
+        });
+    }
+
+    //아이 정보 수정
+    @route('/update/children/:payload')
+    @POST()
+    async updatechildren(ctx: Koa.Context) {
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection(DBService.UserCollection);
+
+            // ctx.response.body = result;
             ctx.response.status = HttpStatus.OK;
         });
     }

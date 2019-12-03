@@ -15,14 +15,6 @@ interface Teeth {
     writedate?: number;
 }
 
-/**
- *
- * @api {get} /api/v1/admin/queryuser userlist
- * @apiName queryuser
- * @apiGroup Owners
- *
- */
-
 @route('/api/v1/teeth')
 export default class BoardAPI implements MyDependencies {
     constructor({dbService, appServer, envService}: MyDependencies) {

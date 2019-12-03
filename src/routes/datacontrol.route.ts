@@ -29,25 +29,6 @@ interface Inbody {
     bonemass?: number;
 }
 
-/**
- *
- * @api {post} /api/v1/data/create create data
- * @apiName create
- * @apiGroup Owners
- *
- * @api {get} /api/v1/data/read read
- * @apiName read
- * @apiGroup Owners
- *
- * @api {post} /api/v1/data/update update
- * @apiName update
- * @apiGroup Owners
- *
- * @api {delete} /api/v1/data/delete delete
- * @apiName delete
- * @apiGroup Owners
- */
-
 @route('/api/v1/data')
 export default class DataControlAPI implements MyDependencies {
     constructor({dbService, appServer, envService}: MyDependencies) {

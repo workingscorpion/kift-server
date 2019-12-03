@@ -8,6 +8,7 @@ import {AppServer} from '../server';
 import * as password from 'secure-random-password';
 import * as nodemailer from 'nodemailer';
 import {Collection} from 'mongodb';
+import bcrypt from 'bcrypt';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
@@ -20,33 +21,6 @@ interface User {
     isMale?: Boolean;
     children?: string[];
 }
-
-/**
- * @api {post} /api/v1/auth/join sign up
- * @apiName join
- * @apiGroup Owners
- *
- * @api {post} /api/v1/auth/login login check
- * @apiName login
- * @apiGroup Owners
- *
- * @api {post} /api/v1/auth/signout signout
- * @apiName signout
- * @apiGroup Owners
- *
- *
- * @api {get} /api/v1/auth/findid findid
- * @apiName findid
- * @apiGroup Owners
- *
- * @api {post} /api/v1/auth/findpw findpw
- * @apiName findpw
- * @apiGroup Owners
- *
- * @api {post} /api/v1/auth/changepw changepw
- * @apiName changepw
- * @apiGroup Owners
- */
 
 @route('/api/v1/auth')
 export default class AuthAPI implements MyDependencies {

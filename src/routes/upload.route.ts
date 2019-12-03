@@ -10,17 +10,6 @@ import {MongoClient} from 'mongodb';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
-/**
- *
- * @api {post} /api/v1/upload/single single image upload
- * @apiName uploadSingle
- * @apiGroup Owners
- *
- * @api {post} /api/v1/upload/multi images upload more than 2
- * @apiName uploadMulti
- * @apiGroup Owners
- */
-
 @route('/api/v1/upload')
 export default class UploadAPI implements MyDependencies {
     constructor({dbService, appServer, envService}: MyDependencies) {
