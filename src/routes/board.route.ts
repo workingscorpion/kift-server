@@ -186,6 +186,7 @@ export default class BoardAPI implements MyDependencies {
                 .toArray();
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
+            ctx.set('Access-Control-Allow-Origin', '*');
         });
     }
 
@@ -197,6 +198,7 @@ export default class BoardAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
             const result = await col.findOne({_id: new mongodb.ObjectId(id)});
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -209,7 +211,7 @@ export default class BoardAPI implements MyDependencies {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            const result = await col.findOneAndUpdate(
+            await col.findOneAndUpdate(
                 {_id: new mongodb.ObjectId(params.id)},
                 {
                     $set: {
@@ -221,6 +223,7 @@ export default class BoardAPI implements MyDependencies {
                     }
                 }
             );
+            const result = await col.findOne({_id: new mongodb.ObjectId(params.id)});
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
