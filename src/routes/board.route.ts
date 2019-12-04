@@ -53,10 +53,8 @@ export default class BoardAPI implements MyDependencies {
     async adlist(ctx: Koa.Context) {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            const result = await col
-                .find({})
-                .sort({writedate: -1})
-                .toArray();
+            // let result = await col.find({}).toArray();
+            const result = await col.find({}, {sort: {writedate: -1}}).toArray();
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
             ctx.set('Access-Control-Allow-Origin', '*');
@@ -111,7 +109,7 @@ export default class BoardAPI implements MyDependencies {
                     }
                 }
             );
-            const result = await col.findOne({_id: new mongodb.ObjectId(params.id)});
+            const result = await col.find({}, {sort: {writedate: -1}}).toArray();
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
