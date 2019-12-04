@@ -5,6 +5,7 @@ import {DBService} from '../services/db.service';
 import {EnvService} from '../services/env.service';
 import {DBServiceClient, AppServerClient, EnvServiceClient} from '../modules';
 import {AppServer} from '../server';
+import mongodb from 'mongodb';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
@@ -118,10 +119,12 @@ export default class AdminAPI implements MyDependencies {
     @route('/update/children/:payload')
     @POST()
     async updatechildren(ctx: Koa.Context) {
+        const params = ctx.params;
+        const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
-            const col = await db.collection(DBService.UserCollection);
-
-            // ctx.response.body = result;
+            const col = await db.collection(DBService.ChildrenCollection);
+            const result = await col.findOneAndUpdate({parent: params.payload, _id: new mongodb.ObjectId(body.childId)}, {$set: body});
+            ctx.response.body = result;
             ctx.response.status = HttpStatus.OK;
         });
     }
