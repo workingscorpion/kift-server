@@ -13,12 +13,12 @@ import bcrypt from 'bcrypt';
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
 interface User {
-    email?: string;
-    pw?: string;
-    joindate?: number;
-    name?: string;
-    birth?: Date;
-    isMale?: Boolean;
+    email: string;
+    pw: string;
+    joindate: number;
+    name: string;
+    birth: Date;
+    isMale: Boolean;
     children?: string[];
 }
 
@@ -56,10 +56,8 @@ export default class AuthAPI implements MyDependencies {
                     name: body.name,
                     birth: new Date(body.birth),
                     isMale: body.isMale === 'true' ? true : false,
-                    joindate: Date.now(),
-                    children: []
+                    joindate: Date.now()
                 });
-                console.log('join result :', result);
                 ctx.response.body = {result};
                 ctx.response.status = HttpStatus.OK;
             }
@@ -88,7 +86,7 @@ export default class AuthAPI implements MyDependencies {
         const query = ctx.request.query;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
-            const result = await col.findOne({name: query.name, birth: query.birth});
+            const result = await col.findOne({name: query.name, birth: query.birth}, {projection: {email: 1}});
             if (result) {
                 ctx.response.body = result.email;
                 ctx.response.status = HttpStatus.OK;
@@ -100,36 +98,23 @@ export default class AuthAPI implements MyDependencies {
     @POST()
     async findpw(ctx: Koa.Context) {
         const body = ctx.request.body;
+
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
-            const newpw = await password.randomPassword({characters: [password.upper, password.symbols, password.lower, password.digits]});
-            await setpw(col, body, newpw);
-            // await col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth}, {$set: {pw: newpw}});
-            const newinfo = await col.findOne({email: body.email});
-            const transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: this.envService.env.SENDER,
-                    pass: this.envService.env.SENDERPW
+            const mailCheckResult = await mailcheck(col, body);
+            if (mailCheckResult === true) {
+                const newpw = await setpw(col, body, this.envService);
+                if (newpw) {
+                    ctx.response.body = true;
+                    ctx.response.status = HttpStatus.OK;
+                } else {
+                    ctx.response.body = false;
+                    ctx.response.status = HttpStatus.OK;
                 }
-            });
-            if (newinfo) {
-                const email = {
-                    from: this.envService.env.SENDER,
-                    to: newinfo.email,
-                    subject: 'Login Password for PHR',
-                    html: `Hello! Your login Password is <h2>${newinfo.pw}</h2>.<br /> Copy and paste on the app/website to log in`
-                } as nodemailer.SendMailOptions;
-                await transporter.sendMail(email, (err, info) => {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        console.log(info);
-                    }
-                });
+            } else {
+                ctx.response.body = false;
+                ctx.response.status = HttpStatus.OK;
             }
-            ctx.response.body = `email : ${body.email}<br /> newpw : ${newpw}`;
-            ctx.response.status = HttpStatus.OK;
         });
     }
 
@@ -139,10 +124,9 @@ export default class AuthAPI implements MyDependencies {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
-            const result = await setpw(col, body, body.newpw);
-            if (result) {
-                console.log('result :', result);
-            }
+            const result = await setpw(col, body, this.envService);
+            ctx.response.body = true;
+            ctx.response.status = HttpStatus.OK;
         });
     }
 
@@ -152,9 +136,13 @@ export default class AuthAPI implements MyDependencies {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
-            const result = await col.findOne({email: body.email});
-            if (result) {
-                ctx.response.body = body.pw === result.pw;
+            const result = await col.findOneAndDelete({email: body.email, pw: body.pw});
+            console.log('result :', result);
+            if (result === true) {
+                ctx.response.body = true;
+                ctx.response.status = HttpStatus.OK;
+            } else {
+                ctx.response.body = false;
                 ctx.response.status = HttpStatus.OK;
             }
         });
@@ -165,6 +153,51 @@ export default class AuthAPI implements MyDependencies {
     envService: EnvService;
 }
 
-const setpw = (col: Collection<User>, body: any, newpw: string): any => {
-    return col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, pw: body.pw}, {$set: {pw: newpw}});
+const setpw = async (col: Collection<User>, body: any, service: EnvService): Promise<boolean> => {
+    if (body.pw) {
+        //사용자 비밀번호 변경
+        await col.findOneAndUpdate({email: body.email, name: body.name, birth: body.birth, pw: body.pw}, {$set: {pw: body.newpw}});
+        return true;
+    } else {
+        //비밀번호 분실 변경
+        const newpw = await password.randomPassword({characters: [password.upper, password.symbols, password.lower, password.digits]});
+        await col.findOneAndUpdate({email: body.email}, {$set: {pw: newpw}});
+        const newinfo = await col.findOne({email: body.email}, {projection: {email: 1, pw: 1}});
+        const transporter = await nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: service.env.SENDER,
+                pass: service.env.SENDERPW
+            }
+        });
+        if (newinfo) {
+            const email = {
+                from: service.env.SENDER,
+                to: newinfo.email,
+                subject: 'Login Password for PHR',
+                html: `Hello! Your login Password is <h2>${newinfo.pw}</h2>.<br /> Copy and paste on the app/website to log in`
+            } as nodemailer.SendMailOptions;
+            await transporter.sendMail(email, (err, info) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(info);
+                }
+            });
+        }
+        return true;
+    }
+};
+
+const mailcheck = async (col: Collection<User>, body: any): Promise<boolean> => {
+    if (body.email) {
+        const resultcount = await col.count({email: body.email});
+        if (resultcount === 1) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
 };
