@@ -138,16 +138,23 @@ export default class BoardAPI implements MyDependencies {
 
     //리스트에서 삭제할 경우
     @route('/delete')
-    @DELETE()
+    @POST()
     async delete(ctx: Koa.Context) {
-        const {id} = ctx.request.query;
+        ctx.set('Access-Control-Allow-Origin', '*');
+        const body = ctx.request.body;
+        console.log('body :', body);
+        console.log('typeof body :', typeof body);
+        // console.log('typeof body.deletelist :', typeof body.deletelist);
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            for (let i in id) {
-                await col.update({_id: new mongodb.ObjectId(id[i])}, {$set: {isDeletedTime: Date.now()}});
+            for (let oid in body) {
+                console.log('oid :', oid);
+                console.log('body[oid] :', body[oid]);
+                await col.update({_id: new mongodb.ObjectId(body[oid])}, {$set: {isDeletedTime: Date.now()}});
             }
-            const result = await col.find({}).toArray();
-            ctx.set('Access-Control-Allow-Origin', '*');
+            const trueresults = {trueresult: await col.find({fix: true, isDeletedTime: undefined}, {sort: {writedate: -1}}).toArray()};
+            const allresults = {allresults: await col.find({isDeletedTime: undefined}, {sort: {writedate: -1}}).toArray()};
+            const result = Object.assign(trueresults, allresults);
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
