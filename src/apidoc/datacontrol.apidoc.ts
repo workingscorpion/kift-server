@@ -1,18 +1,207 @@
 /**
- *
- * @api {post} /api/v1/data/create create data
- * @apiName create
- * @apiGroup jinjoosoft-team2
- *
- * @api {get} /api/v1/data/read read
- * @apiName read
- * @apiGroup jinjoosoft-team2
- *
- * @api {post} /api/v1/data/update update
- * @apiName update
- * @apiGroup jinjoosoft-team2
- *
- * @api {delete} /api/v1/data/delete delete
- * @apiName delete
- * @apiGroup jinjoosoft-team2
+ * @api {post} /api/v1/data/create 측정데이터 입력 API
+ * @apiVersion 0.0.0
+ * @apiName create inbodyData
+ * @apiGroup Inbody API
+ * @apiParam {string} childrenId 아이 고유 ObjectId
+ * @apiParam {Object[]} inbodyData 측정 데이터
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *      childrenId: "dfhdfg123df1h2f3d",
+ *      inbodyData: [
+ *          {
+ *              height: 170.0,
+ *              weight: 60.0,
+ *              headround: 20.0,
+ *              sight: 1.5,
+ *              waist: 60,
+ *              foot: 240,
+ *              bodyfat: 15,
+ *              muscle: 20,
+ *              moisture: 20,
+ *              protein: 30,
+ *              internalfat: 10,
+ *              metabolism: 22,
+ *              bonemass: 80,
+ *              measureTime: 1231351321321
+ *          }
+ *      ]
+ *     }
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/create
+ * @apiSuccess {boolean} result inbody측정 데이터 입력 성공 여부
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     result : {
+ *          result : true
+ *     }
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 400 Error
+ *     result : {
+ *          result : false
+ *     }
+ */
+
+/**
+ * @api {get} /api/v1/data/read/:payload 특정 아이 측정데이터 전체 조회 API
+ * @apiVersion 0.0.0
+ * @apiName read inbodyData
+ * @apiGroup Inbody API
+ * @apiParam {string} payload 아이 고유 ObjectId
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/read/5dde21b5ab07243d708950a6
+ * @apiSuccess {boolean} result inbody측정 데이터 입력 성공 여부
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     result: {
+ *      childrenId: "dfhdfg123df1h2f3d",
+ *      inbodyData: [
+ *          {
+ *              height: 170.0,
+ *              weight: 60.0,
+ *              headround: 20.0,
+ *              sight: 1.5,
+ *              waist: 60,
+ *              foot: 240,
+ *              bodyfat: 15,
+ *              muscle: 20,
+ *              moisture: 20,
+ *              protein: 30,
+ *              internalfat: 10,
+ *              metabolism: 22,
+ *              bonemass: 80,
+ *              measureTime: 1231351321321
+ *          },
+ *          {
+ *              height: 175.0,
+ *              weight: 62.0,
+ *              headround: 21.0,
+ *              sight: 1.2,
+ *              waist: 60.1,
+ *              foot: 245,
+ *              bodyfat: 16,
+ *              muscle: 20,
+ *              moisture: 20,
+ *              protein: 30,
+ *              internalfat: 10,
+ *              metabolism: 22,
+ *              bonemass: 80,
+ *              measureTime: 1231351325351
+ *          }
+ *      ]
+ *     }
+ */
+
+/**
+ * @api {post} /api/v1/data/update 아이 측정데이터 수정 API
+ * @apiVersion 0.0.0
+ * @apiName join
+ * @apiGroup Inbody API
+ * @apiParam {string} childrenId 아이 고유 ObjectId
+ * @apiParam {number} height 키 [생략가능]
+ * @apiParam {number} weight 몸무게 [생략가능]
+ * @apiParam {number} headround 머리둘레 [생략가능]
+ * @apiParam {number} sight 시력 [생략가능]
+ * @apiParam {number} waist 허리둘레 [생략가능]
+ * @apiParam {number} foot 발크기 [생략가능]
+ * @apiParam {number} bodyfat 체지방 [생략가능]
+ * @apiParam {number} muscle 근육량 [생략가능]
+ * @apiParam {number} moisture 수분량 [생략가능]
+ * @apiParam {number} protein 단백질량 [생략가능]
+ * @apiParam {number} internalfat 내장지방량 [생략가능]
+ * @apiParam {number} metabolism 신진대사량 [생략가능]
+ * @apiParam {number} bonemass 골격량 [생략가능]
+ * @apiParam {boolean} isMale 성별(true:남, false:여)
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *      childrenId: "213513213851638541"
+ *      height: 175.0,
+ *      weight: 62.0,
+ *      headround: 21.0,
+ *      sight: 1.2,
+ *      waist: 60.1,
+ *      foot: 245,
+ *      bodyfat: 16,
+ *      muscle: 20,
+ *      moisture: 20,
+ *      protein: 30,
+ *      internalfat: 10,
+ *      metabolism: 22,
+ *      bonemass: 80,
+ *      measureTime: 1231351328132
+ *     }
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/join
+ * @apiSuccess {boolean} response 회원가입 성공 여부
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     result : {
+ *          result : true
+ *     }
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 400 Error
+ *     result : {
+ *          result : false
+ *     }
+ */
+
+/**
+ * @api {post} /api/v1/auth/join 회원가입 API
+ * @apiVersion 0.0.0
+ * @apiName join
+ * @apiGroup Inbody API
+ * @apiParam {string} email 계정(email)
+ * @apiParam {string} pw pw(hashed)
+ * @apiParam {string} name 이름
+ * @apiParam {Date} birth 생일
+ * @apiParam {boolean} isMale 성별(true:남, false:여)
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *      email: "test@naver.com",
+ *      pw: "test1234!",
+ *      name: "test",
+ *      birth: "19-11-20",
+ *      isMale: false
+ *     }
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/join
+ * @apiSuccess {boolean} response 회원가입 성공 여부
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     result : {
+ *          result : true
+ *     }
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 400 Error
+ *     result : {
+ *          result : false
+ *     }
+ */
+
+/**
+ * @api {post} /api/v1/auth/join 회원가입 API
+ * @apiVersion 0.0.0
+ * @apiName join
+ * @apiGroup Inbody API
+ * @apiParam {string} email 계정(email)
+ * @apiParam {string} pw pw(hashed)
+ * @apiParam {string} name 이름
+ * @apiParam {Date} birth 생일
+ * @apiParam {boolean} isMale 성별(true:남, false:여)
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *      email: "test@naver.com",
+ *      pw: "test1234!",
+ *      name: "test",
+ *      birth: "19-11-20",
+ *      isMale: false
+ *     }
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/join
+ * @apiSuccess {boolean} response 회원가입 성공 여부
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     result : {
+ *          result : true
+ *     }
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 400 Error
+ *     result : {
+ *          result : false
+ *     }
  */

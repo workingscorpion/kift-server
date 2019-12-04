@@ -213,16 +213,19 @@
  */
 
 /**
- * @api {delete} /api/v1/board/delete 공지사항 삭제 API(리스트)
+ * @api {post} /api/v1/board/delete 공지사항 삭제 API(리스트)
  * @apiVersion 0.0.0
- * @apiName board delete
+ * @apiName board delete multiple
  * @apiGroup Board API
- * @apiParam {string} query 삭제할 공지사항 ObjectId 여러개
- * @apiParam {string} query 삭제할 공지사항 ObjectId 여러개
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/delete?id=5de089d569296802f0982b44&id=5de0bc65188c5712c8e177ea
+ * @apiParam {string[]} query 삭제할 공지사항 ObjectId Array
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/delete
  * @apiParamExample {string[]} Request-Example:
  *     {
- *      id: "5de089d569296802f0982b44",
- *      id: "5de0bc65188c5712c8e177ea"
+ *      [
+ *          0: "sd1g53ds1g3s51g",
+ *          1: "fdh153df1h35df13",
+ *          2: "df51h3fd51h35df41",
+ *          3: "df5h13fd5h1df351",
+ *      ]
  *     }
  */
