@@ -10,12 +10,13 @@ import mongodb from 'mongodb';
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
 interface Board {
-    _id?: mongodb.ObjectID;
-    title?: string;
+    _id: mongodb.ObjectID;
+    title: string;
     description?: string;
-    writer?: string;
-    writedate?: number;
-    fix?: Boolean;
+    writer: string;
+    writedate: number;
+    fix: Boolean;
+    count: number;
 }
 
 @route('/api/v1/board')
@@ -37,7 +38,8 @@ export default class BoardAPI implements MyDependencies {
                 description: body.description,
                 writer: body.writer,
                 writedate: Date.now(),
-                fix: body.fix
+                fix: body.fix,
+                count: 0
             });
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
@@ -83,7 +85,7 @@ export default class BoardAPI implements MyDependencies {
         const {id} = ctx.params;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            const result = await col.findOne({_id: new mongodb.ObjectId(id)});
+            const result = await col.findOneAndUpdate({_id: new mongodb.ObjectId(id)}, {$inc: {count: 1}});
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
