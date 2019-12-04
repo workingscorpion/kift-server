@@ -9,15 +9,15 @@ import {AppServer} from '../server';
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
 interface UserList {
-    email?: string;
-    name?: string;
-    isMale?: Boolean;
-    joindate?: number;
+    email: string;
+    name: string;
+    isMale: Boolean;
+    joindate: number;
 }
 
 interface User {
-    email?: string;
-    pw?: string;
+    email: string;
+    pw: string;
     joindate?: Date;
     name?: string;
     birth?: string;
@@ -38,7 +38,7 @@ export default class AdminAPI implements MyDependencies {
     async queryuser(ctx: Koa.Context) {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<UserList>(DBService.UserCollection);
-            const results = await col.find({}, {projection: {pw: 0}}).toArray();
+            const results = await col.find({}, {projection: {pw: 0, children: 0, childrenInfo: 0}}).toArray();
             // const results = await col.find({}).toArray();
             console.log('results.length :', results.length);
             ctx.response.body = {results};

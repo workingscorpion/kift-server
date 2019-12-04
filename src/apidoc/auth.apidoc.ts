@@ -3,160 +3,143 @@
  * @apiVersion 0.0.0
  * @apiName join
  * @apiGroup Auth API
- * @apiParam {string} email 상세보기할 해당 공지사항 ObjectId
- * @apiParam {string} pw 공지사항 제목
- * @apiParam {string} name 공지사항 내용
- * @apiParam {Date} birth 작성자
- * @apiParam {boolean} isMale 상단고정 여부
+ * @apiParam {string} email 계정(email)
+ * @apiParam {string} pw pw(hashed)
+ * @apiParam {string} name 이름
+ * @apiParam {Date} birth 생일
+ * @apiParam {boolean} isMale 성별(true:남, false:여)
  * @apiParamExample {json} Request-Example:
  *     {
- *      "title": "수정된 공지사항 제목입니다",
- *      "description" : "수정된 공지사항 내용입니다",
- *      "writer" : "test@naver.com",
- *      "writedate" : "19-11-20",
- *      "fix" : false
+ *      email: "test@naver.com",
+ *      pw: "test1234!",
+ *      name: "test",
+ *      birth: "19-11-20",
+ *      isMale: false
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/update/5de089d569296802f0982b44/
- * @apiSuccess {string} _id ObjectId
- * @apiSuccess {string} email 계정(이메일)
- * @apiSuccess {string} name 이름
- * @apiSuccess {Date} birth 생일
- * @apiSuccess {boolean} isMale 성별(true:남, false:여)
- * @apiSuccess {number} joindate 가입일
- * @apiSuccess {object[]} childrenInfo 아이 데이터
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/join
+ * @apiSuccess {boolean} response 회원가입 성공 여부
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     result : {
+ *          result : true
+ *     }
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 400 Error
+ *     result : {
+ *          result : false
+ *     }
  */
 
 /**
- * @api {post} /api/v1/board/update/:id 공지사항 수정 API
+ * @api {post} /api/v1/auth/login 로그인 API
  * @apiVersion 0.0.0
- * @apiName board update
+ * @apiName login
  * @apiGroup Auth API
- * @apiParam {string} id 상세보기할 해당 공지사항 ObjectId
- * @apiParam {string} title 공지사항 제목
- * @apiParam {string} description 공지사항 내용
- * @apiParam {string} writer 작성자
- * @apiParam {boolean} fix 상단고정 여부
+ * @apiParam {string} email 계정(email)
+ * @apiParam {string} pw pw(hashed)
  * @apiParamExample {json} Request-Example:
  *     {
- *      "title": "수정된 공지사항 제목입니다",
- *      "description" : "수정된 공지사항 내용입니다",
- *      "writer" : "test@naver.com",
- *      "writedate" : "19-11-20",
- *      "fix" : false
+ *      email: "test@naver.com",
+ *      pw: "test1234!"
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/update/5de089d569296802f0982b44/
- * @apiSuccess {string} _id ObjectId
- * @apiSuccess {string} title 공지사항 제목
- * @apiSuccess {string} description 공지사항 내용
- * @apiSuccess {string} writer 작성자
- * @apiSuccess {number} writedate 작성일
- * @apiSuccess {boolean} fix 상단고정 여부
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/login
+ * @apiSuccess {boolean} response 로그인 성공 여부
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     result : {
+ *          result : true
+ *     }
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 400 Error
+ *     result : {
+ *          result : false
+ *     }
  */
 
 /**
- * @api {post} /api/v1/board/update/:id 공지사항 수정 API
+ * @api {get} /api/v1/auth/findid ID 찾기 API
  * @apiVersion 0.0.0
- * @apiName board update
+ * @apiName findid
  * @apiGroup Auth API
- * @apiParam {string} id 상세보기할 해당 공지사항 ObjectId
- * @apiParam {string} title 공지사항 제목
- * @apiParam {string} description 공지사항 내용
- * @apiParam {string} writer 작성자
- * @apiParam {boolean} fix 상단고정 여부
- * @apiParamExample {json} Request-Example:
- *     {
- *      "title": "수정된 공지사항 제목입니다",
- *      "description" : "수정된 공지사항 내용입니다",
- *      "writer" : "test@naver.com",
- *      "writedate" : "19-11-20",
- *      "fix" : false
+ * @apiParam {string} name 이름
+ * @apiParam {Date} birth 생일
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/findid?name=test&birth=19-11-20
+ * @apiSuccess {string} email 계정
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     result : {
+ *          email : "test@naver.com"
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/update/5de089d569296802f0982b44/
- * @apiSuccess {string} _id ObjectId
- * @apiSuccess {string} title 공지사항 제목
- * @apiSuccess {string} description 공지사항 내용
- * @apiSuccess {string} writer 작성자
- * @apiSuccess {number} writedate 작성일
- * @apiSuccess {boolean} fix 상단고정 여부
  */
 
 /**
- * @api {post} /api/v1/board/update/:id 공지사항 수정 API
+ * @api {post} /api/v1/auth/findpw PW 찾기 API
  * @apiVersion 0.0.0
- * @apiName board update
+ * @apiName findpw
  * @apiGroup Auth API
- * @apiParam {string} id 상세보기할 해당 공지사항 ObjectId
- * @apiParam {string} title 공지사항 제목
- * @apiParam {string} description 공지사항 내용
- * @apiParam {string} writer 작성자
- * @apiParam {boolean} fix 상단고정 여부
+ * @apiParam {string} email 계정(email)
  * @apiParamExample {json} Request-Example:
  *     {
- *      "title": "수정된 공지사항 제목입니다",
- *      "description" : "수정된 공지사항 내용입니다",
- *      "writer" : "test@naver.com",
- *      "writedate" : "19-11-20",
- *      "fix" : false
+ *      email: "test@naver.com"
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/update/5de089d569296802f0982b44/
- * @apiSuccess {string} _id ObjectId
- * @apiSuccess {string} title 공지사항 제목
- * @apiSuccess {string} description 공지사항 내용
- * @apiSuccess {string} writer 작성자
- * @apiSuccess {number} writedate 작성일
- * @apiSuccess {boolean} fix 상단고정 여부
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/findpw
+ * @apiSuccess {boolean} result 변경 성공 여부
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     result : {
+ *          result : true
+ *     }
  */
 
 /**
- * @api {post} /api/v1/board/update/:id 공지사항 수정 API
+ * @api {post} /api/v1/auth/changepw 비밀번호 수정
  * @apiVersion 0.0.0
- * @apiName board update
+ * @apiName pw update
  * @apiGroup Auth API
- * @apiParam {string} id 상세보기할 해당 공지사항 ObjectId
- * @apiParam {string} title 공지사항 제목
- * @apiParam {string} description 공지사항 내용
- * @apiParam {string} writer 작성자
- * @apiParam {boolean} fix 상단고정 여부
+ * @apiParam {string} email 계정(email)
+ * @apiParam {string} name 이름
+ * @apiParam {Date} birth 생일
+ * @apiParam {string} pw 비밀번호
+ * @apiParam {string} newpw 수정할 비밀번호
  * @apiParamExample {json} Request-Example:
  *     {
- *      "title": "수정된 공지사항 제목입니다",
- *      "description" : "수정된 공지사항 내용입니다",
- *      "writer" : "test@naver.com",
- *      "writedate" : "19-11-20",
- *      "fix" : false
+ *      email: "test@naver.com",
+ *      name: "test",
+ *      birth: "19-11-20",
+ *      pw: "test1234!",
+ *      newpw: "test4321!"
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/update/5de089d569296802f0982b44/
- * @apiSuccess {string} _id ObjectId
- * @apiSuccess {string} title 공지사항 제목
- * @apiSuccess {string} description 공지사항 내용
- * @apiSuccess {string} writer 작성자
- * @apiSuccess {number} writedate 작성일
- * @apiSuccess {boolean} fix 상단고정 여부
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/changepw
+ * @apiSuccess {boolean} result 비밀번호 수정 성공 여부
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     result : {
+ *          result : true
+ *     }
  */
 
 /**
- * @api {post} /api/v1/board/update/:id 공지사항 수정 API
+ * @api {post} /api/v1/auth/signout 회원 탈퇴
  * @apiVersion 0.0.0
- * @apiName board update
+ * @apiName signout
  * @apiGroup Auth API
- * @apiParam {string} id 상세보기할 해당 공지사항 ObjectId
- * @apiParam {string} title 공지사항 제목
- * @apiParam {string} description 공지사항 내용
- * @apiParam {string} writer 작성자
- * @apiParam {boolean} fix 상단고정 여부
+ * @apiParam {string} email 계정(email)
+ * @apiParam {string} pw 비밀번호
  * @apiParamExample {json} Request-Example:
  *     {
- *      "title": "수정된 공지사항 제목입니다",
- *      "description" : "수정된 공지사항 내용입니다",
- *      "writer" : "test@naver.com",
- *      "writedate" : "19-11-20",
- *      "fix" : false
+ *      email: "test@naver.com",
+ *      pw: "test1234!"
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/update/5de089d569296802f0982b44/
- * @apiSuccess {string} _id ObjectId
- * @apiSuccess {string} title 공지사항 제목
- * @apiSuccess {string} description 공지사항 내용
- * @apiSuccess {string} writer 작성자
- * @apiSuccess {number} writedate 작성일
- * @apiSuccess {boolean} fix 상단고정 여부
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/signout
+ * @apiSuccess {boolean} result 회원탈퇴 성공 여부
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     result : {
+ *          result : true
+ *     }
+ *     ------------------------
+ *     result : {
+ *          result : false
+ *     }
+ *
  */
