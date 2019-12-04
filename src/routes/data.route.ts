@@ -27,10 +27,11 @@ interface Inbody {
     internalfat?: number;
     metabolism?: number;
     bonemass?: number;
+    measureTime?: number;
 }
 
 @route('/api/v1/data')
-export default class DataControlAPI implements MyDependencies {
+export default class DataAPI implements MyDependencies {
     constructor({dbService, appServer, envService}: MyDependencies) {
         this.dbService = dbService;
         this.appServer = appServer;
@@ -76,21 +77,21 @@ export default class DataControlAPI implements MyDependencies {
                 protein: Number(body.protein),
                 internalfat: Number(body.internalfat),
                 metabolism: Number(body.metabolism),
-                bonemass: Number(body.bonemass)
+                bonemass: Number(body.bonemass),
+                measureTime: Date.now()
             });
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
     }
 
-    @route('/read')
+    @route('/read/:payload')
     @GET()
     async read(ctx: Koa.Context) {
-        const {email} = ctx.request.query;
-        const {childrenId} = ctx.request.query;
+        const params = ctx.params;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
-            const result = await col.find({email: email, childrenId: childrenId}).toArray();
+            const result = await col.findOne({childrenId: params.payload});
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -102,29 +103,7 @@ export default class DataControlAPI implements MyDependencies {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
-            const result = await col.findOneAndUpdate(
-                {email: body.email, childrenId: body.childrenId},
-                {
-                    $set: {
-                        email: body.email,
-                        childrenId: body.childrenId,
-                        height: body.height,
-                        weight: body.weight,
-                        BMI: body.BMI,
-                        headround: body.headround,
-                        sight: body.sight,
-                        waist: body.waist,
-                        foot: body.foot,
-                        bodyfat: body.bodyfat,
-                        muscle: body.muscle,
-                        Moisture: body.Moisture,
-                        protein: body.protein,
-                        internalfat: body.internalfat,
-                        metabolism: body.metabolism,
-                        bonemass: body.bonemass
-                    }
-                }
-            );
+            const result = await col.findOneAndUpdate({email: body.childrenId, childrenId: body.childrenId}, {$set: {body, measureTime: Date.now()}});
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
