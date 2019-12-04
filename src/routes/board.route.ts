@@ -54,7 +54,9 @@ export default class BoardAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
             // let result = await col.find({}).toArray();
-            const result = await col.find({}, {sort: {writedate: -1}}).toArray();
+            const trueresults = {trueresult: await col.find({fix: true}, {sort: {writedate: -1}}).toArray()};
+            const allresults = {allresults: await col.find({}, {sort: {writedate: -1}}).toArray()};
+            const result = Object.assign(trueresults, allresults);
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
             ctx.set('Access-Control-Allow-Origin', '*');
