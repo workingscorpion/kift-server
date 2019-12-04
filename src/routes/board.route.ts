@@ -17,6 +17,9 @@ interface Board {
     writedate: number;
     fix: Boolean;
     count: number;
+    isDeletedTime?: number;
+    isCreatedTime?: number;
+    isUpdatedTime?: number;
 }
 
 @route('/api/v1/board')
@@ -54,8 +57,8 @@ export default class BoardAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
             // let result = await col.find({}).toArray();
-            const trueresults = {trueresult: await col.find({fix: true}, {sort: {writedate: -1}}).toArray()};
-            const allresults = {allresults: await col.find({}, {sort: {writedate: -1}}).toArray()};
+            const trueresults = {trueresult: await col.find({fix: true, isDeletedTime: undefined}, {sort: {writedate: -1}}).toArray()};
+            const allresults = {allresults: await col.find({isDeletedTime: undefined}, {sort: {writedate: -1}}).toArray()};
             const result = Object.assign(trueresults, allresults);
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
@@ -68,8 +71,8 @@ export default class BoardAPI implements MyDependencies {
     async list(ctx: Koa.Context) {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            const trueresults = {trueresult: await col.find({fix: true}, {projection: {title: 1, writedate: 1}, sort: {writedate: -1}}).toArray()};
-            const allresults = {allresult: await col.find({}, {projection: {title: 1, wirtedate: 1}, sort: {writedate: -1}})};
+            const trueresults = {trueresult: await col.find({fix: true, isDeletedTime: undefined}, {projection: {title: 1, writedate: 1}, sort: {writedate: -1}}).toArray()};
+            const allresults = {allresult: await col.find({isDeletedTime: undefined}, {projection: {title: 1, wirtedate: 1}, sort: {writedate: -1}})};
             const result = Object.assign(trueresults, allresults);
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
@@ -107,8 +110,8 @@ export default class BoardAPI implements MyDependencies {
                         title: body.title,
                         description: body.description,
                         writer: body.writer,
-                        // writedate: Date.now(),
-                        fix: body.fix
+                        fix: body.fix,
+                        isUpdatedTime: Date.now()
                     }
                 }
             );
@@ -126,7 +129,7 @@ export default class BoardAPI implements MyDependencies {
         const params = ctx.params;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            const result = await col.remove({_id: new mongodb.ObjectId(params.id)});
+            const result = await col.findOneAndUpdate({_id: new mongodb.ObjectId(params.id)}, {$set: {isDeletedTime: Date.now()}});
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
@@ -141,7 +144,7 @@ export default class BoardAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
             for (let i in id) {
-                await col.remove({_id: new mongodb.ObjectId(id[i])});
+                await col.update({_id: new mongodb.ObjectId(id[i])}, {$set: {isDeletedTime: Date.now()}});
             }
             const result = await col.find({}).toArray();
             ctx.set('Access-Control-Allow-Origin', '*');
