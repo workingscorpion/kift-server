@@ -126,6 +126,7 @@ export default class BoardAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
             const result = await col.remove({_id: new mongodb.ObjectId(params.id)});
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -142,6 +143,7 @@ export default class BoardAPI implements MyDependencies {
                 await col.remove({_id: new mongodb.ObjectId(id[i])});
             }
             const result = await col.find({}).toArray();
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
