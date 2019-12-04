@@ -68,10 +68,9 @@ export default class BoardAPI implements MyDependencies {
     async list(ctx: Koa.Context) {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            const result = await col
-                .find({}, {projection: {title: 1, writedate: 1}})
-                .sort({writedate: -1})
-                .toArray();
+            const trueresults = {trueresult: await col.find({fix: true}, {projection: {title: 1, writedate: 1}, sort: {writedate: -1}}).toArray()};
+            const allresults = {allresult: await col.find({}, {projection: {title: 1, wirtedate: 1}, sort: {writedate: -1}})};
+            const result = Object.assign(trueresults, allresults);
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
             ctx.set('Access-Control-Allow-Origin', '*');
@@ -87,7 +86,9 @@ export default class BoardAPI implements MyDependencies {
             const col = await db.collection<Board>(DBService.BoardCollection);
             const result = await col.findOneAndUpdate({_id: new mongodb.ObjectId(id)}, {$inc: {count: 1}});
             ctx.set('Access-Control-Allow-Origin', '*');
-            ctx.response.body = {result};
+            console.log('result :', result.value);
+            const finalresult = result.value;
+            ctx.response.body = {finalresult};
             ctx.response.status = HttpStatus.OK;
         });
     }
