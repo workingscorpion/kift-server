@@ -47,6 +47,7 @@ export default class BoardAPI implements MyDependencies {
                 .find({}, {projection: {title: 1, writedate: 1}})
                 .sort({writedate: -1})
                 .toArray();
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -60,6 +61,7 @@ export default class BoardAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Teeth>(DBService.TeethCollection);
             const result = await col.findOne({_id: new mongodb.ObjectId(id)});
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -82,6 +84,7 @@ export default class BoardAPI implements MyDependencies {
                     }
                 }
             );
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -95,6 +98,7 @@ export default class BoardAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Teeth>(DBService.TeethCollection);
             const result = await col.remove({_id: new mongodb.ObjectID(params.id)});
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });

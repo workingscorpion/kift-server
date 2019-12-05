@@ -91,6 +91,7 @@ export default class DataAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
             const result = await col.findOne({childrenId: params.payload});
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -103,6 +104,7 @@ export default class DataAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
             const result = await col.findOneAndUpdate({email: body.childrenId, childrenId: body.childrenId}, {$set: {body, measureTime: Date.now()}});
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -117,6 +119,7 @@ export default class DataAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
             const result = await col.remove({email: body.email, childrenId: body.childrenId});
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -142,6 +145,7 @@ export default class DataAPI implements MyDependencies {
             }
             childrenresult.push(childId);
             const result = await col.findOneAndUpdate({email: body.email}, {$set: {children: childrenresult}});
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
