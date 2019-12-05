@@ -108,6 +108,7 @@
     "version": "0.0.0",
     "description": "magpie-tech API",
     "title": "magpie-tech API",
-    "url": "http://192.168.0.84:3002"
+    "url": "http://192.168.0.84:3002",
+    "sampleUrl": "http://192.168.0.84:3002"
   }
 }
