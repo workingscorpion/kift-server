@@ -43,6 +43,7 @@ export default class AuthAPI implements MyDependencies {
             // console.log('hspw :', hspw);
 
             const findResult = await col.findOne({email: body.email});
+            ctx.set('Access-Control-Allow-Origin', '*');
             if (findResult) {
                 if (findResult.email === body.email) {
                     ctx.response.body = '해당 계정이 이미 존재합니다.';
@@ -71,6 +72,7 @@ export default class AuthAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
             const result = await col.findOne({email: body.email});
+            ctx.set('Access-Control-Allow-Origin', '*');
             if (!result) {
                 ctx.response.body = false;
             } else {
@@ -88,6 +90,7 @@ export default class AuthAPI implements MyDependencies {
             const col = await db.collection<User>(DBService.UserCollection);
             const result = await col.findOne({name: query.name, birth: query.birth}, {projection: {email: 1}});
             if (result) {
+                ctx.set('Access-Control-Allow-Origin', '*');
                 ctx.response.body = result.email;
                 ctx.response.status = HttpStatus.OK;
             }
@@ -102,6 +105,7 @@ export default class AuthAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
             const mailCheckResult = await mailcheck(col, body);
+            ctx.set('Access-Control-Allow-Origin', '*');
             if (mailCheckResult === true) {
                 const newpw = await setpw(col, body, this.envService);
                 if (newpw) {
@@ -125,6 +129,7 @@ export default class AuthAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
             const result = await setpw(col, body, this.envService);
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = true;
             ctx.response.status = HttpStatus.OK;
         });
@@ -138,6 +143,7 @@ export default class AuthAPI implements MyDependencies {
             const col = await db.collection<User>(DBService.UserCollection);
             const result = await col.findOneAndDelete({email: body.email, pw: body.pw});
             console.log('result :', result);
+            ctx.set('Access-Control-Allow-Origin', '*');
             if (result === true) {
                 ctx.response.body = true;
                 ctx.response.status = HttpStatus.OK;

@@ -79,6 +79,7 @@ export default class DataAPI implements MyDependencies {
                 bonemass: Number(body.bonemass),
                 measureTime: Date.now()
             });
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
