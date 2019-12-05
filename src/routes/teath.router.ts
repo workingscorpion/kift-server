@@ -65,7 +65,7 @@ export default class BoardAPI implements MyDependencies {
         });
     }
 
-    @route('/update/:id')
+    @route('/update')
     @POST()
     async update(ctx: Koa.Context) {
         const params = ctx.params;
@@ -88,7 +88,7 @@ export default class BoardAPI implements MyDependencies {
     }
 
     //상세보기에서 삭제할 경우
-    @route('/delete/?id')
+    @route('/delete/:id')
     @DELETE()
     async delete(ctx: Koa.Context) {
         const params = ctx.params;

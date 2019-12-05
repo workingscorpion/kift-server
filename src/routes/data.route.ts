@@ -12,7 +12,6 @@ type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 interface Inbody {
     email: string;
     childrenId?: number;
-    // bodydata?:[]
     height?: number;
     weight?: number;
     BMI?: number;
@@ -124,25 +123,25 @@ export default class DataAPI implements MyDependencies {
     }
 
     @route('/createChild')
-    @GET()
+    @POST()
     async createChild(ctx: Koa.Context, next: () => Promise<any>) {
-        const query = ctx.request.query;
+        const body = ctx.request.body;
         await this.singleUploadMiddleware(ctx, next);
         await this.dbService.performWithDB(async db => {
             const col1 = await db.collection(DBService.ChildrenCollection);
             let gender = false;
-            if (query.isMale === 'true') {
+            if (body.isMale === 'true') {
                 gender = true;
             }
-            const childId = await col1.insert({parent: query.email, name: query.name, birth: new Date(query.birth), profile: query.image, isMale: gender}).then(json => json.insertedIds);
+            const childId = await col1.insert({parent: body.email, name: body.name, birth: new Date(body.birth), profile: body.image, isMale: gender}).then(json => json.insertedIds);
 
             const col = await db.collection(DBService.UserCollection);
-            let childrenresult = await col.findOne({email: query.email}).then(json => json.children);
+            let childrenresult = await col.findOne({email: body.email}).then(json => json.children);
             if (childrenresult === (null || undefined)) {
                 childrenresult = [];
             }
             childrenresult.push(childId);
-            const result = await col.findOneAndUpdate({email: query.email}, {$set: {children: childrenresult}});
+            const result = await col.findOneAndUpdate({email: body.email}, {$set: {children: childrenresult}});
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
