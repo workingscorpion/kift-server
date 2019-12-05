@@ -93,7 +93,7 @@
 /**
  * @api {post} /api/v1/data/update 아이 측정데이터 수정 API
  * @apiVersion 0.0.0
- * @apiName join
+ * @apiName update inbodyData
  * @apiGroup Inbody API
  * @apiParam {string} childrenId 아이 고유 ObjectId
  * @apiParam {number} height 키 [생략가능]
@@ -110,9 +110,10 @@
  * @apiParam {number} metabolism 신진대사량 [생략가능]
  * @apiParam {number} bonemass 골격량 [생략가능]
  * @apiParam {boolean} isMale 성별(true:남, false:여)
+ * @apiParam {number} measureTime 측정 시간
  * @apiParamExample {json} Request-Example:
  *     {
- *      childrenId: "213513213851638541"
+ *      childrenId: "213513213851638541",
  *      height: 175.0,
  *      weight: 62.0,
  *      headround: 21.0,
@@ -128,8 +129,8 @@
  *      bonemass: 80,
  *      measureTime: 1231351328132
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/join
- * @apiSuccess {boolean} response 회원가입 성공 여부
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/update
+ * @apiSuccess {boolean} 수정성공여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     result : {
@@ -143,25 +144,19 @@
  */
 
 /**
- * @api {post} /api/v1/auth/join 회원가입 API
+ * @api {delete} /api/v1/data/delete 아이데이터 삭제
  * @apiVersion 0.0.0
- * @apiName join
+ * @apiName delete inbodyData
  * @apiGroup Inbody API
- * @apiParam {string} email 계정(email)
- * @apiParam {string} pw pw(hashed)
- * @apiParam {string} name 이름
- * @apiParam {Date} birth 생일
- * @apiParam {boolean} isMale 성별(true:남, false:여)
+ * @apiParam {string} childrenId 아이 고유 ObjectId
+ * @apiParam {number} measureTime 측정 시간
  * @apiParamExample {json} Request-Example:
  *     {
- *      email: "test@naver.com",
- *      pw: "test1234!",
- *      name: "test",
- *      birth: "19-11-20",
- *      isMale: false
+ *      childrenId: "213513213851638541",
+ *      measureTime: 1231351328132
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/join
- * @apiSuccess {boolean} response 회원가입 성공 여부
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/delete
+ * @apiSuccess {boolean} response 데이터 삭제 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     result : {
@@ -175,25 +170,25 @@
  */
 
 /**
- * @api {post} /api/v1/auth/join 회원가입 API
+ * @api {post} /api/v1/data/createChild 아이 생성 API
  * @apiVersion 0.0.0
- * @apiName join
+ * @apiName create Child Component
  * @apiGroup Inbody API
- * @apiParam {string} email 계정(email)
- * @apiParam {string} pw pw(hashed)
- * @apiParam {string} name 이름
+ * @apiParam {string} email 부모 계정(email)
+ * @apiParam {string} name 아이 이름
  * @apiParam {Date} birth 생일
+ * @apiParam {binary} profile 아이 사진
  * @apiParam {boolean} isMale 성별(true:남, false:여)
  * @apiParamExample {json} Request-Example:
  *     {
  *      email: "test@naver.com",
- *      pw: "test1234!",
  *      name: "test",
  *      birth: "19-11-20",
+ *      profile: <binary data>
  *      isMale: false
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/join
- * @apiSuccess {boolean} response 회원가입 성공 여부
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/createChild
+ * @apiSuccess {boolean} response 아이 생성 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     result : {
