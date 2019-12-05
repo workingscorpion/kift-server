@@ -56,7 +56,6 @@ export default class AdminAPI implements MyDependencies {
     async querysuser(ctx: Koa.Context) {
         // #TODO: 특정 유저의 정보를 가져오는 routing
         const params = ctx.params;
-        console.log('params :', params);
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
             const result1 = await col.findOne({email: params.email}, {projection: {pw: 0, children: 0}});
@@ -65,7 +64,6 @@ export default class AdminAPI implements MyDependencies {
             let result;
             if (result1) {
                 result2 = {childrenInfo: await col1.find({parent: result1.email}).toArray()};
-                console.log('result2 :', result2);
                 result = Object.assign(result1, result2);
             }
             ctx.set('Access-Control-Allow-Origin', '*');
@@ -93,18 +91,14 @@ export default class AdminAPI implements MyDependencies {
             ctx.response.status = HttpStatus.OK;
         });
     }
-    @route('/update/:payload')
+    @route('/update')
     @POST()
     async update(ctx: Koa.Context) {
-        const params = ctx.params;
         const body = ctx.request.body;
-
         await this.dbService.performWithDB(async db => {
             const col = await db.collection(DBService.UserCollection);
-            console.log('update body :', body);
-            delete body['_id'];
-            console.log('delete body:', body);
-            const result = await col.findOneAndUpdate({email: params.payload}, {$set: body});
+            // await col.findOne({email: body.email});
+            const result = await col.findOneAndUpdate({email: body.email}, {$set: body});
             ctx.set('Access-Control-Allow-Origin', '*');
             // const result = await col.findOne({email: params.payload});
 
@@ -116,14 +110,19 @@ export default class AdminAPI implements MyDependencies {
     }
 
     //아이 정보 수정
-    @route('/update/children/:payload')
+    @route('/update/children')
     @POST()
     async updatechildren(ctx: Koa.Context) {
-        const params = ctx.params;
         const body = ctx.request.body;
+        const childId = body._id;
+        delete body._id;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection(DBService.ChildrenCollection);
-            const result = await col.findOneAndUpdate({parent: params.payload, _id: new mongodb.ObjectId(body.childId)}, {$set: body});
+            console.log('body :', body);
+            console.log('childId :', childId);
+            // const result = await col.findOne({_id: new mongodb.ObjectId(childId)});
+            const result = await col.findOneAndUpdate({_id: new mongodb.ObjectId(childId)}, {$set: body});
+            console.log('result :', result);
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = result;
             ctx.response.status = HttpStatus.OK;

@@ -108,21 +108,22 @@
  */
 
 /**
- * @api {post} /api/v1/admin/update/:payload 회원정보 수정 API
+ * @api {post} /api/v1/admin/update 회원정보 수정 API
  * @apiVersion 0.0.0
  * @apiName userInfo update
  * @apiGroup Admin API
- * @apiParam {string} payload 수정할 계정(email)
+ * @apiParam {string} email 수정할 계정(email)
  * @apiParam {string} name 이름[생략 가능]
  * @apiParam {Date} birth 생일[생략 가능]
  * @apiParam {boolean} isMale 성별[생략 가능]
  * @apiParamExample {json} Request-Example:
  *     {
+ *      email: "test@naver.com",
  *      name: "test",
  *      birth : "19-11-30",
  *      isMale : false
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/admin/update/test@naver.com
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/admin/update
  * @apiSuccess {boolean} response 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -132,23 +133,24 @@
  */
 
 /**
- * @api {post} /api/v1/admin/update/children/:payload 아이정보 수정 API
+ * @api {post} /api/v1/admin/update/children 아이정보 수정 API
  * @apiVersion 0.0.0
  * @apiName childrenInfo update
  * @apiGroup Admin API
- * @apiParam {string} payload 부모 계정 이름
+ * @apiParam {string} email 부모 계정(email)
  * @apiParam {string} childId 수정할 아이 ObjectId
  * @apiParam {string} name 아이 이름
  * @apiParam {Date} birth 아이 생일
  * @apiParam {boolean} isMale 아이 성별
  * @apiParamExample {json} Request-Example:
  *     {
+ *      email: "test@naver.com",
  *      childId: "s1dg35sdf1g32s1g",
  *      name: "babytest",
  *      birth: "19-12-30",
  *      isMale: true
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/admin/update/children/test@naver.com
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/admin/update/children
  * @apiSuccess {boolean} response 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
