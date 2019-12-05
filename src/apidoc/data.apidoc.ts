@@ -130,7 +130,7 @@
  *      measureTime: 1231351328132
  *     }
  * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/update
- * @apiSuccess {boolean} 수정성공여부
+ * @apiSuccess {boolean} response 수정성공여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     result : {
