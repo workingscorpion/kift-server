@@ -10,6 +10,7 @@ import mongodb from 'mongodb';
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
 interface Teeth {
+    isUp?: boolean;
     childrenId?: string;
     description?: string;
     isCreatedTime?: string;
@@ -30,6 +31,7 @@ export default class TeethAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Teeth>(DBService.TeethCollection);
             const result = await col.insert({
+                isUp: body.isUp === 'true' ? true : false,
                 childrenId: body.childrenId,
                 description: body.description,
                 isCreatedTime: body.isCreatedTime
@@ -39,13 +41,20 @@ export default class TeethAPI implements MyDependencies {
         });
     }
 
-    //모든 치아 정보 보기
+    //모든 치아 정보 보기(관리자)
     @route('/lists')
     @GET()
     async list(ctx: Koa.Context) {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Teeth>(DBService.TeethCollection);
-            const result = await col.find({}).toArray();
+            const result1 = await col.find({}).toArray();
+            let result = [];
+            for (let i = 0; i < result1.length; i++) {
+                const col1 = await db.collection(DBService.ChildrenCollection);
+                const result2 = await col1.findOne({_id: new mongodb.ObjectId(result1[0].childrenId)}, {projection: {parent: 1, name: 1}});
+                result.push(Object.assign(result1[i], result2));
+                console.log('result :', result);
+            }
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;

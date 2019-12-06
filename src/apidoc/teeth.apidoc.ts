@@ -6,9 +6,11 @@
  * @apiParam {string} childrenId 아이 고유 ObjectId
  * @apiParam {string} description 내용
  * @apiParam {string} isCreatedTime 생성일
+ * @apiParam {boolean} isUp 위/아래(true:위, false:아래)
  * @apiParamExample {json} Request-Example:
  *     {
- *      childrenId: "dfhdfg123df1h2f3d",
+ *      isUp: false,
+ *      childrenId: "5dde21b5ab07243d708950a6",
  *      description: "1번 이빨 나감",
  *      isCreatedTime: "19-12-12"
  *     }
@@ -35,21 +37,33 @@
  * @apiSuccess {object[]} result 모든 치아 기록
  * @apiSuccessExample {json} Success-Response:
  * {
-    "result": [
+    result: [
         {
-            "_id": "5de9b17f2bd7275e046b5b13",
-            "childrenId": "5dde21b5ab07243d708950a6",
-            "description": "1번 이빨 나감",
-            "isCreatedTime": "19-12-12"
+        _id: "5dde22df8b48c720501eefa7",
+        childrenId: "5dde22df8b48c720501eefa7",
+        description: "3번 이빨 나감",
+        isCreatedTime: "19-12-12",
+        parent: "test@naver.com",
+        name: "지수"
         },
         {
-            "_id": "5de9b19a2bd7275e046b5b14",
-            "childrenId": "5dde22df8b48c720501eefa7",
-            "description": "3번 이빨 나감",
-            "isCreatedTime": "19-12-12"
+        _id: "5dde22df8b48c720501eefa7",
+        childrenId: "5dde2431f61b345a40550c15",
+        description: "148번 이빨 나감",
+        isCreatedTime: "19-12-12",
+        parent: "test@naver.com",
+        name: "지수"
+        },
+        {
+        _id: "5dde22df8b48c720501eefa7",
+        childrenId: "5dde2484e486b02344a4a84f",
+        description: "이가 싹다 나감",
+        isCreatedTime: "19-12-12",
+        parent: "test@naver.com",
+        name: "지수"
         }
     ]
-}   
+   }
  * @apiErrorExample {json} Error-Response:
  *     HTTP/1.1 400 Error
  *     result : {
