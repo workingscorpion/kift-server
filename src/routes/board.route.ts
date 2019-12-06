@@ -87,10 +87,10 @@ export default class BoardAPI implements MyDependencies {
         const {id} = ctx.params;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            const result = await col.findOneAndUpdate({_id: new mongodb.ObjectId(id)}, {$inc: {count: 1}});
+            const result = await col.updateOne({_id: new mongodb.ObjectId(id)}, {$inc: {count: 1}});
             ctx.set('Access-Control-Allow-Origin', '*');
-            console.log('result :', result.value);
-            const finalresult = result.value;
+            console.log('result :', result);
+            const finalresult = result;
             ctx.response.body = {finalresult};
             ctx.response.status = HttpStatus.OK;
         });
@@ -103,7 +103,7 @@ export default class BoardAPI implements MyDependencies {
         const body = ctx.request.body;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            await col.findOneAndUpdate(
+            await col.updateOne(
                 {_id: new mongodb.ObjectId(params.id)},
                 {
                     $set: {
@@ -129,7 +129,7 @@ export default class BoardAPI implements MyDependencies {
         const params = ctx.params;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            const result = await col.findOneAndUpdate({_id: new mongodb.ObjectId(params.id)}, {$set: {isDeletedTime: Date.now()}});
+            const result = await col.updateOne({_id: new mongodb.ObjectId(params.id)}, {$set: {isDeletedTime: Date.now()}});
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
