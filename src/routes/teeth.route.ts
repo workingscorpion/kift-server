@@ -51,7 +51,7 @@ export default class TeethAPI implements MyDependencies {
             let result = [];
             for (let i = 0; i < result1.length; i++) {
                 const col1 = await db.collection(DBService.ChildrenCollection);
-                const result2 = await col1.findOne({_id: new mongodb.ObjectId(result1[0].childrenId)}, {projection: {parent: 1, name: 1}});
+                const result2 = await col1.findOne({_id: new mongodb.ObjectId(result1[i].childrenId)}, {projection: {parent: 1, name: 1}});
                 result.push(Object.assign(result1[i], result2));
                 console.log('result :', result);
             }
