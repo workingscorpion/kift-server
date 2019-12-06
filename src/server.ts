@@ -13,7 +13,7 @@ import {TestQueries} from './graphql/testqueries';
 // import cors from 'koa-cors';
 // import bodyParser from 'body-parser';
 import * as bodyparser from 'koa-bodyparser';
-import * as cors from '@koa/cors';
+import cors from 'koa-cors';
 import multer from 'koa-multer';
 import mount from 'koa-mount';
 import serve from 'koa-static';
