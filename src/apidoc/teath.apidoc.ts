@@ -4,16 +4,13 @@
  * @apiName create teethData
  * @apiGroup Teeth API
  * @apiParam {string} childrenId 아이 고유 ObjectId
- * @apiParam {Object[]} teethData 데이터
+ * @apiParam {string} description 내용
+ * @apiParam {string} isCreatedTime 생성일
  * @apiParamExample {json} Request-Example:
  *     {
  *      childrenId: "dfhdfg123df1h2f3d",
- *      teethData: [
- *          {
- *              description: "1번 이빨 나감",
- *              isCreatedTime: "19-12-12"
- *          }
- *      ]
+ *      description: "1번 이빨 나감",
+ *      isCreatedTime: "19-12-12"
  *     }
  * @apiSampleUrl http://192.168.0.84:3002/api/v1/teeth/create
  * @apiSuccess {boolean} result 데이터 저장 성공 여부
@@ -30,18 +27,55 @@
  */
 
 /**
- * @api {get} /api/v1/teeth/list 치아 기록 조회 API
+ * @api {get} /api/v1/teeth/lists 전체 치아 기록 조회 API
  * @apiVersion 0.0.0
- * @apiName read teethData
+ * @apiName teethData list
+ * @apiGroup Teeth API
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/teeth/lists
+ * @apiSuccess {object[]} 모든 치아 기록
+ * @apiSuccessExample {json} Success-Response:
+ * {
+    "result": [
+        {
+            "_id": "5de9b17f2bd7275e046b5b13",
+            "childrenId": "5dde21b5ab07243d708950a6",
+            "description": "1번 이빨 나감",
+            "isCreatedTime": "19-12-12"
+        },
+        {
+            "_id": "5de9b19a2bd7275e046b5b14",
+            "childrenId": "5dde22df8b48c720501eefa7",
+            "description": "3번 이빨 나감",
+            "isCreatedTime": "19-12-12"
+        }
+    ]
+}   
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 400 Error
+ *     result : {
+ *          result : false
+ *     }
+ */
+
+/**
+ * @api {get} /api/v1/teeth/list 특정 아이 치아 기록 조회 API
+ * @apiVersion 0.0.0
+ * @apiName read a teethData
  * @apiGroup Teeth API
  * @apiParam {string} childrenId 아이 고유 ObjectId
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/teeth/list?childrenId=dfhdfg123df1h2f3d
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/teeth/list?childrenId=5dde21b5ab07243d708950a6
  * @apiSuccess {boolean} result 데이터 조회 성공 여부
  * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     result : {
- *          result : true
- *     }
+ * {
+    "result": [
+        {
+            "_id": "5de9b17f2bd7275e046b5b13",
+            "childrenId": "5dde21b5ab07243d708950a6",
+            "description": "1번 이빨 나감",
+            "isCreatedTime": "19-12-12"
+        }
+    ]
+   }
  * @apiErrorExample {json} Error-Response:
  *     HTTP/1.1 400 Error
  *     result : {

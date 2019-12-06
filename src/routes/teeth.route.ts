@@ -10,13 +10,13 @@ import mongodb from 'mongodb';
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
 interface Teeth {
-    _id?: mongodb.ObjectID;
-    title?: string;
-    writedate?: number;
+    childrenId?: string;
+    description?: string;
+    isCreatedTime?: string;
 }
 
 @route('/api/v1/teeth')
-export default class BoardAPI implements MyDependencies {
+export default class TeethAPI implements MyDependencies {
     constructor({dbService, appServer, envService}: MyDependencies) {
         this.dbService = dbService;
         this.appServer = appServer;
@@ -30,37 +30,36 @@ export default class BoardAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Teeth>(DBService.TeethCollection);
             const result = await col.insert({
-                title: body.title,
-                writedate: Date.now()
+                childrenId: body.childrenId,
+                description: body.description,
+                isCreatedTime: body.isCreatedTime
             });
-            ctx.response.body = {result};
+            ctx.response.body = result;
             ctx.response.status = HttpStatus.OK;
         });
     }
 
-    @route('/list')
+    //모든 치아 정보 보기
+    @route('/lists')
     @GET()
     async list(ctx: Koa.Context) {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Teeth>(DBService.TeethCollection);
-            const result = await col
-                .find({}, {projection: {title: 1, writedate: 1}})
-                .sort({writedate: -1})
-                .toArray();
+            const result = await col.find({}).toArray();
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
     }
 
-    //공지사항 상세보기
-    @route('/read/:id')
+    //아이 하나의 정보 보기
+    @route('/list')
     @GET()
     async read(ctx: Koa.Context) {
-        const {id} = ctx.params;
+        const query = ctx.request.query;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Teeth>(DBService.TeethCollection);
-            const result = await col.findOne({_id: new mongodb.ObjectId(id)});
+            const result = await col.find({childrenId: query.childrenId}, {sort: {isCreatedTime: 1}}).toArray();
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
@@ -70,18 +69,15 @@ export default class BoardAPI implements MyDependencies {
     @route('/update')
     @POST()
     async update(ctx: Koa.Context) {
-        const params = ctx.params;
         const body = ctx.request.body;
+        const updatequery = JSON.parse(JSON.stringify(body));
+        delete updatequery._id;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Teeth>(DBService.TeethCollection);
             const result = await col.findOneAndUpdate(
-                {_id: new mongodb.ObjectId(params.id)},
+                {_id: new mongodb.ObjectId(body._id)},
                 {
-                    $set: {
-                        _id: new mongodb.ObjectID('id'),
-                        title: body.title,
-                        writedate: Date.now()
-                    }
+                    $set: updatequery
                 }
             );
             ctx.set('Access-Control-Allow-Origin', '*');
@@ -90,7 +86,6 @@ export default class BoardAPI implements MyDependencies {
         });
     }
 
-    //상세보기에서 삭제할 경우
     @route('/delete/:id')
     @DELETE()
     async delete(ctx: Koa.Context) {
