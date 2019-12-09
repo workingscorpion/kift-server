@@ -10,8 +10,8 @@ import multer from 'koa-multer';
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
 interface Inbody {
-    email: string;
-    childrenId?: number;
+    // email: string;
+    childrenId?: string;
     height?: number;
     weight?: number;
     BMI?: number;
@@ -60,9 +60,9 @@ export default class DataAPI implements MyDependencies {
 
             // }
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
+            console.log('body :', body);
             const result = await col.insert({
-                email: body.email,
-                childrenId: Number(body.childrenId),
+                childrenId: body.childrenId,
                 height: Number(body.height),
                 weight: Number(body.weight),
                 BMI: Number((body.weight / (body.height * 0.01 * (body.height * 0.01))).toFixed(2)),
@@ -91,7 +91,7 @@ export default class DataAPI implements MyDependencies {
         const params = ctx.params;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
-            const result = await col.findOne({childrenId: params.payload});
+            const result = await col.find({childrenId: params.payload}).toArray();
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
