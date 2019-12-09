@@ -167,7 +167,7 @@ const setpw = async (col: Collection<User>, body: any, service: EnvService): Pro
     } else {
         //비밀번호 분실 변경
         const newpw = await password.randomPassword({characters: [password.upper, password.symbols, password.lower, password.digits]});
-        await col.findOneAndUpdate({email: body.email}, {$set: {pw: newpw}});
+        await col.updateOne({email: body.email}, {$set: {pw: newpw}});
         const newinfo = await col.findOne({email: body.email}, {projection: {email: 1, pw: 1}});
         const transporter = await nodemailer.createTransport({
             service: 'gmail',

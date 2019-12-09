@@ -83,7 +83,7 @@ export default class TeethAPI implements MyDependencies {
         delete updatequery._id;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Teeth>(DBService.TeethCollection);
-            const result = await col.findOneAndUpdate(
+            const result = await col.updateOne(
                 {_id: new mongodb.ObjectId(body._id)},
                 {
                     $set: updatequery
