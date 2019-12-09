@@ -6,6 +6,7 @@ import {EnvService} from '../services/env.service';
 import {DBServiceClient, AppServerClient, EnvServiceClient} from '../modules';
 import {AppServer} from '../server';
 import multer from 'koa-multer';
+import mongodb from 'mongodb';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
@@ -26,6 +27,12 @@ interface Inbody {
     internalfat?: number;
     metabolism?: number;
     bonemass?: number;
+    measureTime?: number;
+}
+
+interface ChildrenList {
+    parent?: string;
+    childrenName?: string;
     measureTime?: number;
 }
 
@@ -80,6 +87,28 @@ export default class DataAPI implements MyDependencies {
                 measureTime: Date.now()
             });
             ctx.set('Access-Control-Allow-Origin', '*');
+            ctx.response.body = {result};
+            ctx.response.status = HttpStatus.OK;
+        });
+    }
+
+    @route('/list')
+    @GET()
+    async list(ctx: Koa.Context) {
+        console.log('data list');
+        await this.dbService.performWithDB(async db => {
+            // const col = await db.collection(DBService.ChildrenCollection);
+            // const result = await col
+            //     .aggregate([{$project: {_id: {$toString: '$_id'}, parent: 1, name: 1}}, {$lookup: {from: DBService.InbodyCollection, localField: '_id', foreignField: 'childrenId', as: 'inbodydata'}}])
+            //     .toArray();
+            const col = await db.collection(DBService.InbodyCollection);
+            const result = await col
+                .aggregate([
+                    {$project: {childrenId: {$toObjectId: '$childrenId'}, measureTime: 1}},
+                    {$lookup: {from: DBService.ChildrenCollection, localField: 'childrenId', foreignField: '_id', as: 'childrenData'}}
+                ])
+                .toArray();
+
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
