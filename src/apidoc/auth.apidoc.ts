@@ -92,7 +92,7 @@
  */
 
 /**
- * @api {post} /api/v1/auth/changepw 비밀번호 수정
+ * @api {post} /api/v1/auth/changepw 비밀번호 수정 API
  * @apiVersion 0.0.0
  * @apiName pw update
  * @apiGroup Auth API
@@ -119,7 +119,7 @@
  */
 
 /**
- * @api {post} /api/v1/auth/signout 회원 탈퇴
+ * @api {post} /api/v1/auth/signout 회원 탈퇴 API
  * @apiVersion 0.0.0
  * @apiName signout
  * @apiGroup Auth API

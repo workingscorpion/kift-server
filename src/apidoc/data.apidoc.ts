@@ -38,6 +38,55 @@
  */
 
 /**
+ * @api {get} /api/v1/data/list 측정기록 전체 조회 API
+ * @apiVersion 0.0.0
+ * @apiName show list of data
+ * @apiGroup Inbody API
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/list
+ * @apiSuccess {boolean} result inbody측정 기록 전체 데이터
+ * @apiSuccessExample {json} Success-Response:
+ *     {
+        result: [
+            {
+                _id: "5dedbcb53ee3e02dbcaea507",
+                measureTime: 1575861429408,
+                childrenId: "5dde21b5ab07243d708950a6",
+                inbodydata: [
+                    {
+                        _id: "5dde21b5ab07243d708950a6",
+                        parent: "test@naver.com",
+                        name: "준기",
+                        birth: "2018-11-06",
+                        profile: null,
+                        isMale: false
+                    }
+                ]
+            },
+            {
+                _id: "5dedbd99613b0947e4efb82e",
+                measureTime: 1575861657559,
+                childrenId: "5dde21b5ab07243d708950a6",
+                inbodydata: [
+                    {
+                        _id: "5dde21b5ab07243d708950a6",
+                        parent: "test@naver.com",
+                        name: "준기",
+                        birth: "2018-11-06",
+                        profile: null,
+                        isMale: false
+                    }
+                ]
+            }
+        ]
+    }
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 400 Error
+ *     result : {
+ *          result : false
+ *     }
+ */
+
+/**
  * @api {get} /api/v1/data/read/:payload 특정 아이 측정데이터 전체 조회 API
  * @apiVersion 0.0.0
  * @apiName read inbodyData
@@ -138,7 +187,7 @@
  */
 
 /**
- * @api {delete} /api/v1/data/delete 아이데이터 삭제
+ * @api {delete} /api/v1/data/delete 아이데이터 삭제 API
  * @apiVersion 0.0.0
  * @apiName delete inbodyData
  * @apiGroup Inbody API
