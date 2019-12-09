@@ -12,7 +12,7 @@ import {constructGraphQLSChema} from './graphql/schema';
 import {TestQueries} from './graphql/testqueries';
 // import cors from 'koa-cors';
 // import bodyParser from 'body-parser';
-import * as bodyparser from 'koa-bodyparser';
+import bodyparser from 'koa-bodyparser';
 import cors from 'koa-cors';
 import multer from 'koa-multer';
 import mount from 'koa-mount';
@@ -90,7 +90,7 @@ export class AppServer {
         );
 
         app.use(mount('/', serve('./www')));
-        app.use(bodyparser.default());
+        app.use(bodyparser());
         app.use(scopePerRequest(container));
         app.use(loadControllers('routes/*.route.js', {cwd: __dirname}));
 
@@ -128,7 +128,7 @@ export class AppServer {
                 allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Access-Control-Allow-Headers', 'Access-Control-Allow-Origin'],
                 methods: ['GET', 'POST', 'DELETE', 'PATCH', 'PUT', 'OPTIONS']
             };
-            app.use(cors.default(options));
+            app.use(cors(options));
         }
 
         process.title = this.envService.get().APP_TITLE + `${process.env.NODE_ENV} - ${this.envService.get().PORT}`;
