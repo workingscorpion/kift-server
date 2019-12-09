@@ -7,6 +7,7 @@ import {DBServiceClient, AppServerClient, EnvServiceClient} from '../modules';
 import {AppServer} from '../server';
 import multer from 'koa-multer';
 import mongodb from 'mongodb';
+import {Http2Stream} from 'http2';
 
 type MyDependencies = DBServiceClient & AppServerClient & EnvServiceClient;
 
@@ -109,6 +110,18 @@ export default class DataAPI implements MyDependencies {
                 ])
                 .toArray();
 
+            ctx.response.body = {result};
+            ctx.response.status = HttpStatus.OK;
+        });
+    }
+
+    @route('/select')
+    @GET()
+    async select(ctx: Koa.Context) {
+        const query = ctx.request.query;
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection<Inbody>(DBService.InbodyCollection);
+            const result = await col.findOne({_id: new mongodb.ObjectId(query.id)});
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });

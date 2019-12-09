@@ -87,6 +87,43 @@
  */
 
 /**
+ * @api {get} /api/v1/data/select 특정데이터 조회 API
+ * @apiVersion 0.0.0
+ * @apiName show specific inbodyData
+ * @apiGroup Inbody API
+ * @apiParam {string} id 특정데이터 ObjectId
+ * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/select?id=5dedbcb53ee3e02dbcaea507
+ * @apiSuccess {boolean} result 특정 데이터 조회 결과
+ * @apiSuccessExample {json} Success-Response:
+ *     {
+        result: {
+            _id: "5dedbcb53ee3e02dbcaea507",
+            childrenId: "5dde21b5ab07243d708950a6",
+            height: 170,
+            weight: 60,
+            BMI: 20.76,
+            headround: 20,
+            sight: 1.5,
+            waist: 60,
+            foot: 240,
+            bodyfat: 15,
+            muscle: 20,
+            moisture: 20,
+            protein: 30,
+            internalfat: 10,
+            metabolism: 22,
+            bonemass: 80,
+            measureTime: 1575861429408
+        }
+    }
+ * @apiErrorExample {json} Error-Response:
+ *     HTTP/1.1 400 Error
+ *     result : {
+ *          result : false
+ *     }
+ */
+
+/**
  * @api {get} /api/v1/data/read/:payload 특정 아이 측정데이터 전체 조회 API
  * @apiVersion 0.0.0
  * @apiName read inbodyData
