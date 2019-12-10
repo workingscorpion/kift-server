@@ -52,7 +52,7 @@ export default class TeethAPI implements MyDependencies {
             let result = [];
             for (let i = 0; i < result1.length; i++) {
                 const result2 = await col1.findOne({_id: new mongodb.ObjectId(result1[i].childrenId)}, {projection: {parent: 1, name: 1}});
-                result.push(Object.assign(result1[i], result2));
+                result.push(Object.assign(result2, result1[i]));
                 console.log('result :', result);
             }
             ctx.set('Access-Control-Allow-Origin', '*');
@@ -101,6 +101,7 @@ export default class TeethAPI implements MyDependencies {
         const params = ctx.params;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Teeth>(DBService.TeethCollection);
+            console.log('params.id :', params.id);
             const result = await col.remove({_id: new mongodb.ObjectID(params.id)});
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};

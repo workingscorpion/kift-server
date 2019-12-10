@@ -128,7 +128,7 @@
  */
 
 /**
- * @api {delete} /api/v1/teeth/delete 치아 기록 삭제 API
+ * @api {delete} /api/v1/teeth/delete/:id 치아 기록 삭제 API
  * @apiVersion 0.0.0
  * @apiName delete teethData
  * @apiGroup Teeth API
