@@ -109,7 +109,7 @@ export default class DataAPI implements MyDependencies {
                     {$lookup: {from: DBService.ChildrenCollection, localField: 'childrenId', foreignField: '_id', as: 'childrenData'}}
                 ])
                 .toArray();
-
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -122,6 +122,7 @@ export default class DataAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
             const result = await col.findOne({_id: new mongodb.ObjectId(query.id)});
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
