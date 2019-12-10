@@ -14,7 +14,7 @@
  *      writer: "admin@naver.com",
  *      fix: true
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/create
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/create
  * @apiSuccess {string} _id ObjectId
  * @apiSuccess {string} title 공지사항 제목
  * @apiSuccess {string} description 공지사항 내용
@@ -37,7 +37,7 @@
  * @apiVersion 0.0.0
  * @apiName board admin list
  * @apiGroup Board API
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/adlist
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/adlist
  * @apiSuccess {object[]} trueresult 공지사항 상위고정 리스트
  * @apiSuccess {object[]} allresult 공지사항 전체 리스트
  * @apiSuccessExample {json} Success-Response:
@@ -100,7 +100,7 @@
  * @apiVersion 0.0.0
  * @apiName board list
  * @apiGroup Board API
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/list
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/list
  * @apiSuccess {object[]} trueresult 공지사항 상위고정 리스트
  * @apiSuccess {object[]} allresult 공지사항 전체 리스트
  * @apiSuccessExample {json} Success-Response:
@@ -144,7 +144,7 @@
  * @apiName board read
  * @apiGroup Board API
  * @apiParam {string} id 상세보기할 해당 공지사항 ObjectId
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/read/5de089d569296802f0982b44/
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/read/5de089d569296802f0982b44/
  * @apiSuccess {string} _id ObjectId
  * @apiSuccess {string} title 공지사항 제목
  * @apiSuccess {string} description 공지사항 내용
@@ -183,7 +183,7 @@
  *      writedate: "19-11-20",
  *      fix: false
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/update/5de089d569296802f0982b44/
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/update/5de089d569296802f0982b44/
  * @apiSuccess {string} _id ObjectId
  * @apiSuccess {string} title 공지사항 제목
  * @apiSuccess {string} description 공지사항 내용
@@ -208,7 +208,7 @@
  * @apiVersion 0.0.0
  * @apiName board delete one
  * @apiGroup Board API
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/delete/5de089d569296802f0982b44/
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/delete/5de089d569296802f0982b44/
  * @apiParam {string} id 삭제할 해당 공지사항 ObjecgId
  */
 
@@ -218,7 +218,7 @@
  * @apiName board delete multiple
  * @apiGroup Board API
  * @apiParam {string[]} query 삭제할 공지사항 ObjectId Array
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/board/delete
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/delete
  * @apiParamExample {string[]} Request-Example:
  *     {
  *      [

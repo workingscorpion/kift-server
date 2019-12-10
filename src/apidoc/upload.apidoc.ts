@@ -8,7 +8,7 @@
  *     {
  *      file : <binary data>
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/upload/single
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/upload/single
  * @apiSuccess {boolean} response 단일 사진 저장 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -32,7 +32,7 @@
  *     {
  *      files : <binary data>
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/upload/multi
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/upload/multi
  * @apiSuccess {boolean} response 다수 사진 저장 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK

@@ -3,7 +3,7 @@
  * @apiVersion 0.0.0
  * @apiName  userlist
  * @apiGroup Admin API
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/admin/queryuser
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/admin/queryuser
  * @apiSuccess {string} _id ObjectId
  * @apiSuccess {string} email 계정(이메일)
  * @apiSuccess {string} name 이름
@@ -39,7 +39,7 @@
  * @apiName userInfo
  * @apiGroup Admin API
  * @apiParam {string} email 상세보기할 사용자 계정(email)
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/admin/queryuser/test@naver.com
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/admin/queryuser/test@naver.com
  * @apiSuccess {string} _id ObjectId
  * @apiSuccess {string} email 계정(이메일)
  * @apiSuccess {string} name 이름
@@ -76,8 +76,8 @@
  * @apiGroup Admin API
  * @apiParam {string} payload 검색할 키워드
  * @apiParam {string} searchWay 검색조건(email | name)
- * @apiSampleUrl http://localhost:3002/api/v1/admin/search/test1?searchWay=email
- * @apiSampleUrl http://localhost:3002/api/v1/admin/search/test2?searchWay=name
+ * @apiSampleRequest http://localhost:3002/api/v1/admin/search/test1?searchWay=email
+ * @apiSampleRequest http://localhost:3002/api/v1/admin/search/test2?searchWay=name
  * @apiSuccess {string} _id ObjectId
  * @apiSuccess {string} email 계정(이메일)
  * @apiSuccess {string} name 이름
@@ -123,7 +123,7 @@
  *      birth : "19-11-30",
  *      isMale : false
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/admin/update
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/admin/update
  * @apiSuccess {boolean} response 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -150,7 +150,7 @@
  *      birth: "19-12-30",
  *      isMale: true
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/admin/update/children
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/admin/update/children
  * @apiSuccess {boolean} response 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -164,5 +164,5 @@
  * @apiVersion 0.0.0
  * @apiName admin shutdown
  * @apiGroup Admin API
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/admin/shutdown
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/admin/shutdown
  */

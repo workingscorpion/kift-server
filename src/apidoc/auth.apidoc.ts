@@ -16,7 +16,7 @@
  *      birth: "19-11-20",
  *      isMale: false
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/join
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/auth/join
  * @apiSuccess {boolean} response 회원가입 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -42,7 +42,7 @@
  *      email: "test@naver.com",
  *      pw: "test1234!"
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/login
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/auth/login
  * @apiSuccess {boolean} response 로그인 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -63,7 +63,7 @@
  * @apiGroup Auth API
  * @apiParam {string} name 이름
  * @apiParam {Date} birth 생일
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/findid?name=test&birth=19-11-20
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/auth/findid?name=test&birth=19-11-20
  * @apiSuccess {string} email 계정
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -82,7 +82,7 @@
  *     {
  *      email: "test@naver.com"
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/findpw
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/auth/findpw
  * @apiSuccess {boolean} result 변경 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -109,7 +109,7 @@
  *      pw: "test1234!",
  *      newpw: "test4321!"
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/changepw
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/auth/changepw
  * @apiSuccess {boolean} result 비밀번호 수정 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -130,7 +130,7 @@
  *      email: "test@naver.com",
  *      pw: "test1234!"
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/auth/signout
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/auth/signout
  * @apiSuccess {boolean} result 회원탈퇴 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK

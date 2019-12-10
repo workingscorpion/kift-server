@@ -23,7 +23,7 @@
  *      bonemass: 80,
  *      measureTime: 1231351321321
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/create
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/data/create
  * @apiSuccess {boolean} result inbody측정 데이터 입력 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -42,7 +42,7 @@
  * @apiVersion 0.0.0
  * @apiName show list of data
  * @apiGroup Inbody API
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/list
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/data/list
  * @apiSuccess {boolean} result inbody측정 기록 전체 데이터
  * @apiSuccessExample {json} Success-Response:
  *     {
@@ -92,7 +92,7 @@
  * @apiName show specific inbodyData
  * @apiGroup Inbody API
  * @apiParam {string} id 특정데이터 ObjectId
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/select?id=5dedbcb53ee3e02dbcaea507
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/data/select?id=5dedbcb53ee3e02dbcaea507
  * @apiSuccess {boolean} result 특정 데이터 조회 결과
  * @apiSuccessExample {json} Success-Response:
  *     {
@@ -129,7 +129,7 @@
  * @apiName read inbodyData
  * @apiGroup Inbody API
  * @apiParam {string} payload 아이 고유 ObjectId
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/read/5dde21b5ab07243d708950a6
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/data/read/5dde21b5ab07243d708950a6
  * @apiSuccess {boolean} result inbody측정 데이터 입력 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -209,7 +209,7 @@
  *      bonemass: 80,
  *      measureTime: 1231351328132
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/update
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/data/update
  * @apiSuccess {boolean} response 수정성공여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -235,7 +235,7 @@
  *      childrenId: "5dde21b5ab07243d708950a6",
  *      measureTime: 1575861429408
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/delete
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/data/delete
  * @apiSuccess {boolean} response 데이터 삭제 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -267,7 +267,7 @@
  *      profile: <binary data>
  *      isMale: false
  *     }
- * @apiSampleUrl http://192.168.0.84:3002/api/v1/data/createChild
+ * @apiSampleRequest http://192.168.0.84:3002/api/v1/data/createChild
  * @apiSuccess {boolean} response 아이 생성 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
