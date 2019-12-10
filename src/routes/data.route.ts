@@ -31,10 +31,10 @@ interface Inbody {
     measureTime?: number;
 }
 
-interface ChildrenList {
+interface Children {
     parent?: string;
-    childrenName?: string;
-    measureTime?: number;
+    name?: string;
+    // measureTime?: number;
 }
 
 @route('/api/v1/data')
@@ -121,7 +121,20 @@ export default class DataAPI implements MyDependencies {
         const query = ctx.request.query;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
-            const result = await col.findOne({_id: new mongodb.ObjectId(query.id)});
+            const col1 = await db.collection<Children>(DBService.ChildrenCollection);
+            let result;
+            const result1 = await col.findOne({_id: new mongodb.ObjectId(query.id)});
+            // console.log('result1 :', result1);
+            if (result1) {
+                const result2 = await col1.findOne({_id: new mongodb.ObjectId(result1.childrenId)});
+                // console.log('result2 :', result2);
+
+                if (result2) {
+                    result = await Object.assign(result1, {name: `${result2.name}`});
+                    result = await Object.assign(result1, {parent: `${result2.parent}`});
+                }
+            }
+            // console.log('result :', result);
             ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
