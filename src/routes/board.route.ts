@@ -72,11 +72,12 @@ export default class BoardAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
             const trueresults = {trueresult: await col.find({fix: true, isDeletedTime: undefined}, {projection: {title: 1, writedate: 1}, sort: {writedate: -1}}).toArray()};
-            const allresults = {allresult: await col.find({isDeletedTime: undefined}, {projection: {title: 1, wirtedate: 1}, sort: {writedate: -1}})};
+            const allresults = {allresult: await col.find({isDeletedTime: undefined}, {projection: {title: 1, writedate: 1}, sort: {writedate: -1}}).toArray()};
+
             const result = Object.assign(trueresults, allresults);
+            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
-            ctx.set('Access-Control-Allow-Origin', '*');
         });
     }
 
@@ -87,7 +88,8 @@ export default class BoardAPI implements MyDependencies {
         const {id} = ctx.params;
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
-            const result = await col.updateOne({_id: new mongodb.ObjectId(id)}, {$inc: {count: 1}});
+            await col.updateOne({_id: new mongodb.ObjectId(id)}, {$inc: {count: 1}});
+            const result = await col.findOne({_id: new mongodb.ObjectId(id)});
             ctx.set('Access-Control-Allow-Origin', '*');
             console.log('result :', result);
             const finalresult = result;
