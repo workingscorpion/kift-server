@@ -86,12 +86,20 @@ export default class AuthAPI implements MyDependencies {
     @GET()
     async findid(ctx: Koa.Context) {
         const query = ctx.request.query;
+        console.log('query :', query);
+        console.log('query.birth :', query.birth);
+        console.log('new Date(query.birth) :', new Date(query.birth));
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<User>(DBService.UserCollection);
-            const result = await col.findOne({name: query.name, birth: query.birth}, {projection: {email: 1}});
+            const result = await col.findOne({name: query.name, birth: new Date(query.birth)}, {projection: {email: 1}});
+            console.log('result :', result);
             if (result) {
                 ctx.set('Access-Control-Allow-Origin', '*');
                 ctx.response.body = result.email;
+                ctx.response.status = HttpStatus.OK;
+            } else {
+                ctx.set('Access-Control-Allow-Origin', '*');
+                ctx.response.body = 'nothing';
                 ctx.response.status = HttpStatus.OK;
             }
         });
