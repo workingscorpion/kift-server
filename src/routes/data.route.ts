@@ -17,16 +17,16 @@ interface Inbody {
     height?: number;
     weight?: number;
     BMI?: number;
-    headround?: number;
-    sight?: number;
+    BPD?: number;
+    sight?: object;
     waist?: number;
     foot?: number;
-    bodyfat?: number;
-    muscle?: number;
-    moisture?: number;
+    bodyFateRate?: number;
+    muscleRate?: number;
+    bodyWaterRate?: number;
     protein?: number;
-    internalfat?: number;
-    metabolism?: number;
+    visceralFat?: number;
+    BMR?: number;
     bonemass?: number;
     measureTime?: number;
 }
@@ -74,16 +74,16 @@ export default class DataAPI implements MyDependencies {
                 height: Number(body.height),
                 weight: Number(body.weight),
                 BMI: Number((body.weight / (body.height * 0.01 * (body.height * 0.01))).toFixed(2)),
-                headround: Number(body.headround),
-                sight: Number(body.sight),
+                BPD: Number(body.BPD),
+                sight: {left: Number(body.leftSight), right: Number(body.rightSight)},
                 waist: Number(body.waist),
                 foot: Number(body.foot),
-                bodyfat: Number(body.bodyfat),
-                muscle: Number(body.muscle),
-                moisture: Number(body.moisture),
+                bodyFateRate: Number(body.bodyFateRate),
+                muscleRate: Number(body.muscleRate),
+                bodyWaterRate: Number(body.bodyWaterRate),
                 protein: Number(body.protein),
-                internalfat: Number(body.internalfat),
-                metabolism: Number(body.metabolism),
+                visceralFat: Number(body.visceralFat),
+                BMR: Number(body.BMR),
                 bonemass: Number(body.bonemass),
                 measureTime: Date.now()
             });
