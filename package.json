@@ -13,7 +13,7 @@
     "watch": "npm run watch:dev",
     "watch:dev": "better-npm-run watch:dev",
     "watch:prod": "better-npm-run watch:prod",
-    "apidoc": "npx apidoc -i ./ -e node_modules -o ./www"
+    "apidoc": "apidoc -i src/apidoc -o ./www"
   },
   "betterScripts": {
     "start:dev": "node src/index.js",
