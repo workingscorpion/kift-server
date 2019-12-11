@@ -3,10 +3,10 @@
  * @apiVersion 0.0.0
  * @apiName create teethData
  * @apiGroup Teeth API
- * @apiParam {string} childrenId 아이 고유 ObjectId
- * @apiParam {string} description 내용
- * @apiParam {string} isCreatedTime 생성일
- * @apiParam {boolean} isUp 위/아래(true:위, false:아래)
+ * @apiParam (body) {string} [childrenId] 아이 고유 ObjectId
+ * @apiParam (body) {string} [description] 내용
+ * @apiParam (body) {string} [isCreatedTime] 생성일
+ * @apiParam (body) {boolean} [isUp] 위/아래(true:위, false:아래)
  * @apiParamExample {json} Request-Example:
  *     {
  *      isUp: false,
@@ -15,7 +15,7 @@
  *      isCreatedTime: "19-12-12"
  *     }
  *
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/teeth/create
+ * @apiSampleRequest /api/v1/teeth/create
  * @apiSuccess {boolean} result 데이터 저장 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -34,7 +34,7 @@
  * @apiVersion 0.0.0
  * @apiName teethData list
  * @apiGroup Teeth API
- * @apiSampleRequest http://localhost:3002/api/v1/teeth/lists
+ * @apiSampleRequest /api/v1/teeth/lists
  * @apiSuccess {object[]} result 모든 치아 기록
  * @apiSuccessExample {json} Success-Response:
  * {
@@ -77,8 +77,8 @@
  * @apiVersion 0.0.0
  * @apiName read a teethData
  * @apiGroup Teeth API
- * @apiParam {string} childrenId 아이 고유 ObjectId
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/teeth/list?childrenId=5dde21b5ab07243d708950a6
+ * @apiParam (querystring) {string} [childrenId] 아이 고유 ObjectId
+ * @apiSampleRequest /api/v1/teeth/list?childrenId=5dde21b5ab07243d708950a6
  * @apiSuccess {boolean} result 데이터 조회 성공 여부
  * @apiSuccessExample {json} Success-Response:
  * {
@@ -103,10 +103,10 @@
  * @apiVersion 0.0.0
  * @apiName update teethData
  * @apiGroup Teeth API
- * @apiParam {string} _id 해당 치아기록 ObjectId
- * @apiParam {string} childrenId 아이 고유 ObjectId
- * @apiParam {string} description 내용
- * @apiParam {string} isCreatedTime 생성일
+ * @apiParam (body) {string} [_id] 해당 치아기록 ObjectId
+ * @apiParam (body) {string} [childrenId] 아이 고유 ObjectId
+ * @apiParam (body) {string} [description] 내용
+ * @apiParam (body) {string} [isCreatedTime] 생성일
  * @apiParamExample {json} Request-Example:
  *     {
  *      _id: "5de9b17f2bd7275e046b5b13",
@@ -114,7 +114,7 @@
  *      description: "1번 이빨 다시 솟아남",
  *      isCreatedTime: "19-12-13"
  *     }
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/teeth/update
+ * @apiSampleRequest /api/v1/teeth/update
  * @apiSuccess {boolean} result 데이터 수정 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -133,7 +133,8 @@
  * @apiVersion 0.0.0
  * @apiName delete teethData
  * @apiGroup Teeth API
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/teeth/delete/5deefd47ab07ea58d8f2b76d
+ * @apiParam (url parameter) {string} [id] 삭제할 치아 기록 Object
+ * @apiSampleRequest /api/v1/teeth/delete/5deefd47ab07ea58d8f2b76d
  * @apiSuccess {boolean} result 데이터 삭제 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK

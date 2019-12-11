@@ -3,10 +3,10 @@
  * @apiVersion 0.0.0
  * @apiName board create
  * @apiGroup Board API
- * @apiParam {string} title 공지사항 제목
- * @apiParam {string} description 공지사항 내용
- * @apiParam {string} writer 작성자
- * @apiParam {boolean} fix 상단고정 여부
+ * @apiParam (body) {string} [title] 공지사항 제목
+ * @apiParam (body) {string} [description] 공지사항 내용
+ * @apiParam (body) {string} [writer] 작성자
+ * @apiParam (body) {boolean} [fix] 상단고정 여부
  * @apiParamExample {json} Request-Example:
  *     {
  *      title: "공지사항 제목입니다",
@@ -14,7 +14,7 @@
  *      writer: "admin@naver.com",
  *      fix: true
  *     }
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/create
+ * @apiSampleRequest /api/v1/board/create
  * @apiSuccess {string} _id ObjectId
  * @apiSuccess {string} title 공지사항 제목
  * @apiSuccess {string} description 공지사항 내용
@@ -37,7 +37,7 @@
  * @apiVersion 0.0.0
  * @apiName board admin list
  * @apiGroup Board API
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/adlist
+ * @apiSampleRequest /api/v1/board/adlist
  * @apiSuccess {object[]} trueresult 공지사항 상위고정 리스트
  * @apiSuccess {object[]} allresult 공지사항 전체 리스트
  * @apiSuccessExample {json} Success-Response:
@@ -100,7 +100,7 @@
  * @apiVersion 0.0.0
  * @apiName board list
  * @apiGroup Board API
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/list
+ * @apiSampleRequest /api/v1/board/list
  * @apiSuccess {object[]} trueresult 공지사항 상위고정 리스트
  * @apiSuccess {object[]} allresult 공지사항 전체 리스트
  * @apiSuccessExample {json} Success-Response:
@@ -143,8 +143,8 @@
  * @apiVersion 0.0.0
  * @apiName board read
  * @apiGroup Board API
- * @apiParam {string} id 상세보기할 해당 공지사항 ObjectId
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/read/5de089d569296802f0982b44/
+ * @apiParam (querystring) {string} [id] 상세보기할 해당 공지사항 ObjectId
+ * @apiSampleRequest /api/v1/board/read/5de089d569296802f0982b44/
  * @apiSuccess {string} _id ObjectId
  * @apiSuccess {string} title 공지사항 제목
  * @apiSuccess {string} description 공지사항 내용
@@ -170,11 +170,11 @@
  * @apiVersion 0.0.0
  * @apiName board update
  * @apiGroup Board API
- * @apiParam {string} id 상세보기할 해당 공지사항 ObjectId
- * @apiParam {string} title 공지사항 제목
- * @apiParam {string} description 공지사항 내용
- * @apiParam {string} writer 작성자
- * @apiParam {boolean} fix 상단고정 여부
+ * @apiParam (body) {string} [id] 상세보기할 해당 공지사항 ObjectId
+ * @apiParam (body) {string} [title] 공지사항 제목
+ * @apiParam (body) {string} [description] 공지사항 내용
+ * @apiParam (body) {string} [writer] 작성자
+ * @apiParam (body) {boolean} [fix] 상단고정 여부
  * @apiParamExample {json} Request-Example:
  *     {
  *      title: "수정된 공지사항 제목입니다",
@@ -183,7 +183,7 @@
  *      writedate: "19-11-20",
  *      fix: false
  *     }
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/update/5de089d569296802f0982b44/
+ * @apiSampleRequest /api/v1/board/update/5de089d569296802f0982b44/
  * @apiSuccess {string} _id ObjectId
  * @apiSuccess {string} title 공지사항 제목
  * @apiSuccess {string} description 공지사항 내용
@@ -208,8 +208,8 @@
  * @apiVersion 0.0.0
  * @apiName board delete one
  * @apiGroup Board API
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/delete/5de089d569296802f0982b44/
- * @apiParam {string} id 삭제할 해당 공지사항 ObjecgId
+ * @apiSampleRequest /api/v1/board/delete/5de089d569296802f0982b44/
+ * @apiParam (querystring) {string} [id] 삭제할 해당 공지사항 ObjecgId
  */
 
 /**
@@ -217,8 +217,8 @@
  * @apiVersion 0.0.0
  * @apiName board delete multiple
  * @apiGroup Board API
- * @apiParam {string[]} query 삭제할 공지사항 ObjectId Array
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/board/delete
+ * @apiParam (body) {string[]} [query] 삭제할 공지사항 ObjectId Array
+ * @apiSampleRequest /api/v1/board/delete
  * @apiParamExample {string[]} Request-Example:
  *     {
  *      [

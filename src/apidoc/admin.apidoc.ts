@@ -3,7 +3,7 @@
  * @apiVersion 0.0.0
  * @apiName  userlist
  * @apiGroup Admin API
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/admin/queryuser
+ * @apiSampleRequest /api/v1/admin/queryuser
  * @apiSuccess {string} _id ObjectId
  * @apiSuccess {string} email 계정(이메일)
  * @apiSuccess {string} name 이름
@@ -38,8 +38,7 @@
  * @apiVersion 0.0.0
  * @apiName userInfo
  * @apiGroup Admin API
- * @apiParam {string} email 상세보기할 사용자 계정(email)
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/admin/queryuser/test@naver.com
+ * @apiSampleRequest /api/v1/admin/queryuser/test@naver.com
  * @apiSuccess {string} _id ObjectId
  * @apiSuccess {string} email 계정(이메일)
  * @apiSuccess {string} name 이름
@@ -72,12 +71,11 @@
 /**
  * @api {get} /api/v1/admin/search/:payload 회원검색 API
  * @apiVersion 0.0.0
- * @apiName search user
+ * @apiName search User
  * @apiGroup Admin API
- * @apiParam {string} payload 검색할 키워드
- * @apiParam {string} searchWay 검색조건(email | name)
- * @apiSampleRequest http://localhost:3002/api/v1/admin/search/test1?searchWay=email
- * @apiSampleRequest http://localhost:3002/api/v1/admin/search/test2?searchWay=name
+ * @apiParam (url Parameter) {string} payload 검색 키워드
+ * @apiParam (querystring) {string} [searchWay] 검색조건(email|name)
+ * @apiSampleRequest /api/v1/admin/search/test1
  * @apiSuccess {string} _id ObjectId
  * @apiSuccess {string} email 계정(이메일)
  * @apiSuccess {string} name 이름
@@ -112,10 +110,10 @@
  * @apiVersion 0.0.0
  * @apiName userInfo update
  * @apiGroup Admin API
- * @apiParam {string} email 수정할 계정(email)
- * @apiParam {string} name 이름[생략 가능]
- * @apiParam {Date} birth 생일[생략 가능]
- * @apiParam {boolean} isMale 성별[생략 가능]
+ * @apiParam (body) {string} [email] 수정할 계정(email)
+ * @apiParam (body) {string} [name] 이름(생략가능)
+ * @apiParam (body) {Date} [birth] 생일(생략가능)
+ * @apiParam (body) {boolean} [isMale] 성별(생략가능)
  * @apiParamExample {json} Request-Example:
  *     {
  *      email: "test@naver.com",
@@ -123,7 +121,7 @@
  *      birth : "19-11-30",
  *      isMale : false
  *     }
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/admin/update
+ * @apiSampleRequest /api/v1/admin/update
  * @apiSuccess {boolean} response 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -137,11 +135,11 @@
  * @apiVersion 0.0.0
  * @apiName childrenInfo update
  * @apiGroup Admin API
- * @apiParam {string} email 부모 계정(email)
- * @apiParam {string} childId 수정할 아이 ObjectId
- * @apiParam {string} name 아이 이름
- * @apiParam {Date} birth 아이 생일
- * @apiParam {boolean} isMale 아이 성별
+ * @apiParam (body) {string} [email] 부모 계정(email)
+ * @apiParam (body) {string} [childId] 수정할 아이 ObjectId
+ * @apiParam (body) {string} [name] 아이 이름
+ * @apiParam (body) {Date} [birth] 아이 생일
+ * @apiParam (body) {boolean} [isMale] 아이 성별
  * @apiParamExample {json} Request-Example:
  *     {
  *      email: "test@naver.com",
@@ -150,7 +148,7 @@
  *      birth: "19-12-30",
  *      isMale: true
  *     }
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/admin/update/children
+ * @apiSampleRequest /api/v1/admin/update/children
  * @apiSuccess {boolean} response 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -164,5 +162,5 @@
  * @apiVersion 0.0.0
  * @apiName admin shutdown
  * @apiGroup Admin API
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/admin/shutdown
+ * @apiSampleRequest /api/v1/admin/shutdown
  */

@@ -3,12 +3,12 @@
  * @apiVersion 0.0.0
  * @apiName store a Image
  * @apiGroup Upload API
- * @apiParam {binary} file 이미지
+ * @apiParam (body) {binary} [file] 이미지
  * @apiParamExample {json} Request-Example:
  *     {
  *      file : <binary data>
  *     }
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/upload/single
+ * @apiSampleRequest /api/v1/upload/single
  * @apiSuccess {boolean} response 단일 사진 저장 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -27,12 +27,12 @@
  * @apiVersion 0.0.0
  * @apiName store Images
  * @apiGroup Upload API
- * @apiParam {binary} files 이미지 데이터(다수)
+ * @apiParam (body) {binary} [files] 이미지 데이터(다수)
  * @apiParamExample {json} Request-Example:
  *     {
  *      files : <binary data>
  *     }
- * @apiSampleRequest http://192.168.0.84:3002/api/v1/upload/multi
+ * @apiSampleRequest /api/v1/upload/multi
  * @apiSuccess {boolean} response 다수 사진 저장 성공 여부
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
