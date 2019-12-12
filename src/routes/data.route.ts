@@ -21,7 +21,7 @@ interface Inbody {
     sight?: object;
     waist?: number;
     foot?: number;
-    bodyFateRate?: number;
+    bodyFatRate?: number;
     muscleRate?: number;
     bodyWaterRate?: number;
     protein?: number;
@@ -78,7 +78,7 @@ export default class DataAPI implements MyDependencies {
                 sight: {left: Number(body.leftSight), right: Number(body.rightSight)},
                 waist: Number(body.waist),
                 foot: Number(body.foot),
-                bodyFateRate: Number(body.bodyFateRate),
+                bodyFatRate: Number(body.bodyFatRate),
                 muscleRate: Number(body.muscleRate),
                 bodyWaterRate: Number(body.bodyWaterRate),
                 protein: Number(body.protein),
