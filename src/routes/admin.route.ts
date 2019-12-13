@@ -44,7 +44,7 @@ export default class AdminAPI implements MyDependencies {
             console.log('results.length :', results.length);
             ctx.response.body = {results};
             // ctx.set('Access-Control-Allow-Origin', 'http://localhost:3000');
-    
+
             // ctx.set('Access-COntrol-Allow-Credentials', 'true');
 
             ctx.response.status = HttpStatus.OK;
@@ -66,7 +66,7 @@ export default class AdminAPI implements MyDependencies {
                 result2 = {childrenInfo: await col1.find({parent: result1.email}).toArray()};
                 result = Object.assign(result1, result2);
             }
-    
+
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -86,11 +86,12 @@ export default class AdminAPI implements MyDependencies {
             } else if (query.searchWay === 'email') {
                 result = await col.find({email: new RegExp(params.payload)}, {projection: {pw: 0, children: 0}}).toArray();
             }
-    
+
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
     }
+
     @route('/update')
     @POST()
     async update(ctx: Koa.Context) {
@@ -99,7 +100,7 @@ export default class AdminAPI implements MyDependencies {
             const col = await db.collection(DBService.UserCollection);
             // await col.findOne({email: body.email});
             const result = await col.findOneAndUpdate({email: body.email}, {$set: body});
-    
+
             // const result = await col.findOne({email: params.payload});
             ctx.response.body = 'true';
             ctx.response.status = HttpStatus.OK;

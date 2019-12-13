@@ -229,3 +229,36 @@
  *      ]
  *     }
  */
+
+/**
+ * @api {post} /api/v1/board/search 공지사항 검색 API
+ * @apiVersion 0.0.0
+ * @apiName search Board
+ * @apiGroup Board API
+ * @apiParam (body) {string} [title] 검색할 키워드
+ * @apiSampleRequest /api/v1/board/search
+ * @apiSuccess {string} _id 해당 공지사항 고유 ID
+ * @apiSuccess {string} title 해당 공지사항 제목
+ * @apiSuccess {string} description 해당 공지사항 내용
+ * @apiSuccess {string} writer 해당 공지사항 작성자
+ * @apiSuccess {number} writedate 해당 공지사항 작성시간
+ * @apiSuccess {boolean} fix 해당 공지사항 상단고정 여부
+ * @apiSuccess {number} count 해당 공지사항 조회수
+ * @apiSuccess {number} [isUpdatedTime] 해당 공지사항 수정시간(경우에 따라 없을 수 있음)
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+        "result": [
+            {
+                "_id": "5dedac2a58d39f85d9cb3ff8",
+                "title": "test3222dsfsdg",
+                "description": "testdfahfdhadh",
+                "writer": "관리자",
+                "writedate": 1575857194000,
+                "fix": null,
+                "count": 8,
+                "isUpdatedTime": 1576202990310
+            }
+        ]
+    }
+ */

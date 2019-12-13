@@ -17,9 +17,9 @@ interface Board {
     writedate: number;
     fix: Boolean;
     count: number;
-    isDeletedTime?: number;
+    isDeletedTime?: number | null;
     isCreatedTime?: number;
-    isUpdatedTime?: number;
+    isUpdatedTime?: number | null;
 }
 
 @route('/api/v1/board')
@@ -90,7 +90,6 @@ export default class BoardAPI implements MyDependencies {
             const col = await db.collection<Board>(DBService.BoardCollection);
             await col.updateOne({_id: new mongodb.ObjectId(id)}, {$inc: {count: 1}});
             const result = await col.findOne({_id: new mongodb.ObjectId(id)});
-            console.log('result :', result);
             const finalresult = result;
             ctx.response.body = {finalresult};
             ctx.response.status = HttpStatus.OK;
@@ -139,21 +138,27 @@ export default class BoardAPI implements MyDependencies {
     @route('/delete')
     @POST()
     async delete(ctx: Koa.Context) {
-        // ctx.set('Access-Control-Allow-Origin', '*');
         const body = ctx.request.body;
-        console.log('body :', body);
-        console.log('typeof body :', typeof body);
-        // console.log('typeof body.deletelist :', typeof body.deletelist);
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
             for (let oid in body) {
-                console.log('oid :', oid);
-                console.log('body[oid] :', body[oid]);
                 await col.update({_id: new mongodb.ObjectId(body[oid])}, {$set: {isDeletedTime: Date.now()}});
             }
             const trueresults = {trueresult: await col.find({fix: true, isDeletedTime: undefined}, {sort: {writedate: -1}}).toArray()};
             const allresults = {allresults: await col.find({isDeletedTime: undefined}, {sort: {writedate: -1}}).toArray()};
             const result = Object.assign(trueresults, allresults);
+            ctx.response.body = {result};
+            ctx.response.status = HttpStatus.OK;
+        });
+    }
+
+    @route('/search')
+    @POST()
+    async search(ctx: Koa.Context) {
+        const body = ctx.request.body;
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection<Board>(DBService.BoardCollection);
+            const result = await col.find({title: new RegExp(body.title), isDeletedTime: null}).toArray();
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
