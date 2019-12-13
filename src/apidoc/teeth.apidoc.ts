@@ -154,7 +154,7 @@
  * @apiName search Teeth
  * @apiGroup Teeth API
  * @apiParam (url Parameter) {string} payload 검색 키워드
- * @apiParam (querystring) {string} [searchWay] 검색조건(childName|parent|description)
+ * @apiParam (querystring) {string} [searchWay] 검색조건(childrenName|parent|description)
  * @apiSampleRequest /api/v1/teeth/search/ydl
  * @apiSuccess {string} _id ObjectId
  * @apiSuccess {string} name 이름

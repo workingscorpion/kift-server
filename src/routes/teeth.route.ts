@@ -115,8 +115,6 @@ export default class TeethAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Teeth>(DBService.TeethCollection);
             const col1 = await db.collection(DBService.ChildrenCollection);
-            console.log('params :', params);
-            console.log('searchWay :', searchWay);
             let result1;
             let result2;
             let result = [];
@@ -124,10 +122,11 @@ export default class TeethAPI implements MyDependencies {
                 result1 = await col.find({description: new RegExp(params.payload)}).toArray();
                 for (let i = 0; i < result1.length; i++) {
                     const result2 = await col1.find({_id: new mongodb.ObjectId(result1[i].childrenId)}, {projection: {parent: 1, name: 1}}).toArray();
-                    console.log('result2 in for :', result2);
+                    console.log('result1[i] :', result1[i]);
                     if (result2) {
                         for (let j = 0; j < result2.length; j++) {
-                            result.push(Object.assign(result2[j], result1[i]));
+                            console.log('result2[j] :', result2[j]);
+                            result.push(JSON.parse(JSON.stringify(Object.assign(result2[j], result1[i]))));
                             console.log('result :', result);
                         }
                     }
@@ -147,7 +146,7 @@ export default class TeethAPI implements MyDependencies {
                     if (result1) {
                         for (let j = 0; j < result1.length; j++) {
                             console.log('result1 :', result1);
-                            result.push(Object.assign(result2[i], result1[j]));
+                            result.push(JSON.parse(JSON.stringify(Object.assign(result2[i], result1[j]))));
                             console.log('result :', result);
                         }
                     }

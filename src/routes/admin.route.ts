@@ -43,7 +43,6 @@ export default class AdminAPI implements MyDependencies {
             // const results = await col.find({}).toArray();
             console.log('results.length :', results.length);
             ctx.response.body = {results};
-            // ctx.set('Access-Control-Allow-Origin', 'http://localhost:3000');
 
             // ctx.set('Access-COntrol-Allow-Credentials', 'true');
 
