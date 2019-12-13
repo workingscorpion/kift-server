@@ -108,7 +108,6 @@ export default class DataAPI implements MyDependencies {
                     {$lookup: {from: DBService.ChildrenCollection, localField: 'childrenId', foreignField: '_id', as: 'childrenData'}}
                 ])
                 .toArray();
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -197,6 +196,58 @@ export default class DataAPI implements MyDependencies {
             }
             childrenresult.push(childId);
             const result = await col.updateOne({email: body.email}, {$set: {children: childrenresult}});
+            ctx.response.body = {result};
+            ctx.response.status = HttpStatus.OK;
+        });
+    }
+
+    @route('/search')
+    @POST()
+    async search(ctx: Koa.Context) {
+        const {searchWay} = ctx.request.body;
+        const {payload} = ctx.request.body;
+        console.log('searchWay :', searchWay);
+        console.log('payload :', payload);
+        await this.dbService.performWithDB(async db => {
+            const col = await db.collection(DBService.ChildrenCollection);
+            const col1 = await db.collection(DBService.InbodyCollection);
+            let result1;
+            let result2;
+            let result = [];
+            if (searchWay === 'childrenName') {
+                // result = await col
+                //     .aggregate([
+                //         {$match: {name: new RegExp(payload)}},
+                //         {$project: {_id: {$toString: '$_id'}, name: 1, parent: 1}},
+                //         {$lookup: {from: DBService.InbodyCollection, localField: '_id', foreignField: 'childrenId', as: 'childrenData'}}
+                //     ])
+                //     .toArray();
+                result1 = await col.find({name: new RegExp(payload)}, {projection: {parent: 1, name: 1}}).toArray();
+                // console.log('result1 :', result1);
+                if (result1) {
+                    for (let i = 0; i < result1.length; i++) {
+                        result2 = await col1.find({childrenId: String(result1[i]._id)}, {projection: {measureTime: 1}}).toArray();
+                        console.log('result2 :', result2);
+                        if (result2) {
+                            for (let j = 0; j < result2.length; j++) {
+                                // console.log('result2[j] :', result2[j]);
+                                const sum = JSON.parse(JSON.stringify(Object.assign(result1[i], result2[j])));
+                                await result.push(sum);
+                                console.log('result :', result);
+                            }
+                        }
+                    }
+                }
+            } else {
+                // result = await col
+                //     .aggregate([
+                //         {$match: {parent: new RegExp(payload)}},
+                //         {$project: {_id: {$toString: '$_id'}, name: 1, parent: 1}},
+                //         {$lookup: {from: DBService.InbodyCollection, localField: '_id', foreignField: 'childrenId', as: 'childrenData'}}
+                //     ])
+                //     .toArray();
+            }
+
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });

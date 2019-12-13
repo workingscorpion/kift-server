@@ -296,3 +296,35 @@
  *          result : false
  *     }
  */
+
+/**
+ * @api {post} /api/v1/data/search 측정데이터 검색 API
+ * @apiVersion 0.0.0
+ * @apiName search Inbody
+ * @apiGroup Inbody API
+ * @apiParam (body) {string} [payload] 검색 키워드
+ * @apiParam (body) {string} [searchWay] 검색조건(childrenName|parent)
+ * @apiSampleRequest /api/v1/data/search
+ * @apiSuccess {string} _id 해당 측정데이터 ObjectId
+ * @apiSuccess {string} name 이름
+ * @apiSuccess {string} parent 부모계정(이메일)
+ * @apiSuccess {number} measureTime 측정시간
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+        "result": [
+            {
+                "_id": "5dedbcb53ee3e02dbcaea507",
+                "parent": "test@naver.com",
+                "name": "준기",
+                "measureTime": 1575861429408
+            },
+            {
+                "_id": "5df1dcf85343f0a8bee9d678",
+                "parent": "test@naver.com",
+                "name": "준기",
+                "measureTime": 1576131832242
+            }
+        ]
+    }
+ */
