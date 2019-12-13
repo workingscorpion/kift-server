@@ -12,7 +12,7 @@ import {constructGraphQLSChema} from './graphql/schema';
 import {TestQueries} from './graphql/testqueries';
 // import cors from 'koa-cors';
 // import bodyParser from 'body-parser';
-import formidable from 'formidable';
+// import formidable from 'formidable';
 import bodyparser from 'koa-bodyparser';
 import cors from 'koa-cors';
 import multer from 'koa-multer';
