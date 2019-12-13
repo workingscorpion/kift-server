@@ -63,7 +63,7 @@
  * @apiGroup Auth API
  * @apiParam (querystring) {string} [name=walter] 이름
  * @apiParam (querystring) {Date} [birth="1993-12-31"] 생일
- * @apiSampleRequest http://localhost:3002/api/v1/auth/findid
+ * @apiSampleRequest /api/v1/auth/findid
  * @apiSuccess {string} email 계정
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
