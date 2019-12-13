@@ -55,7 +55,6 @@ export default class TeethAPI implements MyDependencies {
                 result.push(Object.assign(result2, result1[i]));
                 console.log('result :', result);
             }
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -69,7 +68,6 @@ export default class TeethAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Teeth>(DBService.TeethCollection);
             const result = await col.find({childrenId: query.childrenId}, {sort: {isCreatedTime: 1}}).toArray();
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -89,7 +87,6 @@ export default class TeethAPI implements MyDependencies {
                     $set: updatequery
                 }
             );
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -103,7 +100,6 @@ export default class TeethAPI implements MyDependencies {
             const col = await db.collection<Teeth>(DBService.TeethCollection);
             console.log('params.id :', params.id);
             const result = await col.remove({_id: new mongodb.ObjectID(params.id)});
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });

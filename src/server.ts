@@ -12,6 +12,7 @@ import {constructGraphQLSChema} from './graphql/schema';
 import {TestQueries} from './graphql/testqueries';
 // import cors from 'koa-cors';
 // import bodyParser from 'body-parser';
+import formidable from 'formidable';
 import bodyparser from 'koa-bodyparser';
 import cors from 'koa-cors';
 import multer from 'koa-multer';
@@ -92,11 +93,6 @@ export class AppServer {
         app.use(mount('/', serve('./www')));
         app.use(bodyparser());
         app.use(scopePerRequest(container));
-        app.use(loadControllers('routes/*.route.js', {cwd: __dirname}));
-
-        server.applyMiddleware({app});
-        // alternatively you can get a composed middleware from the apollo server
-        // app.use(server.getMiddleware());
 
         // 테스트 모드일 때는 포트를 열지 않는다. Apollo 테스트 도구는 포트를 거치지 않고 직접 쿼리를 호출하기 때문에 필요가 없고,
         // 포트 충돌이 발생한다.
@@ -121,7 +117,6 @@ export class AppServer {
             });
             this.httpServer = ws;
         }
-
         if (this.envService.isDevelopmentMode()) {
             const options = {
                 origin: '*',
@@ -130,6 +125,14 @@ export class AppServer {
             };
             app.use(cors(options));
         }
+        
+        app.use(loadControllers('routes/*.route.js', {cwd: __dirname}));
+
+
+        server.applyMiddleware({app});
+        // alternatively you can get a composed middleware from the apollo server
+        // app.use(server.getMiddleware());
+
 
         process.title = this.envService.get().APP_TITLE + `${process.env.NODE_ENV} - ${this.envService.get().PORT}`;
     }

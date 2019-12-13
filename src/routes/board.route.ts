@@ -44,7 +44,9 @@ export default class BoardAPI implements MyDependencies {
                 fix: body.fix,
                 count: 0
             });
-            ctx.set('Access-Control-Allow-Origin', '*');
+            // ctx.set('Accept', 'application/json');
+            // ctx.set('Accept', 'application/x-www-form-urlencoded');
+            // ctx.set('Accept', 'application/multipart/form-data');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -62,7 +64,6 @@ export default class BoardAPI implements MyDependencies {
             const result = Object.assign(trueresults, allresults);
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
-            ctx.set('Access-Control-Allow-Origin', '*');
         });
     }
 
@@ -75,7 +76,6 @@ export default class BoardAPI implements MyDependencies {
             const allresults = {allresult: await col.find({isDeletedTime: undefined}, {projection: {title: 1, writedate: 1}, sort: {writedate: -1}}).toArray()};
 
             const result = Object.assign(trueresults, allresults);
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -90,7 +90,6 @@ export default class BoardAPI implements MyDependencies {
             const col = await db.collection<Board>(DBService.BoardCollection);
             await col.updateOne({_id: new mongodb.ObjectId(id)}, {$inc: {count: 1}});
             const result = await col.findOne({_id: new mongodb.ObjectId(id)});
-            ctx.set('Access-Control-Allow-Origin', '*');
             console.log('result :', result);
             const finalresult = result;
             ctx.response.body = {finalresult};
@@ -118,7 +117,6 @@ export default class BoardAPI implements MyDependencies {
                 }
             );
             const result = await col.find({}, {sort: {writedate: -1}}).toArray();
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -132,7 +130,6 @@ export default class BoardAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Board>(DBService.BoardCollection);
             const result = await col.updateOne({_id: new mongodb.ObjectId(params.id)}, {$set: {isDeletedTime: Date.now()}});
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -142,7 +139,7 @@ export default class BoardAPI implements MyDependencies {
     @route('/delete')
     @POST()
     async delete(ctx: Koa.Context) {
-        ctx.set('Access-Control-Allow-Origin', '*');
+        // ctx.set('Access-Control-Allow-Origin', '*');
         const body = ctx.request.body;
         console.log('body :', body);
         console.log('typeof body :', typeof body);

@@ -87,7 +87,6 @@ export default class DataAPI implements MyDependencies {
                 bonemass: Number(body.bonemass),
                 measureTime: Date.now()
             });
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -135,7 +134,6 @@ export default class DataAPI implements MyDependencies {
                 }
             }
             // console.log('result :', result);
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -148,7 +146,6 @@ export default class DataAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
             const result = await col.find({childrenId: params.payload}).toArray();
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -161,7 +158,6 @@ export default class DataAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
             const result = await col.updateOne({email: body.childrenId, childrenId: body.childrenId}, {$set: {body, measureTime: Date.now()}});
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -176,7 +172,6 @@ export default class DataAPI implements MyDependencies {
         await this.dbService.performWithDB(async db => {
             const col = await db.collection<Inbody>(DBService.InbodyCollection);
             const result = await col.remove({email: body.email, childrenId: body.childrenId});
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
@@ -202,7 +197,6 @@ export default class DataAPI implements MyDependencies {
             }
             childrenresult.push(childId);
             const result = await col.updateOne({email: body.email}, {$set: {children: childrenresult}});
-            ctx.set('Access-Control-Allow-Origin', '*');
             ctx.response.body = {result};
             ctx.response.status = HttpStatus.OK;
         });
