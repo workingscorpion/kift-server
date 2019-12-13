@@ -147,3 +147,42 @@
  *          result : false
  *     }
  */
+
+/**
+ * @api {get} /api/v1/teeth/search/:payload 치아기록 검색 API
+ * @apiVersion 0.0.0
+ * @apiName search Teeth
+ * @apiGroup Teeth API
+ * @apiParam (url Parameter) {string} payload 검색 키워드
+ * @apiParam (querystring) {string} [searchWay] 검색조건(childName|parent|description)
+ * @apiSampleRequest /api/v1/teeth/search/ydl
+ * @apiSuccess {string} _id ObjectId
+ * @apiSuccess {string} name 이름
+ * @apiSuccess {string} parent 부모계정(이메일)
+ * @apiSuccess {string} description 치아메모
+ * @apiSuccess {string} isCreatedTime 작성일
+ * @apiSuccess {boolean} isUp 윗니, 아랫니(true:위, false: 아래)
+ * @apiSuccess {string} childrenId 해당 아이 고유 ID
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     result: [
+        {
+            _id: "5def101a1abf9e20ccec0200",
+            parent: "ydlamia@naver.com",
+            name: "spring",
+            isUp: true,
+            childrenId: "5dde2484e486b02344a4a84f",
+            description: "aa",
+            isCreatedTime: "19-12-14"
+        },
+        {
+            _id: "5def101a1abf9e20ccec0200",
+            parent: "ydlamia@naver.com",
+            name: "spring",
+            isUp: true,
+            childrenId: "5dde2484e486b02344a4a84f",
+            description: "aa",
+            isCreatedTime: "19-12-14"
+        }
+    ]
+ */

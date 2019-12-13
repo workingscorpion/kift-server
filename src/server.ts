@@ -18,7 +18,6 @@ import cors from 'koa-cors';
 import multer from 'koa-multer';
 import mount from 'koa-mount';
 import serve from 'koa-static';
-// import bodyParser from 'body-parser';
 
 export class AppServer {
     constructor({envService, dbService}: any) {
@@ -125,14 +124,12 @@ export class AppServer {
             };
             app.use(cors(options));
         }
-        
-        app.use(loadControllers('routes/*.route.js', {cwd: __dirname}));
 
+        app.use(loadControllers('routes/*.route.js', {cwd: __dirname}));
 
         server.applyMiddleware({app});
         // alternatively you can get a composed middleware from the apollo server
         // app.use(server.getMiddleware());
-
 
         process.title = this.envService.get().APP_TITLE + `${process.env.NODE_ENV} - ${this.envService.get().PORT}`;
     }
