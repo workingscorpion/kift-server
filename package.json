@@ -66,7 +66,7 @@
     "@types/nodemailer": "^6.2.2",
     "@types/secure-random-password": "^0.1.0",
     "@types/winston": "^2.4.4",
-    "apollo-server-koa": "^2.6.7",
+    "apollo-server-koa": "^2.14.2",
     "apollo-server-testing": "^2.6.7",
     "awilix": "^4.2.2",
     "awilix-koa": "^3.1.0",
